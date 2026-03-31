@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-brand-black text-brand-warm font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-normal;
+  }
+
+  ::selection {
+    background-color: #9f8b6b33;
+    color: #f7f8f7;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-block uppercase tracking-display text-xs font-heading font-semibold
+      border border-brand-bronze text-brand-bronze
+      px-8 py-3
+      transition-all duration-400
+      hover:bg-brand-bronze hover:text-brand-black;
+  }
+
+  .btn-ghost {
+    @apply inline-block uppercase tracking-display text-xs font-heading font-semibold
+      border border-brand-warm text-brand-warm
+      px-8 py-3
+      transition-all duration-400
+      hover:bg-brand-warm hover:text-brand-black;
+  }
+
+  .section-label {
+    @apply uppercase tracking-widest text-xs font-heading font-semibold text-brand-bronze;
+  }
+
+  .section-title {
+    @apply font-display text-4xl md:text-5xl lg:text-6xl leading-tight text-brand-warm;
+  }
+
+  .divider-line {
+    @apply block w-12 h-px bg-brand-bronze mx-auto my-6;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .tracking-display {
+    letter-spacing: 0.25em;
+  }
+}
+
+@keyframes slow-zoom {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.12); }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 8s ease-in-out forwards;
+}

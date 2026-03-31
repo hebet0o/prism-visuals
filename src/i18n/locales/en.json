@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "about": "About",
+    "weddingGalleries": "Wedding Galleries",
+    "portfolio": "Portfolio",
+    "pricing": "Pricing",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Prism Visuals Budapest",
+    "tagline": "Professional Photography & Videography Services in Budapest",
+    "cta": "View Our Portfolio"
+  },
+  "home": {
+    "featuredTitle": "Featured Work",
+    "servicesTitle": "Our Services",
+    "ctaTitle": "Ready to get started?",
+    "ctaText": "Contact us and let's make your moments unforgettable",
+    "ctaButton": "Get in Touch"
+  },
+  "services": {
+    "wedding": {
+      "title": "Wedding Photography",
+      "description": "Full day coverage with professional wedding photography and videography"
+    },
+    "portrait": {
+      "title": "Portrait Photography",
+      "description": "Individual and family portrait sessions with personalized approach"
+    },
+    "event": {
+      "title": "Event Photography",
+      "description": "Professional coverage for corporate and private events"
+    },
+    "video": {
+      "title": "Video Production",
+      "description": "High-quality video services for any occasion"
+    }
+  },
+  "about": {
+    "title": "About Us",
+    "story": "Hi! We are the Prism Visuals Budapest team. We are brothers who are passionate about photography and videography. Our goal is to capture and artistically bring to life every special moment.",
+    "approach": "Our Approach",
+    "approachText": "We work with a modern, creative style while ensuring that every image is natural and authentic. We believe that the best photos are when you are your best self.",
+    "equipment": "Equipment",
+    "equipmentText": "We work with professional equipment to ensure the highest quality in every project."
+  },
+  "weddingGalleries": {
+    "title": "Wedding Galleries",
+    "description": "Explore our latest wedding photography"
+  },
+  "portfolio": {
+    "title": "Portfolio",
+    "description": "A selection of our work",
+    "allCategories": "All",
+    "portrait": "Portrait",
+    "event": "Event",
+    "commercial": "Commercial",
+    "videography": "Video"
+  },
+  "pricing": {
+    "title": "Pricing",
+    "description": "Choose from our packages",
+    "weddingFull": {
+      "name": "Full Day Wedding",
+      "price": "Custom Quote",
+      "features": [
+        "Full day coverage",
+        "2 professional photographers",
+        "500+ edited photos",
+        "Online gallery",
+        "Video highlight (optional)"
+      ]
+    },
+    "eventHalf": {
+      "name": "Half Day Event",
+      "price": "Custom Quote",
+      "features": [
+        "4 hours coverage",
+        "1 professional photographer",
+        "200+ edited photos",
+        "Online gallery",
+        "Fast editing within 48 hours"
+      ]
+    },
+    "portrait": {
+      "name": "Portrait Session",
+      "price": "Custom Quote",
+      "features": [
+        "1-2 hour session",
+        "50+ edited photos",
+        "Customized location",
+        "Online gallery",
+        "Print rights"
+      ]
+    },
+    "custom": {
+      "name": "Custom Package",
+      "price": "Custom Price",
+      "features": [
+        "Fully customizable",
+        "For commercial projects",
+        "Video production",
+        "Special requests",
+        "Contact us"
+      ]
+    },
+    "contactButton": "Request Quote"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Get in touch with us and let's talk about your project",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "service": "Service Type",
+      "message": "Message",
+      "send": "Send",
+      "success": "Thank you! We'll be in touch soon.",
+      "error": "An error occurred. Please try again."
+    },
+    "info": {
+      "email": "info@prismvisuals.hu",
+      "location": "Budapest, Hungary"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Prism Visuals Budapest. All rights reserved.",
+    "followUs": "Follow Us"
+  }
+}

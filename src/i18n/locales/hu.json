@@ -1,0 +1,131 @@
+{
+  "nav": {
+    "about": "Rólunk",
+    "weddingGalleries": "Esküvői Galériák",
+    "portfolio": "Portfólió",
+    "pricing": "Árazás",
+    "contact": "Kapcsolat"
+  },
+  "hero": {
+    "title": "Prism Visuals Budapest",
+    "tagline": "Professzionális fotós és videós szolgáltatások Budapesten",
+    "cta": "Nézd meg a portfoliónkat"
+  },
+  "home": {
+    "featuredTitle": "Kiemelt munkák",
+    "servicesTitle": "Szolgáltatásaink",
+    "ctaTitle": "Készen állsz rá?",
+    "ctaText": "Lépj kapcsolatba velünk és tegyük felejthetetlenné a pillanataidat",
+    "ctaButton": "Kapcsolatfelvétel"
+  },
+  "services": {
+    "wedding": {
+      "title": "Esküvői fotózás",
+      "description": "Teljes napos lefedettség professzionális esküvői fotózással és videózással"
+    },
+    "portrait": {
+      "title": "Portré fotózás",
+      "description": "Egyéni és családi portré szekciók személyre szabott megközelítéssel"
+    },
+    "event": {
+      "title": "Esemény fotózás",
+      "description": "Professzionális lefedettség céges és privát eseményekre"
+    },
+    "video": {
+      "title": "Videó produkció",
+      "description": "Kiváló minőségű videós szolgáltatások minden alkalomra"
+    }
+  },
+  "about": {
+    "title": "Rólunk",
+    "story": "Sziasztok! Mi vagyunk a Prism Visuals Budapest csapata. Fivérek vagyunk, akik szenvedélyesen szeretnek fotózni és videózni. Célunk, hogy minden különleges pillanatot megörökítsünk és művészi módon elevenítsünk meg.",
+    "approach": "Megközelítésünk",
+    "approachText": "Modern, kreatív stílussal dolgozunk, miközben ügyelünk arra, hogy minden kép természetes és autentikus legyen. Hiszünk abban, hogy a legjobb fotók azok, amikor te a legjobb önmagad vagy.",
+    "equipment": "Felszerelés",
+    "equipmentText": "Professzionális eszközökkel dolgozunk, hogy a legmagasabb minőséget biztosítsuk minden projektben."
+  },
+  "weddingGalleries": {
+    "title": "Esküvői Galériák",
+    "description": "Fedezd fel legújabb esküvői fotózásainkat"
+  },
+  "portfolio": {
+    "title": "Portfólió",
+    "description": "Válogatás munkáinkból",
+    "allCategories": "Minden",
+    "portrait": "Portré",
+    "event": "Esemény",
+    "commercial": "Kereskedelmi",
+    "videography": "Videó"
+  },
+  "pricing": {
+    "title": "Árazás",
+    "description": "Válassz a csomagjaink közül",
+    "weddingFull": {
+      "name": "Esküvő teljes nap",
+      "price": "Ár egyeztetés alapján",
+      "features": [
+        "Teljes napos lefedettség",
+        "2 professzionális fotós",
+        "500+ szerkesztett fotó",
+        "Online galéria",
+        "Videó highlight (opcionális)"
+      ]
+    },
+    "eventHalf": {
+      "name": "Esemény félnapos",
+      "price": "Ár egyeztetés alapján",
+      "features": [
+        "4 órás lefedettség",
+        "1 professzionális fotós",
+        "200+ szerkesztett fotó",
+        "Online galéria",
+        "Gyors szerkesztés 48 órán belül"
+      ]
+    },
+    "portrait": {
+      "name": "Portré szekció",
+      "price": "Ár egyeztetés alapján",
+      "features": [
+        "1-2 órás fotózás",
+        "50+ szerkesztett fotó",
+        "Személyre szabott lokáció",
+        "Online galéria",
+        "Nyomtatási jogok"
+      ]
+    },
+    "custom": {
+      "name": "Egyedi ajánlat",
+      "price": "Egyedi ár",
+      "features": [
+        "Teljesen testreszabható",
+        "Kereskedelmi projektekhez",
+        "Videó produkció",
+        "Különleges kérések",
+        "Lépj velünk kapcsolatba"
+      ]
+    },
+    "contactButton": "Ajánlatkérés"
+  },
+  "contact": {
+    "title": "Kapcsolat",
+    "description": "Lépj velünk kapcsolatba és beszélgessünk a projektedről",
+    "form": {
+      "name": "Név",
+      "email": "Email",
+      "phone": "Telefon",
+      "service": "Szolgáltatás típusa",
+      "message": "Üzenet",
+      "send": "Küldés",
+      "success": "Köszönjük! Hamarosan jelentkezünk.",
+      "error": "Hiba történt. Kérjük próbáld újra."
+    },
+    "info": {
+      "email": "info@prismvisuals.hu",
+      "location": "Budapest, Magyarország"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Prism Visuals Budapest. Minden jog fenntartva.",
+    "followUs": "Kövess minket"
+  }
+}

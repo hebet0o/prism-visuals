@@ -1,0 +1,6 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" rx="20" fill="#1a1a1a"/>
+  <path d="M100 50L130 80L100 110L70 80L100 50Z" fill="#ffffff"/>
+  <path d="M100 90L130 120L100 150L70 120L100 90Z" fill="#cccccc"/>
+  <text x="100" y="175" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">PRISM</text>
+</svg>
