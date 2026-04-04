@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom'
 import Hero from '../components/presentational/Hero'
 import ServiceCard from '../components/presentational/ServiceCard'
 import GalleryGrid from '../components/presentational/GalleryGrid'
+import ReviewCarousel from '../components/presentational/ReviewCarousel'
+import ReviewForm from '../components/presentational/ReviewForm'
 import { PLACEHOLDER_IMAGES } from '../utils/constants'
-
-const DUMMY_TESTIMONIAL = {
-  quote: "Working with Prism Visuals was unlike anything we expected. They didn't just take photos — they told the story of our day in a way we could never have imagined.",
-  author: "Anna & David",
-  event: "Budapest, September 2025",
-}
+import { useReviews } from '../hooks/useReviews'
 
 const HomePage = () => {
   const { t } = useTranslation()
+  const { reviews, addReview } = useReviews()
 
-  const featuredImages = PLACEHOLDER_IMAGES.portfolio.slice(0, 6)
+  const featuredImages = PLACEHOLDER_IMAGES.featured
 
   return (
     <div className="bg-brand-black">
@@ -29,14 +27,13 @@ const HomePage = () => {
       {/* Intro — story-first */}
       <section className="py-28 px-6">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="section-label mb-8">Our Philosophy</p>
+          <p className="section-label mb-8">{t('home.ourPhilosophy')}</p>
           <h2 className="font-display text-3xl md:text-4xl lg:text-5xl text-brand-warm leading-relaxed mb-8">
-            You live the moment —<br />
-            <span className="italic text-brand-offwhite/70">we turn it into something eternal.</span>
+            {t('home.philosophyText')}
           </h2>
           <span className="divider-line" />
           <p className="text-brand-muted text-base leading-loose font-body font-light max-w-xl mx-auto">
-            We are a Budapest-based photography and cinematography duo. Every project we take on is a collaboration — rooted in trust, driven by artistry, and measured by emotion.
+            {t('home.philosophyDescription')}
           </p>
         </div>
       </section>
@@ -50,25 +47,30 @@ const HomePage = () => {
         <GalleryGrid images={featuredImages} columns={3} />
         <div className="text-center mt-12 pb-8">
           <Link to="/portfolio" className="btn-primary">
-            View Full Portfolio
+            {t('home.viewFullPortfolio')}
           </Link>
         </div>
       </section>
 
-      {/* Testimonial — cinematic quote */}
+      {/* Testimonial — cinematic quote carousel */}
       <section className="py-28 px-6 bg-brand-dark">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="section-label mb-10">From Our Couples</p>
-          <blockquote className="font-display italic text-2xl md:text-3xl text-brand-warm/90 leading-relaxed mb-10">
-            &ldquo;{DUMMY_TESTIMONIAL.quote}&rdquo;
-          </blockquote>
-          <span className="divider-line" />
-          <p className="font-heading text-xs uppercase tracking-display text-brand-bronze mt-6">
-            {DUMMY_TESTIMONIAL.author}
-          </p>
-          <p className="font-heading text-xs uppercase tracking-widest text-brand-muted mt-1">
-            {DUMMY_TESTIMONIAL.event}
-          </p>
+        <div className="max-w-4xl mx-auto">
+          <p className="section-label mb-10 text-center">{t('home.fromOurCouples')}</p>
+          <ReviewCarousel reviews={reviews} />
+        </div>
+      </section>
+
+      {/* Review Form — submit your own review */}
+      <section className="py-28 px-6 bg-brand-black">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="section-label mb-3">{t('reviews.formTitle') || 'Share Your Experience'}</p>
+            <span className="divider-line" />
+            <p className="text-brand-muted text-base leading-loose font-body font-light max-w-2xl mx-auto mt-6">
+              {t('reviews.formDescription') || 'We\'d love to hear about your experience. Your review helps others discover us and inspires our work.'}
+            </p>
+          </div>
+          <ReviewForm onSubmit={addReview} />
         </div>
       </section>
 

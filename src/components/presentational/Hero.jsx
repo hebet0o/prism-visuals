@@ -1,34 +1,98 @@
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
   const [current, setCurrent] = useState(0)
-  const [fading, setFading] = useState(false)
+  const [nextIndex, setNextIndex] = useState(null)
+  const [nextImageLoaded, setNextImageLoaded] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
+  const intervalRef = useRef(null)
+  const timeoutRef = useRef(null)
 
   useEffect(() => {
     if (!images || images.length <= 1) return
-    const interval = setInterval(() => {
-      setFading(true)
-      setTimeout(() => {
-        setCurrent(prev => (prev + 1) % images.length)
-        setFading(false)
-      }, 800)
+
+    intervalRef.current = setInterval(() => {
+      const upcoming = (current + 1) % images.length
+      setNextImageLoaded(false)
+      setNextIndex(upcoming)
     }, 5000)
-    return () => clearInterval(interval)
-  }, [images])
+
+    return () => {
+      clearInterval(intervalRef.current)
+      clearTimeout(timeoutRef.current)
+    }
+  }, [images, current])
+
+  useEffect(() => {
+    if (nextIndex === null) return
+
+    const img = new Image()
+    img.src = images[nextIndex]
+    img.onload = () => setNextImageLoaded(true)
+
+    return () => {
+      img.onload = null
+    }
+  }, [nextIndex, images])
+
+  useEffect(() => {
+    if (!nextImageLoaded || nextIndex === null) return
+    setTransitioning(true)
+  }, [nextImageLoaded, nextIndex])
+
+  useEffect(() => {
+    if (!transitioning || nextIndex === null) return
+
+    timeoutRef.current = setTimeout(() => {
+      setCurrent(nextIndex)
+      setTransitioning(false)
+      setNextImageLoaded(false)
+    }, 800)
+
+    return () => {
+      clearTimeout(timeoutRef.current)
+    }
+  }, [transitioning, nextIndex])
+
+  useEffect(() => {
+    if (transitioning || nextIndex === null) return
+    
+    // Clear nextIndex after transition completes + a tiny buffer for DOM stability
+    const cleanupTimeout = setTimeout(() => {
+      setNextIndex(null)
+    }, 50)
+
+    return () => clearTimeout(cleanupTimeout)
+  }, [transitioning, nextIndex])
+
+  if (!images || images.length === 0) {
+    return null
+  }
+
+  const currentImage = images[current]
+  const nextImage = nextIndex !== null ? images[nextIndex] : null
 
   return (
     <section className="relative h-screen w-full overflow-hidden">
       {/* Background image with slow zoom */}
       <div className="absolute inset-0">
         <img
-          key={current}
-          src={images[current]}
+          src={currentImage}
           alt=""
-          className={`w-full h-full object-cover transition-opacity duration-[800ms] ${
-            fading ? 'opacity-0' : 'opacity-100'
-          } scale-105 animate-slow-zoom`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[800ms] ease-in-out scale-105 animate-slow-zoom ${
+            transitioning ? 'opacity-0' : 'opacity-100'
+          }`}
         />
+        {nextImage && (
+          <img
+            src={nextImage}
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[800ms] ease-in-out scale-105 animate-slow-zoom ${
+              transitioning ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+        )}
       </div>
 
       {/* Dark cinematic overlay - stronger at bottom for text legibility */}

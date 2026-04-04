@@ -15,7 +15,27 @@ const PortfolioContainer = () => {
     { id: CATEGORIES.VIDEOGRAPHY, label: t('portfolio.videography') },
   ]
 
-  const images = PLACEHOLDER_IMAGES.portfolio
+  const getImagesForCategory = (category) => {
+    switch (category) {
+      case CATEGORIES.PORTRAIT:
+        return PLACEHOLDER_IMAGES.portrait
+      case CATEGORIES.EVENT:
+        return PLACEHOLDER_IMAGES.event
+      case CATEGORIES.COMMERCIAL:
+        return PLACEHOLDER_IMAGES.commercial
+      case CATEGORIES.VIDEOGRAPHY:
+        return [] // No work yet
+      default:
+        // 'all' - combine all categories
+        return [
+          ...PLACEHOLDER_IMAGES.portrait,
+          ...PLACEHOLDER_IMAGES.event,
+          ...PLACEHOLDER_IMAGES.commercial,
+        ]
+    }
+  }
+
+  const images = getImagesForCategory(selectedCategory)
 
   return (
     <div>
@@ -36,7 +56,13 @@ const PortfolioContainer = () => {
         ))}
       </div>
 
-      <GalleryGrid images={images} columns={3} />
+      {images.length > 0 ? (
+        <GalleryGrid images={images} columns={3} />
+      ) : (
+        <div className="text-center py-16">
+          <p className="text-brand-muted text-lg">{t('portfolio.noWorkYet')}</p>
+        </div>
+      )}
     </div>
   )
 }

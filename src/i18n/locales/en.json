@@ -8,12 +8,17 @@
   },
   "hero": {
     "title": "Prism Visuals Budapest",
-    "tagline": "Professional Photography & Videography Services in Budapest",
+    "tagline": "Professional Photography & Videography Services for Every Occasion",
     "cta": "View Our Portfolio"
   },
   "home": {
     "featuredTitle": "Featured Work",
     "servicesTitle": "Our Services",
+    "ourPhilosophy": "Our Philosophy",
+    "philosophyText": "You live the moment — we turn it into something eternal.",
+    "philosophyDescription": "We are a Budapest-based photography and cinematography duo. Every project we take on is a collaboration — rooted in trust, driven by artistry, and measured by emotion.",
+    "fromOurCouples": "Reviews",
+    "viewFullPortfolio": "View Full Portfolio",
     "ctaTitle": "Ready to get started?",
     "ctaText": "Contact us and let's make your moments unforgettable",
     "ctaButton": "Get in Touch"
@@ -38,11 +43,24 @@
   },
   "about": {
     "title": "About Us",
+    "pageHeading": "Our Story",
     "story": "Hi! We are the Prism Visuals Budapest team. We are brothers who are passionate about photography and videography. Our goal is to capture and artistically bring to life every special moment.",
     "approach": "Our Approach",
     "approachText": "We work with a modern, creative style while ensuring that every image is natural and authentic. We believe that the best photos are when you are your best self.",
     "equipment": "Equipment",
-    "equipmentText": "We work with professional equipment to ensure the highest quality in every project."
+    "equipmentText": "We work with professional equipment to ensure the highest quality in every project.",
+    "gabor": {
+      "role": "Founder & Photographer",
+      "subtitle": "Photographer, software developer, wannabe graphic designer",
+      "huBio": "Iszak Gábor vagyok – fotós, szoftverfejlesztő, wannabe grafikus.\n\nGyerekkorom óta a szoftverfejlesztés volt a fő célom, és ezt sikerült is megvalósítanom.\n2019-ben azonban a kezembe nyomtak egy kamerát, hogy segítsek az akkori otthonom önkormányzati kampányában – és ott valami teljesen új kezdődött. Akkor szerettem bele a fotózásba, a különleges pillanatok megörökítésébe és a kreatív munka világába.\n\nAzóta lediplomáztam, külön költöztem, munkát találtam, de a fotózás végig velem maradt – és idővel sokkal több lett egyszerű hobbinál.\n\nSzámomra a legnagyobb öröm az, amikor azokat a pillanatokat örökíthetem meg, amelyek igazán rólad szólnak. Az őszinte mosolyokat, a spontán nevetést, a csendes, meghitt pillanatokat – azokat az apró részleteket, amelyekből igazi, értékes emlékek születnek.\n\nA Prism Visuals számomra sokkal több mint munka. Ez az a tér, ahol egy saját álom, a kreativitás és az emberi történetek találkoznak. Egy hely, ahol képekben mesélhetek, hangulatokat örökíthetek meg, és segíthetek abban, hogy a fontos pillanatok ne csak emlékek legyenek, hanem időtálló történetek.",
+      "enBio": "I’m Gábor Iszak — photographer, software developer, wannabe graphic designer.\n\nSince childhood, software development has been my main goal, and I managed to make that happen. In 2019, however, a camera was put in my hand so I could help with the municipal campaign in my then-home — and something completely new began there. That’s when I fell in love with photography, with capturing special moments, and with the world of creative work.\n\nSince then, I have graduated, moved out on my own, found a job, but photography has stayed with me all along — and over time it became much more than a simple hobby.\n\nFor me, the greatest joy is when I can capture those moments that are truly about you. The honest smiles, the spontaneous laughter, the quiet, intimate moments — those little details from which real, valuable memories are born.\n\nFor me, Prism Visuals is much more than work. It’s a space where a personal dream, creativity, and human stories meet. A place where I can tell stories in images, capture moods, and help ensure that the important moments become not just memories, but timeless stories.",
+      "partner": {
+        "role": "Second Team Member",
+        "name": "Second Photographer",
+        "placeholderText": "Meet our second team member here. This is a placeholder introduction for the other half of Prism Visuals. Replace this text with the second person’s story, a short bio, and what inspires them.",
+        "imageAlt": "Second team member placeholder"
+      }
+    }
   },
   "weddingGalleries": {
     "title": "Wedding Galleries",
@@ -55,7 +73,8 @@
     "portrait": "Portrait",
     "event": "Event",
     "commercial": "Commercial",
-    "videography": "Video"
+    "videography": "Video",
+    "noWorkYet": "No work yet"
   },
   "pricing": {
     "title": "Pricing",
@@ -108,6 +127,10 @@
   },
   "contact": {
     "title": "Contact",
+    "heading": {
+      "start": "Let's make something",
+      "emphasis": "unforgettable."
+    },
     "description": "Get in touch with us and let's talk about your project",
     "form": {
       "name": "Name",
@@ -117,11 +140,41 @@
       "message": "Message",
       "send": "Send",
       "success": "Thank you! We'll be in touch soon.",
-      "error": "An error occurred. Please try again."
+      "error": "An error occurred. Please try again.",
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Email is invalid",
+        "messageRequired": "Message is required"
+      }
     },
     "info": {
       "email": "info@prismvisuals.hu",
-      "location": "Budapest, Hungary"
+      "location": "Budapest, Hungary",
+      "responseTime": "We aim to respond within 48 hours."
+    },
+    "labels": {
+      "email": "Email",
+      "location": "Location",
+      "responseTime": "Response Time"
+    }
+  },
+  "reviews": {
+    "formTitle": "Share Your Experience",
+    "formDescription": "We'd love to hear about your experience. Your review helps others discover us and inspires our work.",
+    "form": {
+      "review": "Your Review",
+      "reviewPlaceholder": "Share your experience with us...",
+      "name": "Your Name",
+      "namePlaceholder": "Name",
+      "event": "Event / Location",
+      "eventPlaceholder": "e.g., Wedding, Budapest",
+      "characters": "characters",
+      "allFieldsRequired": "All fields are required",
+      "submit": "Submit Review",
+      "submitting": "Submitting...",
+      "success": "Thank you! Your review has been added.",
+      "error": "Failed to submit review. Please try again."
     }
   },
   "footer": {

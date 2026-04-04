@@ -8,12 +8,17 @@
   },
   "hero": {
     "title": "Prism Visuals Budapest",
-    "tagline": "Professzionális fotós és videós szolgáltatások Budapesten",
+    "tagline": "Professzionális fotós és videós szolgáltatások minden alkalomra",
     "cta": "Nézd meg a portfoliónkat"
   },
   "home": {
     "featuredTitle": "Kiemelt munkák",
     "servicesTitle": "Szolgáltatásaink",
+    "ourPhilosophy": "Filozófiánk",
+    "philosophyText": "Te éled a pillanatot — mi örökkévalósággá változtatjuk.",
+    "philosophyDescription": "Budapesti székhelyű fotós és videós duó vagyunk. Minden projektünk együttműködés — bizalmon alapul, művészet hajtja, érzelem méri.",
+    "fromOurCouples": "Értékelések",
+    "viewFullPortfolio": "Teljes portfólió megtekintése",
     "ctaTitle": "Készen állsz rá?",
     "ctaText": "Lépj kapcsolatba velünk és tegyük felejthetetlenné a pillanataidat",
     "ctaButton": "Kapcsolatfelvétel"
@@ -38,11 +43,24 @@
   },
   "about": {
     "title": "Rólunk",
-    "story": "Sziasztok! Mi vagyunk a Prism Visuals Budapest csapata. Fivérek vagyunk, akik szenvedélyesen szeretnek fotózni és videózni. Célunk, hogy minden különleges pillanatot megörökítsünk és művészi módon elevenítsünk meg.",
+    "pageHeading": "Történetünk",
+    "story": "Kedves látogató! Mi vagyunk a Prism Visual. Budapesti székhelyű csapatunk két testvérből áll, akik szenvedélyesen szeretik a fotózást és videózást. Célunk, hogy minden különleges pillanatot megörökítsünk és művészien életre keltsünk.",
     "approach": "Megközelítésünk",
     "approachText": "Modern, kreatív stílussal dolgozunk, miközben ügyelünk arra, hogy minden kép természetes és autentikus legyen. Hiszünk abban, hogy a legjobb fotók azok, amikor te a legjobb önmagad vagy.",
     "equipment": "Felszerelés",
-    "equipmentText": "Professzionális eszközökkel dolgozunk, hogy a legmagasabb minőséget biztosítsuk minden projektben."
+    "equipmentText": "Professzionális eszközökkel dolgozunk, hogy a legmagasabb minőséget biztosítsuk minden projektben.",
+    "gabor": {
+      "role": "Társalapító és fotós",
+      "subtitle": "Fotós, szoftverfejlesztő, wannabe grafikus",
+      "huBio": "Iszak Gábor vagyok – fotós, szoftverfejlesztő, wannabe grafikus.\n\nGyerekkorom óta a szoftverfejlesztés volt a fő célom, és ezt sikerült is megvalósítanom.\n2019-ben azonban a kezembe nyomtak egy kamerát, hogy segítsek az akkori otthonom önkormányzati kampányában – és ott valami teljesen új kezdődött. Akkor szerettem bele a fotózásba, a különleges pillanatok megörökítésébe és a kreatív munka világába.\n\nAzóta lediplomáztam, külön költöztem, munkát találtam, de a fotózás végig velem maradt – és idővel sokkal több lett egyszerű hobbinál.\n\nSzámomra a legnagyobb öröm az, amikor azokat a pillanatokat örökíthetem meg, amelyek igazán rólad szólnak. Az őszinte mosolyokat, a spontán nevetést, a csendes, meghitt pillanatokat – azokat az apró részleteket, amelyekből igazi, értékes emlékek születnek.\n\nA Prism Visuals számomra sokkal több mint munka. Ez az a tér, ahol egy saját álom, a kreativitás és az emberi történetek találkoznak. Egy hely, ahol képekben mesélhetek, hangulatokat örökíthetek meg, és segíthetek abban, hogy a fontos pillanatok ne csak emlékek legyenek, hanem időtálló történetek.",
+      "enBio": "I’m Gábor Iszak — photographer, software developer, wannabe graphic designer.\n\nSince childhood, software development has been my main goal, and I managed to make that happen. In 2019, however, a camera was put in my hand so I could help with the municipal campaign in my then-home — and something completely new began there. That’s when I fell in love with photography, with capturing special moments, and with the world of creative work.\n\nSince then, I have graduated, moved out on my own, found a job, but photography has stayed with me all along — and over time it became much more than a simple hobby.\n\nFor me, the greatest joy is when I can capture those moments that are truly about you. The honest smiles, the spontaneous laughter, the quiet, intimate moments — those little details from which real, valuable memories are born.\n\nFor me, Prism Visuals is much more than work. It’s a space where a personal dream, creativity, and human stories meet. A place where I can tell stories in images, capture moods, and help ensure that the important moments become not just memories, but timeless stories.",
+      "partner": {
+        "role": "Második csapattag",
+        "name": "Második fotós",
+        "placeholderText": "Ismerd meg a csapat másik tagját itt. Ez egy helykitöltő bemutatkozás a Prism Visuals másik feléhez. Cseréld le ezt a szöveget a második személy történetére, rövid bemutatkozására és az inspirációjára.",
+        "imageAlt": "Második csapattag helykitöltő"
+      }
+    }
   },
   "weddingGalleries": {
     "title": "Esküvői Galériák",
@@ -55,7 +73,8 @@
     "portrait": "Portré",
     "event": "Esemény",
     "commercial": "Kereskedelmi",
-    "videography": "Videó"
+    "videography": "Videó",
+    "noWorkYet": "Még nincs munka"
   },
   "pricing": {
     "title": "Árazás",
@@ -108,6 +127,10 @@
   },
   "contact": {
     "title": "Kapcsolat",
+    "heading": {
+      "start": "Tegyük együtt felejthetetlenné",
+      "emphasis": "a te pillanatodat."
+    },
     "description": "Lépj velünk kapcsolatba és beszélgessünk a projektedről",
     "form": {
       "name": "Név",
@@ -117,11 +140,41 @@
       "message": "Üzenet",
       "send": "Küldés",
       "success": "Köszönjük! Hamarosan jelentkezünk.",
-      "error": "Hiba történt. Kérjük próbáld újra."
+      "error": "Hiba történt. Kérjük próbáld újra.",
+      "validation": {
+        "nameRequired": "A név megadása kötelező",
+        "emailRequired": "Az email megadása kötelező",
+        "emailInvalid": "Az email cím érvénytelen",
+        "messageRequired": "Az üzenet megadása kötelező"
+      }
     },
     "info": {
       "email": "info@prismvisuals.hu",
-      "location": "Budapest, Magyarország"
+      "location": "Budapest, Magyarország",
+      "responseTime": "Arra törekszünk, hogy 48 órán belül válaszoljunk."
+    },
+    "labels": {
+      "email": "Email",
+      "location": "Helyszín",
+      "responseTime": "Válaszidő"
+    }
+  },
+  "reviews": {
+    "formTitle": "Oszd meg az élményed",
+    "formDescription": "Szeretnénk hallani az élményed. Az értékelésed segít másoknak megtalálni minket és inspirálja a munkánkat.",
+    "form": {
+      "review": "Az értékelésed",
+      "reviewPlaceholder": "Oszd meg velünk az élményed...",
+      "name": "A te neved",
+      "namePlaceholder": "Név",
+      "event": "Esemény / Helyszín",
+      "eventPlaceholder": "Pl: Esküvő, Budapest",
+      "characters": "karakter",
+      "allFieldsRequired": "Minden mező kitöltése kötelező",
+      "submit": "Értékelés beküldése",
+      "submitting": "Beküldés...",
+      "success": "Köszönjük! Az értékelésed hozzáadva.",
+      "error": "Az értékelés beküldése sikertelen. Kérjük próbáld újra."
     }
   },
   "footer": {

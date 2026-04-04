@@ -4,7 +4,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
 
-const ImageCarousel = ({ images, autoplay = true, className = '' }) => {
+const ImageCarousel = ({ images, autoplay = true, className = '', initialSlide = 0 }) => {
   return (
     <Swiper
       modules={[Navigation, Pagination, Autoplay]}
@@ -14,6 +14,7 @@ const ImageCarousel = ({ images, autoplay = true, className = '' }) => {
       pagination={{ clickable: true }}
       autoplay={autoplay ? { delay: 5000, disableOnInteraction: false } : false}
       loop={true}
+      initialSlide={initialSlide}
       className={className}
     >
       {images.map((image, index) => (

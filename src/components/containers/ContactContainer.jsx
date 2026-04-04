@@ -24,13 +24,13 @@ const ContactContainer = () => {
 
   const validate = () => {
     const newErrors = {}
-    if (!formData.name.trim()) newErrors.name = 'Name is required'
+    if (!formData.name.trim()) newErrors.name = t('contact.form.validation.nameRequired')
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required'
+      newErrors.email = t('contact.form.validation.emailRequired')
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid'
+      newErrors.email = t('contact.form.validation.emailInvalid')
     }
-    if (!formData.message.trim()) newErrors.message = 'Message is required'
+    if (!formData.message.trim()) newErrors.message = t('contact.form.validation.messageRequired')
     return newErrors
   }
 
@@ -73,7 +73,7 @@ const ContactContainer = () => {
       {/* Info */}
       <div className="md:col-span-2 flex flex-col gap-10 pt-2">
         <div>
-          <p className="section-label mb-4">Email</p>
+          <p className="section-label mb-4">{t('contact.labels.email')}</p>
           <a
             href="mailto:info@prismvisuals.hu"
             className="text-brand-warm hover:text-brand-bronze transition-colors duration-300 text-sm font-body font-light"
@@ -82,15 +82,15 @@ const ContactContainer = () => {
           </a>
         </div>
         <div>
-          <p className="section-label mb-4">Location</p>
+          <p className="section-label mb-4">{t('contact.labels.location')}</p>
           <p className="text-brand-muted text-sm font-body font-light">
             {t('contact.info.location')}
           </p>
         </div>
         <div>
-          <p className="section-label mb-4">Response Time</p>
+          <p className="section-label mb-4">{t('contact.labels.responseTime')}</p>
           <p className="text-brand-muted text-sm font-body font-light">
-            We aim to respond within 48 hours.
+            {t('contact.info.responseTime')}
           </p>
         </div>
       </div>

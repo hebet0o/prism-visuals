@@ -27,7 +27,7 @@ const Header = () => {
         }`}
       >
         <nav className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-between lg:justify-center lg:gap-12">
+          <div className="flex items-center justify-center lg:justify-between lg:items-center gap-8 lg:gap-0">
 
             {/* Left Navigation - Desktop */}
             <div className="hidden lg:flex items-center gap-10">
@@ -43,10 +43,14 @@ const Header = () => {
             </div>
 
             {/* Logo - Center */}
-            <Link to="/" className="flex-shrink-0 lg:mx-10">
-              <span className="font-display text-xl tracking-widest text-brand-warm">
-                PRISM
-              </span>
+            <Link to="/" className="flex-shrink-0" aria-label="Home">
+              <img
+                src="/logosvg.svg"
+                alt="PRISM logo"
+                className="h-12 w-auto"
+                loading="lazy"
+                decoding="async"
+              />
             </Link>
 
             {/* Right Navigation - Desktop */}
@@ -62,7 +66,7 @@ const Header = () => {
 
             {/* Mobile Hamburger */}
             <button
-              className="lg:hidden p-2 text-brand-warm"
+              className="lg:hidden p-2 text-brand-warm ml-auto"
               onClick={() => setIsMenuOpen(true)}
               aria-label="Open menu"
             >
