@@ -1,24 +1,38 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
+import ProtectedRoute from './components/ProtectedRoute'
 import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import WeddingGalleriesPage from './pages/WeddingGalleriesPage'
 import PortfolioPage from './pages/PortfolioPage'
 import PricingPage from './pages/PricingPage'
 import ContactPage from './pages/ContactPage'
+import LoginPage from './pages/LoginPage'
+import AdminDashboard from './pages/AdminDashboard'
+import GalleryPage from './pages/GalleryPage'
 
 function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/wedding-galleries" element={<WeddingGalleriesPage />} />
-        <Route path="/portfolio" element={<PortfolioPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      {/* Public routes with layout */}
+      <Route path="/" element={<Layout><HomePage /></Layout>} />
+      <Route path="/about" element={<Layout><AboutPage /></Layout>} />
+      <Route path="/wedding-galleries" element={<Layout><WeddingGalleriesPage /></Layout>} />
+      <Route path="/portfolio" element={<Layout><PortfolioPage /></Layout>} />
+      <Route path="/pricing" element={<Layout><PricingPage /></Layout>} />
+      <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
+
+      {/* Gallery route without layout */}
+      <Route path="/gallery/:name" element={<GalleryPage />} />
+
+      {/* Auth routes without layout */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin" element={
+        <ProtectedRoute>
+          <AdminDashboard />
+        </ProtectedRoute>
+      } />
+    </Routes>
   )
 }
 

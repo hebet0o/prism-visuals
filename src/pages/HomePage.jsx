@@ -5,12 +5,13 @@ import ServiceCard from '../components/presentational/ServiceCard'
 import GalleryGrid from '../components/presentational/GalleryGrid'
 import ReviewCarousel from '../components/presentational/ReviewCarousel'
 import ReviewForm from '../components/presentational/ReviewForm'
+import LoadingSpinner from '../components/LoadingSpinner'
 import { PLACEHOLDER_IMAGES } from '../utils/constants'
 import { useReviews } from '../hooks/useReviews'
 
 const HomePage = () => {
   const { t } = useTranslation()
-  const { reviews, addReview } = useReviews()
+  const { reviews, addReview, isLoading: reviewsLoading } = useReviews()
 
   const featuredImages = PLACEHOLDER_IMAGES.featured
 
@@ -56,7 +57,14 @@ const HomePage = () => {
       <section className="py-28 px-6 bg-brand-dark">
         <div className="max-w-4xl mx-auto">
           <p className="section-label mb-10 text-center">{t('home.fromOurCouples')}</p>
-          <ReviewCarousel reviews={reviews} />
+          {reviewsLoading ? (
+            <div className="flex items-center justify-center py-12">
+              <LoadingSpinner size="lg" className="mr-3" />
+              <span className="text-brand-warm text-lg">{t('reviews.loading') || 'Loading reviews...'}</span>
+            </div>
+          ) : (
+            <ReviewCarousel reviews={reviews} />
+          )}
         </div>
       </section>
 

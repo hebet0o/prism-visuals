@@ -175,10 +175,99 @@
       "submitting": "Beküldés...",
       "success": "Köszönjük! Az értékelésed hozzáadva.",
       "error": "Az értékelés beküldése sikertelen. Kérjük próbáld újra."
-    }
+    },
+    "loading": "Értékelések betöltése..."
   },
   "footer": {
     "copyright": "© 2026 Prism Visuals Budapest. Minden jog fenntartva.",
     "followUs": "Kövess minket"
+  },
+  "admin": {
+    "title": "Admin Vezérlőpult",
+    "logout": "Kijelentkezés",
+    "tabs": {
+      "dashboard": "Vezérlőpult",
+      "reviews": "Értékelések",
+      "galleries": "Galériák"
+    },
+    "login": {
+      "title": "Admin Bejelentkezés",
+      "subtitle": "Hozzáférés az admin vezérlőpulthoz",
+      "email": "Email",
+      "emailPlaceholder": "Add meg az emailed",
+      "password": "Jelszó",
+      "passwordPlaceholder": "Add meg a jelszavad",
+      "submit": "Bejelentkezés",
+      "loading": "Bejelentkezés...",
+      "error": "Hibás email vagy jelszó"
+    },
+    "dashboard": {
+      "title": "Vezérlőpult Áttekintés",
+      "totalReviews": "Összes Értékelés",
+      "totalGalleries": "Összes Galéria",
+      "welcome": "Üdvözöljük"
+    },
+    "reviews": {
+      "title": "Értékelés Kezelés",
+      "visible": "Látható",
+      "hidden": "Rejtett",
+      "delete": "Törlés",
+      "confirmDelete": "Biztosan törölni szeretnéd ezt az értékelést?",
+      "deleteError": "Az értékelés törlése sikertelen",
+      "visibilityError": "Az értékelés láthatóságának módosítása sikertelen"
+    },
+    "galleries": {
+      "title": "Galéria Kezelés",
+      "edit": "Szerkesztés",
+      "delete": "Törlés",
+      "noGalleries": "Még nincs galéria létrehozva",
+      "createFirst": "Hozd létre az első galériát",
+      "createNew": "Új Galéria Létrehozása",
+      "cancel": "Mégse",
+      "create": "Galéria Létrehozása",
+      "creating": "Létrehozás...",
+      "createSuccess": "A galéria sikeresen létrehozva!",
+      "createError": "A galéria létrehozása sikertelen",
+      "update": "Galéria Frissítése",
+      "updating": "Frissítés...",
+      "updateSuccess": "A galéria sikeresen frissítve!",
+      "updateError": "A galéria frissítése sikertelen",
+      "cancelEdit": "Szerkesztés Mégse",
+      "confirmDelete": "Biztosan törölni szeretnéd a(z) „{{name}}” galériát? Ez a művelet nem vonható vissza.",
+      "deleteSuccess": "A galéria sikeresen törölve!",
+      "deleteError": "A galéria törlése sikertelen",
+      "loading": "Galériák betöltése...",
+      "editForm": {
+        "title": "Galéria Szerkesztése"
+      },
+      "createForm": {
+        "title": "Új Galéria Létrehozása",
+        "name": "Galéria Neve",
+        "namePlaceholder": "pl. Barbi & Andor",
+        "slug": "URL Slug",
+        "slugPlaceholder": "barbi-andor",
+        "slugHelp": "Automatikusan generálódik a galéria névből a tiszta URL-ek érdekében",
+        "password": "Jelszó",
+        "passwordPlaceholder": "Add meg a hozzáférési jelszót",
+        "images": "Képek"
+      }
+    }
+  },
+  "gallery": {
+    "title": "Galéria Hozzáférés",
+    "subtitle": "Add meg a jelszót a galéria eléréséhez",
+    "password": "Jelszó",
+    "passwordPlaceholder": "Add meg a galéria jelszavát",
+    "submit": "Galéria Megtekintése",
+    "accessing": "Hozzáférés...",
+    "notFound": "A galéria nem található",
+    "wrongPassword": "Hibás jelszó",
+    "authError": "A hitelesítés sikertelen",
+    "loadError": "A galéria betöltése sikertelen",
+    "downloadAll": "Összes Letöltése",
+    "download": "Letöltés",
+    "logout": "Kijelentkezés",
+    "loading": "Betöltés...",
+    "noPictures": "Még nincsenek képek ebben a galériában"
   }
 }
