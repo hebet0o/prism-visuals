@@ -266,8 +266,12 @@
     "loadError": "A galéria betöltése sikertelen",
     "downloadAll": "Összes Letöltése",
     "download": "Letöltés",
+    "downloading": "Letöltés...",
     "logout": "Kijelentkezés",
     "loading": "Betöltés...",
-    "noPictures": "Még nincsenek képek ebben a galériában"
+    "noPictures": "Még nincsenek képek ebben a galériában",
+    "privateGallery": "Privát Galéria",
+    "photo": "kép",
+    "photos": "kép"
   }
 }

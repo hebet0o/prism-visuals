@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import JSZip from 'jszip'
 import pb from '../utils/pocketbase'
 import LoadingSpinner from '../components/LoadingSpinner'
 
@@ -15,6 +16,9 @@ const GalleryPage = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [authLoading, setAuthLoading] = useState(false)
+  const [lightboxIndex, setLightboxIndex] = useState(null)
+  const [downloadingAll, setDownloadingAll] = useState(false)
+  const [downloadingSingle, setDownloadingSingle] = useState(false)
 
   useEffect(() => {
     // Check if user is already authenticated for this gallery
@@ -78,16 +82,14 @@ const GalleryPage = () => {
       const galleryRecord = await pb.collection('galleries').getFirstListItem(`slug = "${name}"`)
       console.log('Found gallery:', galleryRecord)
       console.log('Entered password:', password)
-      console.log('Stored password:', galleryRecord?.password)
+      console.log('Stored password:', galleryRecord?.passwordHash)
 
       if (!galleryRecord) {
         setError(t('gallery.notFound') || 'Gallery not found')
         return
       }
 
-      // Verify password (in production, this should be done server-side)
-      // For now, we'll do client-side verification
-      if (password === galleryRecord.password) {
+      if (password === galleryRecord.passwordHash) {
         console.log('Password correct, authenticating...')
         setIsAuthenticated(true)
         setGallery(galleryRecord)
@@ -105,16 +107,37 @@ const GalleryPage = () => {
     }
   }
 
-  const handleDownloadAll = () => {
-    // In a real implementation, this would create a zip file
-    // For now, we'll open each image in a new tab
-    pictures.forEach(picture => {
-      window.open(pb.files.getUrl(picture, picture.image), '_blank')
-    })
+  const handleDownloadAll = async () => {
+    setDownloadingAll(true)
+    const zip = new JSZip()
+    await Promise.all(pictures.map(async (picture, index) => {
+      const url = pb.files.getUrl(picture, picture.image)
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const ext = picture.image.split('.').pop()
+      zip.file(`${index + 1}.${ext}`, blob)
+    }))
+    const content = await zip.generateAsync({ type: 'blob' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(content)
+    a.download = `${gallery?.name || 'gallery'}.zip`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    setDownloadingAll(false)
   }
 
-  const handleDownloadSingle = (picture) => {
-    window.open(pb.files.getUrl(picture, picture.image), '_blank')
+  const handleDownloadSingle = async (picture) => {
+    setDownloadingSingle(true)
+    const url = pb.files.getUrl(picture, picture.image)
+    const response = await fetch(url)
+    const blob = await response.blob()
+    const ext = picture.image.split('.').pop()
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = picture.image || `image.${ext}`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    setDownloadingSingle(false)
   }
 
   if (loading) {
@@ -179,37 +202,42 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen bg-brand-black">
-      {/* Header */}
-      <div className="bg-brand-dark border-b border-brand-charcoal">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <h1 className="font-display text-2xl text-brand-warm">
-              {gallery?.name || 'Gallery'}
-            </h1>
-            <div className="flex space-x-4">
-              <button
-                onClick={handleDownloadAll}
-                className="px-4 py-2 bg-brand-bronze hover:bg-brand-bronze/80 text-brand-black rounded-md transition-colors"
-              >
-                {t('gallery.downloadAll') || 'Download All'}
-              </button>
-              <button
-                onClick={() => {
-                  localStorage.removeItem(`gallery_auth_${name}`)
-                  setIsAuthenticated(false)
-                  setPassword('')
-                }}
-                className="px-4 py-2 bg-brand-charcoal hover:bg-brand-charcoal/80 text-brand-warm rounded-md transition-colors"
-              >
-                {t('gallery.logout') || 'Logout'}
-              </button>
-            </div>
-          </div>
+      {/* Hero Header */}
+      <div className="relative bg-brand-dark border-b border-brand-charcoal/50 py-16 px-6 text-center">
+        <p className="section-label mb-4">{t('gallery.privateGallery') || 'Private Gallery'}</p>
+        <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-brand-warm tracking-display mb-4">
+          {gallery?.name || 'Gallery'}
+        </h1>
+        <span className="divider-line" />
+        <p className="text-brand-muted text-sm mt-4">
+          {pictures.length} {pictures.length === 1 ? (t('gallery.photo') || 'photo') : (t('gallery.photos') || 'photos')}
+        </p>
+
+        {/* Actions */}
+        <div className="flex justify-center space-x-4 mt-8">
+          <button
+            onClick={handleDownloadAll}
+            disabled={downloadingAll}
+            className="px-6 py-2.5 bg-brand-bronze hover:bg-brand-bronze/80 text-brand-black rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 text-sm font-medium"
+          >
+            {downloadingAll && <LoadingSpinner size="sm" />}
+            <span>{downloadingAll ? t('gallery.downloading') : t('gallery.downloadAll')}</span>
+          </button>
+          <button
+            onClick={() => {
+              localStorage.removeItem(`gallery_auth_${name}`)
+              setIsAuthenticated(false)
+              setPassword('')
+            }}
+            className="px-6 py-2.5 bg-transparent border border-brand-charcoal hover:border-brand-muted text-brand-muted hover:text-brand-warm rounded-md transition-colors text-sm"
+          >
+            {t('gallery.logout') || 'Logout'}
+          </button>
         </div>
       </div>
 
       {/* Gallery Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-12">
         {error && (
           <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-md">
             <p className="text-red-400 text-sm">{error}</p>
@@ -224,23 +252,72 @@ const GalleryPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pictures.map((picture) => (
-              <div key={picture.id} className="group relative bg-brand-dark rounded-lg overflow-hidden">
+            {pictures.map((picture, index) => (
+              <div
+                key={picture.id}
+                className="bg-brand-dark rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => setLightboxIndex(index)}
+              >
                 <img
                   src={pb.files.getUrl(picture, picture.image)}
-                  alt={`Gallery image ${picture.id}`}
-                  className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  alt={`Gallery image ${index + 1}`}
+                  className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
                 />
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <button
-                    onClick={() => handleDownloadSingle(picture)}
-                    className="px-4 py-2 bg-brand-bronze hover:bg-brand-bronze/80 text-brand-black rounded-md transition-colors"
-                  >
-                    {t('gallery.download') || 'Download'}
-                  </button>
-                </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {lightboxIndex !== null && (
+          <div
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+            onClick={() => setLightboxIndex(null)}
+          >
+            <div className="absolute top-4 right-4 flex space-x-3">
+              <button
+                onClick={(e) => { e.stopPropagation(); handleDownloadSingle(pictures[lightboxIndex]) }}
+                disabled={downloadingSingle}
+                className="px-4 py-2 bg-brand-bronze hover:bg-brand-bronze/80 text-brand-black rounded-md transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+              >
+                {downloadingSingle && <LoadingSpinner size="sm" />}
+                <span>{downloadingSingle ? (t('gallery.downloading') || 'Downloading...') : (t('gallery.download') || 'Download')}</span>
+              </button>
+              <button
+                onClick={() => setLightboxIndex(null)}
+                className="px-4 py-2 bg-brand-charcoal hover:bg-brand-charcoal/80 text-brand-warm rounded-md transition-colors text-sm font-medium"
+              >
+                ✕
+              </button>
+            </div>
+
+            {lightboxIndex > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex - 1) }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 px-3 py-4 bg-black/50 hover:bg-black/70 text-white rounded-md transition-colors text-xl"
+              >
+                ‹
+              </button>
+            )}
+
+            <img
+              src={pb.files.getUrl(pictures[lightboxIndex], pictures[lightboxIndex].image)}
+              alt={`Gallery image ${lightboxIndex + 1}`}
+              className="max-h-[85vh] max-w-[85vw] object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+
+            {lightboxIndex < pictures.length - 1 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex(lightboxIndex + 1) }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 px-3 py-4 bg-black/50 hover:bg-black/70 text-white rounded-md transition-colors text-xl"
+              >
+                ›
+              </button>
+            )}
+
+            <div className="absolute bottom-4 text-brand-muted text-sm">
+              {lightboxIndex + 1} / {pictures.length}
+            </div>
           </div>
         )}
       </div>

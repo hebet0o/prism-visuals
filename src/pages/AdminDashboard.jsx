@@ -59,9 +59,9 @@ const AdminDashboard = () => {
     try {
       // Create the gallery record
       const galleryData = {
-        name: galleryForm.name, // Display name
-        slug: galleryForm.slug, // URL slug
-        password: galleryForm.password, // In production, hash this password
+        name: galleryForm.name,
+        slug: galleryForm.slug,
+        passwordHash: galleryForm.password,
         createdBy: pb.authStore.model?.id
       }
 
@@ -117,7 +117,7 @@ const AdminDashboard = () => {
     setGalleryForm({
       name: gallery.name,
       slug: gallery.slug,
-      password: gallery.password,
+      password: gallery.passwordHash,
       images: [] // Don't pre-populate images for editing
     })
     setShowCreateGallery(true)
@@ -138,12 +138,12 @@ const AdminDashboard = () => {
       const updateData = {
         name: galleryForm.name,
         slug: galleryForm.slug,
-        password: galleryForm.password
+        passwordHash: galleryForm.password
       }
 
       // Only update password if it was changed
       if (!galleryForm.password) {
-        delete updateData.password
+        delete updateData.passwordHash
       }
 
       await pb.collection('galleries').update(editingGallery.id, updateData)

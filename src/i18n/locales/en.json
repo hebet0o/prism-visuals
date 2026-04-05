@@ -180,5 +180,26 @@
   "footer": {
     "copyright": "© 2026 Prism Visuals Budapest. All rights reserved.",
     "followUs": "Follow Us"
+  },
+  "gallery": {
+    "title": "Gallery Access",
+    "subtitle": "Enter the password to access this gallery",
+    "password": "Password",
+    "passwordPlaceholder": "Enter gallery password",
+    "submit": "Access Gallery",
+    "accessing": "Accessing...",
+    "notFound": "Gallery not found",
+    "wrongPassword": "Wrong password",
+    "authError": "Authentication failed",
+    "loadError": "Failed to load gallery",
+    "downloadAll": "Download All",
+    "download": "Download",
+    "downloading": "Downloading...",
+    "logout": "Logout",
+    "loading": "Loading gallery...",
+    "noPictures": "No pictures in this gallery yet",
+    "privateGallery": "Private Gallery",
+    "photo": "photo",
+    "photos": "photos"
   }
 }
