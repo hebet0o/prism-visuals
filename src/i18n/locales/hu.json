@@ -64,7 +64,13 @@
   },
   "weddingGalleries": {
     "title": "Esküvői Galériák",
-    "description": "Fedezd fel legújabb esküvői fotózásainkat"
+    "storiesTitle": "Megörökített Pillanatok",
+    "description": "Fedezd fel legújabb esküvői fotózásainkat",
+    "loading": "Galériák betöltése...",
+    "noGalleries": "Még nincsenek galériák",
+    "viewGallery": "Galéria Megtekintése",
+    "close": "Bezárás",
+    "photos": "kép"
   },
   "portfolio": {
     "title": "Portfólió",

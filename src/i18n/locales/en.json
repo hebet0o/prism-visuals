@@ -64,7 +64,13 @@
   },
   "weddingGalleries": {
     "title": "Wedding Galleries",
-    "description": "Explore our latest wedding photography"
+    "storiesTitle": "Stories We've Told",
+    "description": "Explore our latest wedding photography",
+    "loading": "Loading galleries...",
+    "noGalleries": "No galleries yet",
+    "viewGallery": "View Gallery",
+    "close": "Close",
+    "photos": "photos"
   },
   "portfolio": {
     "title": "Portfolio",
