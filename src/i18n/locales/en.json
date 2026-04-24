@@ -213,6 +213,12 @@
     "unsavedLikesBody": "You've liked {{count}} photo(s) in this session. Once you leave, your selection will be lost.",
     "downloadBeforeLeaving": "Download liked photos",
     "leaveAnyway": "Leave anyway",
-    "stayHere": "Stay"
+    "stayHere": "Stay",
+    "layoutGrid": "Grid",
+    "layoutMasonry": "Masonry",
+    "filterAll": "All photos",
+    "filterLiked": "Liked only",
+    "noLikedYet": "No liked photos yet",
+    "noLikedHint": "Tap the heart on any photo to save it here"
   }
 }

@@ -285,6 +285,12 @@
     "unsavedLikesBody": "{{count}} képet kedveltél ebben a munkamenetben. Ha elhagyod az oldalt, a kiválasztásod elvész.",
     "downloadBeforeLeaving": "Kedvelt képek letöltése",
     "leaveAnyway": "Mégis elmegyek",
-    "stayHere": "Maradok"
+    "stayHere": "Maradok",
+    "layoutGrid": "Rács",
+    "layoutMasonry": "Mozaik",
+    "filterAll": "Összes kép",
+    "filterLiked": "Csak kedveltek",
+    "noLikedYet": "Még nincsenek kedvelt képek",
+    "noLikedHint": "Koppints a szívre bármelyik képen"
   }
 }
