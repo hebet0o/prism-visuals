@@ -278,6 +278,13 @@
     "noPictures": "Még nincsenek képek ebben a galériában",
     "privateGallery": "Privát Galéria",
     "photo": "kép",
-    "photos": "kép"
+    "photos": "kép",
+    "likedCount": "{{count}} kedvelt",
+    "downloadLiked": "Kedveltek letöltése",
+    "unsavedLikes": "Nem mentett kedvelések",
+    "unsavedLikesBody": "{{count}} képet kedveltél ebben a munkamenetben. Ha elhagyod az oldalt, a kiválasztásod elvész.",
+    "downloadBeforeLeaving": "Kedvelt képek letöltése",
+    "leaveAnyway": "Mégis elmegyek",
+    "stayHere": "Maradok"
   }
 }

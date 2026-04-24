@@ -1,9 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import JSZip from 'jszip'
 import pb from '../utils/pocketbase'
 import LoadingSpinner from '../components/LoadingSpinner'
+
+const HeartIcon = ({ filled }) => (
+  <svg viewBox="0 0 24 24" className="w-5 h-5" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.8}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+  </svg>
+)
 
 const GalleryPage = () => {
   const { t } = useTranslation()
@@ -19,6 +25,10 @@ const GalleryPage = () => {
   const [lightboxIndex, setLightboxIndex] = useState(null)
   const [downloadingAll, setDownloadingAll] = useState(false)
   const [downloadingSingle, setDownloadingSingle] = useState(false)
+  const [likedIds, setLikedIds] = useState(new Set())
+  const [downloadingLiked, setDownloadingLiked] = useState(false)
+  const [showLeaveModal, setShowLeaveModal] = useState(false)
+  const [pendingLeave, setPendingLeave] = useState(null)
 
   useEffect(() => {
     // Check if user is already authenticated for this gallery
@@ -35,6 +45,61 @@ const GalleryPage = () => {
       setLoading(false)
     }
   }, [name])
+
+  // Intercept browser refresh/tab-close when there are likes
+  useEffect(() => {
+    if (likedIds.size === 0) return
+    const handler = (e) => {
+      e.preventDefault()
+      e.returnValue = ''
+    }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [likedIds])
+
+  const toggleLike = useCallback((id) => {
+    setLikedIds(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }, [])
+
+  const handleDownloadLiked = async () => {
+    const liked = pictures.filter(p => likedIds.has(p.id))
+    if (!liked.length) return
+    setDownloadingLiked(true)
+    const zip = new JSZip()
+    await Promise.all(liked.map(async (picture, index) => {
+      const url = pb.files.getUrl(picture, picture.image)
+      const response = await fetch(url)
+      const blob = await response.blob()
+      const ext = picture.image.split('.').pop()
+      zip.file(`${index + 1}.${ext}`, blob)
+    }))
+    const content = await zip.generateAsync({ type: 'blob' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(content)
+    a.download = `${gallery?.name || 'gallery'}-liked.zip`
+    a.click()
+    URL.revokeObjectURL(a.href)
+    setDownloadingLiked(false)
+  }
+
+  const requestLeave = (action) => {
+    if (likedIds.size > 0) {
+      setPendingLeave(() => action)
+      setShowLeaveModal(true)
+    } else {
+      action()
+    }
+  }
+
+  const confirmLeave = () => {
+    setShowLeaveModal(false)
+    setLikedIds(new Set())
+    pendingLeave?.()
+  }
 
   const loadGallery = async () => {
     try {
@@ -223,12 +288,22 @@ const GalleryPage = () => {
             {downloadingAll && <LoadingSpinner size="sm" />}
             <span>{downloadingAll ? t('gallery.downloading') : t('gallery.downloadAll')}</span>
           </button>
+          {likedIds.size > 0 && (
+            <button
+              onClick={handleDownloadLiked}
+              disabled={downloadingLiked}
+              className="px-6 py-2.5 bg-transparent border border-brand-bronze/50 hover:border-brand-bronze text-brand-bronze rounded-md transition-colors text-sm flex items-center space-x-2 disabled:opacity-50"
+            >
+              {downloadingLiked ? <LoadingSpinner size="sm" /> : <HeartIcon filled />}
+              <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.likedCount', { count: likedIds.size })}</span>
+            </button>
+          )}
           <button
-            onClick={() => {
+            onClick={() => requestLeave(() => {
               localStorage.removeItem(`gallery_auth_${name}`)
               setIsAuthenticated(false)
               setPassword('')
-            }}
+            })}
             className="px-6 py-2.5 bg-transparent border border-brand-charcoal hover:border-brand-muted text-brand-muted hover:text-brand-warm rounded-md transition-colors text-sm"
           >
             {t('gallery.logout') || 'Logout'}
@@ -252,19 +327,33 @@ const GalleryPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {pictures.map((picture, index) => (
-              <div
-                key={picture.id}
-                className="bg-brand-dark rounded-lg overflow-hidden cursor-pointer"
-                onClick={() => setLightboxIndex(index)}
-              >
-                <img
-                  src={pb.files.getUrl(picture, picture.image)}
-                  alt={`Gallery image ${index + 1}`}
-                  className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
+            {pictures.map((picture, index) => {
+              const liked = likedIds.has(picture.id)
+              return (
+                <div
+                  key={picture.id}
+                  className="group relative bg-brand-dark rounded-lg overflow-hidden cursor-pointer"
+                  onClick={() => setLightboxIndex(index)}
+                >
+                  <img
+                    src={pb.files.getUrl(picture, picture.image)}
+                    alt={`Gallery image ${index + 1}`}
+                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleLike(picture.id) }}
+                    className={`absolute top-2 right-2 p-2 rounded-full backdrop-blur-sm transition-all duration-200 ${
+                      liked
+                        ? 'bg-brand-bronze text-brand-black opacity-100'
+                        : 'bg-black/40 text-brand-warm opacity-0 group-hover:opacity-100'
+                    }`}
+                    aria-label={liked ? 'Unlike' : 'Like'}
+                  >
+                    <HeartIcon filled={liked} />
+                  </button>
+                </div>
+              )
+            })}
           </div>
         )}
 
@@ -274,6 +363,17 @@ const GalleryPage = () => {
             onClick={() => setLightboxIndex(null)}
           >
             <div className="absolute top-4 right-4 flex space-x-3">
+              <button
+                onClick={(e) => { e.stopPropagation(); toggleLike(pictures[lightboxIndex].id) }}
+                className={`p-2.5 rounded-full transition-all duration-200 ${
+                  likedIds.has(pictures[lightboxIndex].id)
+                    ? 'bg-brand-bronze text-brand-black'
+                    : 'bg-brand-charcoal text-brand-warm hover:bg-brand-charcoal/80'
+                }`}
+                aria-label={likedIds.has(pictures[lightboxIndex].id) ? 'Unlike' : 'Like'}
+              >
+                <HeartIcon filled={likedIds.has(pictures[lightboxIndex].id)} />
+              </button>
               <button
                 onClick={(e) => { e.stopPropagation(); handleDownloadSingle(pictures[lightboxIndex]) }}
                 disabled={downloadingSingle}
@@ -321,6 +421,48 @@ const GalleryPage = () => {
           </div>
         )}
       </div>
+      {/* Leave confirmation modal */}
+      {showLeaveModal && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center px-6">
+          <div className="bg-brand-dark border border-brand-charcoal rounded-lg max-w-md w-full p-8 text-center">
+            <div className="flex justify-center mb-4 text-brand-bronze">
+              <HeartIcon filled />
+            </div>
+            <h2 className="font-display text-2xl text-brand-warm mb-3">
+              {t('gallery.unsavedLikes')}
+            </h2>
+            <p className="text-brand-muted text-sm mb-8 leading-relaxed">
+              {t('gallery.unsavedLikesBody', { count: likedIds.size })}
+            </p>
+            <div className="flex flex-col space-y-3">
+              <button
+                onClick={async () => {
+                  setShowLeaveModal(false)
+                  await handleDownloadLiked()
+                  confirmLeave()
+                }}
+                disabled={downloadingLiked}
+                className="w-full px-6 py-3 bg-brand-bronze hover:bg-brand-bronze/80 text-brand-black rounded-md transition-colors text-sm font-medium flex items-center justify-center space-x-2 disabled:opacity-50"
+              >
+                {downloadingLiked ? <LoadingSpinner size="sm" /> : <HeartIcon filled />}
+                <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.downloadBeforeLeaving')}</span>
+              </button>
+              <button
+                onClick={confirmLeave}
+                className="w-full px-6 py-3 bg-transparent border border-brand-charcoal hover:border-red-500/50 text-brand-muted hover:text-red-400 rounded-md transition-colors text-sm"
+              >
+                {t('gallery.leaveAnyway')}
+              </button>
+              <button
+                onClick={() => { setShowLeaveModal(false); setPendingLeave(null) }}
+                className="w-full px-6 py-3 bg-transparent text-brand-muted hover:text-brand-warm transition-colors text-sm"
+              >
+                {t('gallery.stayHere')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

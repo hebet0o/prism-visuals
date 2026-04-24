@@ -206,6 +206,13 @@
     "noPictures": "No pictures in this gallery yet",
     "privateGallery": "Private Gallery",
     "photo": "photo",
-    "photos": "photos"
+    "photos": "photos",
+    "likedCount": "{{count}} liked",
+    "downloadLiked": "Download Liked",
+    "unsavedLikes": "You have unsaved likes",
+    "unsavedLikesBody": "You've liked {{count}} photo(s) in this session. Once you leave, your selection will be lost.",
+    "downloadBeforeLeaving": "Download liked photos",
+    "leaveAnyway": "Leave anyway",
+    "stayHere": "Stay"
   }
 }
