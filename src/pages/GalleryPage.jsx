@@ -164,14 +164,26 @@ const GalleryPage = () => {
 
       setGallery(galleryRecord)
 
-      // Load pictures for this gallery
-      const picturesRecords = await pb.collection('pictures').getFullList({
+      // Load first page immediately so the grid renders fast, then fetch remaining pages
+      const PAGE_SIZE = 50
+      const first = await pb.collection('pictures').getList(1, PAGE_SIZE, {
         filter: `gallery = "${galleryRecord.id}"`,
         sort: 'created'
       })
-      console.log('Pictures records:', picturesRecords)
+      setPictures(first.items)
+      setLoading(false)
 
-      setPictures(picturesRecords)
+      if (first.totalPages > 1) {
+        const remaining = await Promise.all(
+          Array.from({ length: first.totalPages - 1 }, (_, i) =>
+            pb.collection('pictures').getList(i + 2, PAGE_SIZE, {
+              filter: `gallery = "${galleryRecord.id}"`,
+              sort: 'created'
+            })
+          )
+        )
+        setPictures([...first.items, ...remaining.flatMap(p => p.items)])
+      }
     } catch (error) {
       console.error('Failed to load gallery:', error)
       setError(t('gallery.loadError') || 'Failed to load gallery')

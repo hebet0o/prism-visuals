@@ -21,6 +21,8 @@ const AdminDashboard = () => {
     images: []
   })
   const [galleryFormLoading, setGalleryFormLoading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(null) // { done, total } | null
+  const [fileInputKey, setFileInputKey] = useState(0)
   const [editingGallery, setEditingGallery] = useState(null)
   const [deletingGalleryId, setDeletingGalleryId] = useState(null)
   const [togglingReviewId, setTogglingReviewId] = useState(null)
@@ -55,9 +57,9 @@ const AdminDashboard = () => {
   const handleCreateGallery = async (e) => {
     e.preventDefault()
     setGalleryFormLoading(true)
+    setUploadProgress(null)
 
     try {
-      // Create the gallery record
       const galleryData = {
         name: galleryForm.name,
         slug: galleryForm.slug,
@@ -67,20 +69,44 @@ const AdminDashboard = () => {
 
       const gallery = await pb.collection('galleries').create(galleryData)
 
-      // Upload images if any
       if (galleryForm.images.length > 0) {
-        for (const image of galleryForm.images) {
-          const formData = new FormData()
-          formData.append('image', image)
-          formData.append('gallery', gallery.id)
+        const total = galleryForm.images.length
+        let done = 0
+        setUploadProgress({ done: 0, total })
 
-          await pb.collection('pictures').create(formData)
+        // Upload in batches of 8 concurrent requests
+        const CONCURRENCY = 8
+        const queue = [...galleryForm.images]
+        const failed = []
+
+        const uploadOne = async (image) => {
+          try {
+            const formData = new FormData()
+            formData.append('image', image)
+            formData.append('gallery', gallery.id)
+            await pb.collection('pictures').create(formData)
+          } catch {
+            failed.push(image.name)
+          } finally {
+            done++
+            setUploadProgress({ done, total })
+          }
+        }
+
+        while (queue.length > 0) {
+          const batch = queue.splice(0, CONCURRENCY)
+          await Promise.all(batch.map(uploadOne))
+        }
+
+        if (failed.length > 0) {
+          alert(`Uploaded ${done - failed.length} / ${total} photos. ${failed.length} failed: ${failed.slice(0, 5).join(', ')}${failed.length > 5 ? '...' : ''}`)
         }
       }
 
-      // Reset form and reload galleries
-      setGalleryForm({ name: '', password: '', images: [] })
+      setGalleryForm({ name: '', slug: '', password: '', images: [] })
+      setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
+      setUploadProgress(null)
       loadGalleries()
 
       alert(t('admin.galleries.createSuccess') || 'Gallery created successfully!')
@@ -89,6 +115,7 @@ const AdminDashboard = () => {
       alert(t('admin.galleries.createError') || 'Failed to create gallery')
     } finally {
       setGalleryFormLoading(false)
+      setUploadProgress(null)
     }
   }
 
@@ -98,6 +125,8 @@ const AdminDashboard = () => {
       ...prev,
       images: [...prev.images, ...files]
     }))
+    // Reset the input so the same folder can be re-picked and multiple folders accumulate correctly
+    setFileInputKey(k => k + 1)
   }
 
   const removeImage = (index) => {
@@ -424,26 +453,49 @@ const AdminDashboard = () => {
                       {t('admin.galleries.createForm.images') || 'Images'}
                     </label>
                     <input
+                      key={fileInputKey}
                       type="file"
                       multiple
                       accept="image/*"
                       onChange={handleImageSelect}
                       className="w-full px-4 py-3 bg-brand-black border border-brand-charcoal rounded-md text-brand-warm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-brand-bronze file:text-brand-black hover:file:bg-brand-bronze/80"
                     />
+                    <p className="text-brand-muted text-xs mt-1">
+                      You can pick from multiple folders — each selection adds to the list below.
+                    </p>
                     {galleryForm.images.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {galleryForm.images.map((image, index) => (
-                          <div key={index} className="flex items-center bg-brand-charcoal px-3 py-1 rounded-md">
-                            <span className="text-sm text-brand-warm mr-2">{image.name}</span>
-                            <button
-                              type="button"
-                              onClick={() => removeImage(index)}
-                              className="text-red-400 hover:text-red-300"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
+                      <div className="mt-2">
+                        <p className="text-brand-bronze text-sm mb-2">
+                          {galleryForm.images.length} photo{galleryForm.images.length !== 1 ? 's' : ''} selected
+                        </p>
+                        <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto">
+                          {galleryForm.images.map((image, index) => (
+                            <div key={index} className="flex items-center bg-brand-charcoal px-3 py-1 rounded-md">
+                              <span className="text-sm text-brand-warm mr-2 max-w-[160px] truncate">{image.name}</span>
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="text-red-400 hover:text-red-300 flex-shrink-0"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {uploadProgress && (
+                      <div className="mt-3">
+                        <div className="flex justify-between text-xs text-brand-muted mb-1">
+                          <span>Uploading photos...</span>
+                          <span>{uploadProgress.done} / {uploadProgress.total}</span>
+                        </div>
+                        <div className="w-full bg-brand-charcoal rounded-full h-2">
+                          <div
+                            className="bg-brand-bronze h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${(uploadProgress.done / uploadProgress.total) * 100}%` }}
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
