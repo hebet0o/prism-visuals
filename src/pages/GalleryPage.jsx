@@ -116,7 +116,7 @@ const GalleryPage = () => {
     setDownloadingLiked(true)
     const zip = new JSZip()
     await Promise.all(liked.map(async (picture, index) => {
-      const url = pb.files.getUrl(picture, picture.image)
+      const url = pb.files.getURL(picture, picture.image)
       const response = await fetch(url)
       const blob = await response.blob()
       const ext = picture.image.split('.').pop()
@@ -233,7 +233,7 @@ const GalleryPage = () => {
     setDownloadingAll(true)
     const zip = new JSZip()
     await Promise.all(pictures.map(async (picture, index) => {
-      const url = pb.files.getUrl(picture, picture.image)
+      const url = pb.files.getURL(picture, picture.image)
       const response = await fetch(url)
       const blob = await response.blob()
       const ext = picture.image.split('.').pop()
@@ -250,7 +250,7 @@ const GalleryPage = () => {
 
   const handleDownloadSingle = async (picture) => {
     setDownloadingSingle(true)
-    const url = pb.files.getUrl(picture, picture.image)
+    const url = pb.files.getURL(picture, picture.image)
     const response = await fetch(url)
     const blob = await response.blob()
     const ext = picture.image.split('.').pop()
@@ -430,7 +430,7 @@ const GalleryPage = () => {
               onClick={() => setLightboxIndex(index)}
             >
               <img
-                src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
+                src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
                 alt={`Gallery image ${index + 1}`}
                 className={`w-full block transition-opacity duration-300 hover:opacity-90 ${layout === 'grid' ? 'aspect-square object-cover' : 'h-auto'}`}
                 loading="lazy"
@@ -487,7 +487,7 @@ const GalleryPage = () => {
                         <div key={picture.id} className="group relative overflow-hidden cursor-pointer"
                           onClick={() => setLightboxIndex(globalIndex)}>
                           <img
-                            src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
+                            src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
                             alt={`Gallery image ${globalIndex + 1}`}
                             className="w-full h-auto block transition-opacity duration-300 hover:opacity-90"
                             loading="lazy"
@@ -560,7 +560,7 @@ const GalleryPage = () => {
                 )}
 
                 <img
-                  src={pb.files.getUrl(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image)}
+                  src={pb.files.getURL(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image)}
                   alt={`Gallery image ${lightboxIndex + 1}`}
                   className="max-h-[85vh] max-w-[85vw] object-contain"
                   onClick={(e) => e.stopPropagation()}
