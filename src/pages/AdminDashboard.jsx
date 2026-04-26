@@ -74,9 +74,8 @@ const AdminDashboard = () => {
         let done = 0
         setUploadProgress({ done: 0, total })
 
-        const CONCURRENCY = 3
-        const BATCH_DELAY_MS = 500
-        const MAX_RETRIES = 3
+        const CONCURRENCY = 10
+        const MAX_RETRIES = 2
         const queue = [...galleryForm.images]
         const failed = []
 
@@ -91,9 +90,8 @@ const AdminDashboard = () => {
               succeeded = true
               break
             } catch (err) {
-              const is429 = err?.status === 429 || err?.response?.code === 429
-              if (is429 && attempt < MAX_RETRIES) {
-                await new Promise(r => setTimeout(r, 1000 * attempt))
+              if (attempt < MAX_RETRIES) {
+                await new Promise(r => setTimeout(r, 500))
               }
             }
           }
@@ -105,7 +103,6 @@ const AdminDashboard = () => {
         while (queue.length > 0) {
           const batch = queue.splice(0, CONCURRENCY)
           await Promise.all(batch.map(uploadOne))
-          if (queue.length > 0) await new Promise(r => setTimeout(r, BATCH_DELAY_MS))
         }
 
         if (failed.length > 0) {
