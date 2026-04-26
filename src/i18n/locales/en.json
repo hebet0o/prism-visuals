@@ -217,7 +217,9 @@
     "layoutGrid": "Grid",
     "layoutMasonry": "Masonry",
     "filterAll": "All photos",
-    "filterLiked": "Liked only",
+    "filterLiked": "Filter by liked",
+    "filterLikedActive": "Showing liked photos",
+    "downloadLiked": "Download liked",
     "noLikedYet": "No liked photos yet",
     "noLikedHint": "Tap the heart on any photo to save it here"
   }

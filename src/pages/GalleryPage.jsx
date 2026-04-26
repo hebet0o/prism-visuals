@@ -352,7 +352,7 @@ const GalleryPage = () => {
               className="px-6 py-2.5 bg-transparent border border-brand-bronze/50 hover:border-brand-bronze text-brand-bronze rounded-md transition-colors text-sm flex items-center space-x-2 disabled:opacity-50"
             >
               {downloadingLiked ? <LoadingSpinner size="sm" /> : <HeartIcon filled />}
-              <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.likedCount', { count: likedIds.size })}</span>
+              <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.downloadLiked')}</span>
             </button>
           )}
           <button
@@ -404,16 +404,15 @@ const GalleryPage = () => {
 
         {/* Liked filter */}
         <button
-          onClick={() => { if (likedIds.size > 0) { setLightboxIndex(null); setShowLikedOnly(p => !p) } }}
-          disabled={likedIds.size === 0}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
+          onClick={() => { setLightboxIndex(null); setShowLikedOnly(p => !p) }}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm transition-colors ${
             showLikedOnly
               ? 'bg-brand-bronze/10 border border-brand-bronze/40 text-brand-bronze'
               : 'border border-brand-charcoal text-brand-muted hover:text-brand-warm hover:border-brand-muted'
           }`}
         >
           <HeartIcon filled={showLikedOnly} />
-          <span>{showLikedOnly ? t('gallery.filterLiked') : t('gallery.filterAll')}</span>
+          <span>{showLikedOnly ? t('gallery.filterLikedActive') : t('gallery.filterLiked')}</span>
           {likedIds.size > 0 && <span className="text-xs opacity-60">({likedIds.size})</span>}
         </button>
       </div>
