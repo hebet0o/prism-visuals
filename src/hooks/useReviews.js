@@ -26,7 +26,7 @@ export const useReviews = () => {
 
         // Load reviews from PocketBase
         const result = await pb.collection('reviews').getList(1, 200, {
-          sort: '-created',
+          sort: '-date',
           filter: 'isVisible != false'
         })
         const records = result.items
