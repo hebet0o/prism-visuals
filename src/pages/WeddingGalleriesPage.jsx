@@ -86,7 +86,7 @@ const WeddingGalleriesPage = () => {
                   >
                     {cover ? (
                       <img
-                        src={pb.files.getUrl(cover, cover.image)}
+                        src={pb.files.getUrl(cover, cover.image, { thumb: '600x800' })}
                         alt={gallery.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

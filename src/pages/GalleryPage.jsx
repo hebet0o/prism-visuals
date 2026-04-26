@@ -430,7 +430,7 @@ const GalleryPage = () => {
               onClick={() => setLightboxIndex(index)}
             >
               <img
-                src={pb.files.getUrl(picture, picture.image)}
+                src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
                 alt={`Gallery image ${index + 1}`}
                 className={`w-full block transition-opacity duration-300 hover:opacity-90 ${layout === 'grid' ? 'aspect-square object-cover' : 'h-auto'}`}
                 loading="lazy"
@@ -487,7 +487,7 @@ const GalleryPage = () => {
                         <div key={picture.id} className="group relative overflow-hidden cursor-pointer"
                           onClick={() => setLightboxIndex(globalIndex)}>
                           <img
-                            src={pb.files.getUrl(picture, picture.image)}
+                            src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
                             alt={`Gallery image ${globalIndex + 1}`}
                             className="w-full h-auto block transition-opacity duration-300 hover:opacity-90"
                             loading="lazy"
