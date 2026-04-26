@@ -25,11 +25,18 @@ export const useReviews = () => {
         await migrateLocalStorageReviews()
 
         // Load reviews from PocketBase
-        const records = await pb.collection('reviews').getFullList({
-          sort: '-created',
-          // Only filter by isVisible if the field exists (backwards compatibility)
-          filter: 'isVisible != false' // This will include records where isVisible is true or null/undefined
-        })
+        let records = []
+        try {
+          records = await pb.collection('reviews').getFullList({
+            sort: '-created',
+            filter: 'isVisible != false'
+          })
+        } catch {
+          // isVisible field may not exist in schema — fetch without filter
+          records = await pb.collection('reviews').getFullList({
+            sort: '-created'
+          })
+        }
 
         // Convert PocketBase records to the expected format
         const pbReviews = records.map(record => ({
