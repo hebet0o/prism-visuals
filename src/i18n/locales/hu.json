@@ -292,5 +292,9 @@
     "filterLiked": "Csak kedveltek",
     "noLikedYet": "Még nincsenek kedvelt képek",
     "noLikedHint": "Koppints a szívre bármelyik képen"
+  },
+  "maintenance": {
+    "title": "Karbantartás alatt",
+    "subtitle": "Jelenleg karbantartási munkákat végzünk. Köszönjük a türelmedet."
   }
 }
