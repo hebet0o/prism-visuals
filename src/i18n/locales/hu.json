@@ -289,7 +289,9 @@
     "layoutGrid": "Rács",
     "layoutMasonry": "Mozaik",
     "filterAll": "Összes kép",
-    "filterLiked": "Csak kedveltek",
+    "filterLiked": "Szűrés kedvelt képekre",
+    "filterLikedActive": "Kedvelt képek mutatása",
+    "downloadLiked": "Kedveltek letöltése",
     "noLikedYet": "Még nincsenek kedvelt képek",
     "noLikedHint": "Koppints a szívre bármelyik képen"
   },

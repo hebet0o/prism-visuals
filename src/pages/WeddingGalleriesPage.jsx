@@ -44,7 +44,7 @@ const WeddingGalleriesPage = () => {
 
   const openGallery = galleries.find(g => g.id === openGalleryId)
   const openPictureUrls = openGallery
-    ? openGallery.pictures.map(p => pb.files.getUrl(p, p.image))
+    ? openGallery.pictures.map(p => pb.files.getURL(p, p.image))
     : []
 
   return (
@@ -86,7 +86,7 @@ const WeddingGalleriesPage = () => {
                   >
                     {cover ? (
                       <img
-                        src={pb.files.getUrl(cover, cover.image, { thumb: '600x800' })}
+                        src={pb.files.getURL(cover, cover.image, { thumb: '600x800' })}
                         alt={gallery.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />

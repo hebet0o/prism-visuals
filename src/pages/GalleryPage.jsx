@@ -116,7 +116,7 @@ const GalleryPage = () => {
     setDownloadingLiked(true)
     const zip = new JSZip()
     await Promise.all(liked.map(async (picture, index) => {
-      const url = pb.files.getUrl(picture, picture.image)
+      const url = pb.files.getURL(picture, picture.image)
       const response = await fetch(url)
       const blob = await response.blob()
       const ext = picture.image.split('.').pop()
@@ -233,7 +233,7 @@ const GalleryPage = () => {
     setDownloadingAll(true)
     const zip = new JSZip()
     await Promise.all(pictures.map(async (picture, index) => {
-      const url = pb.files.getUrl(picture, picture.image)
+      const url = pb.files.getURL(picture, picture.image)
       const response = await fetch(url)
       const blob = await response.blob()
       const ext = picture.image.split('.').pop()
@@ -250,7 +250,7 @@ const GalleryPage = () => {
 
   const handleDownloadSingle = async (picture) => {
     setDownloadingSingle(true)
-    const url = pb.files.getUrl(picture, picture.image)
+    const url = pb.files.getURL(picture, picture.image)
     const response = await fetch(url)
     const blob = await response.blob()
     const ext = picture.image.split('.').pop()
@@ -352,7 +352,7 @@ const GalleryPage = () => {
               className="px-6 py-2.5 bg-transparent border border-brand-bronze/50 hover:border-brand-bronze text-brand-bronze rounded-md transition-colors text-sm flex items-center space-x-2 disabled:opacity-50"
             >
               {downloadingLiked ? <LoadingSpinner size="sm" /> : <HeartIcon filled />}
-              <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.likedCount', { count: likedIds.size })}</span>
+              <span>{downloadingLiked ? t('gallery.downloading') : t('gallery.downloadLiked')}</span>
             </button>
           )}
           <button
@@ -404,16 +404,15 @@ const GalleryPage = () => {
 
         {/* Liked filter */}
         <button
-          onClick={() => { if (likedIds.size > 0) { setLightboxIndex(null); setShowLikedOnly(p => !p) } }}
-          disabled={likedIds.size === 0}
-          className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
+          onClick={() => { setLightboxIndex(null); setShowLikedOnly(p => !p) }}
+          className={`flex items-center space-x-2 px-4 py-2 rounded-md text-sm transition-colors ${
             showLikedOnly
               ? 'bg-brand-bronze/10 border border-brand-bronze/40 text-brand-bronze'
               : 'border border-brand-charcoal text-brand-muted hover:text-brand-warm hover:border-brand-muted'
           }`}
         >
           <HeartIcon filled={showLikedOnly} />
-          <span>{showLikedOnly ? t('gallery.filterLiked') : t('gallery.filterAll')}</span>
+          <span>{showLikedOnly ? t('gallery.filterLikedActive') : t('gallery.filterLiked')}</span>
           {likedIds.size > 0 && <span className="text-xs opacity-60">({likedIds.size})</span>}
         </button>
       </div>
@@ -430,7 +429,7 @@ const GalleryPage = () => {
               onClick={() => setLightboxIndex(index)}
             >
               <img
-                src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
+                src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
                 alt={`Gallery image ${index + 1}`}
                 className={`w-full block transition-opacity duration-300 hover:opacity-90 ${layout === 'grid' ? 'aspect-square object-cover' : 'h-auto'}`}
                 loading="lazy"
@@ -487,7 +486,7 @@ const GalleryPage = () => {
                         <div key={picture.id} className="group relative overflow-hidden cursor-pointer"
                           onClick={() => setLightboxIndex(globalIndex)}>
                           <img
-                            src={pb.files.getUrl(picture, picture.image, { thumb: '0x800' })}
+                            src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
                             alt={`Gallery image ${globalIndex + 1}`}
                             className="w-full h-auto block transition-opacity duration-300 hover:opacity-90"
                             loading="lazy"
@@ -560,7 +559,7 @@ const GalleryPage = () => {
                 )}
 
                 <img
-                  src={pb.files.getUrl(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image)}
+                  src={pb.files.getURL(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image)}
                   alt={`Gallery image ${lightboxIndex + 1}`}
                   className="max-h-[85vh] max-w-[85vw] object-contain"
                   onClick={(e) => e.stopPropagation()}

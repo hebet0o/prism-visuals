@@ -25,11 +25,11 @@ export const useReviews = () => {
         await migrateLocalStorageReviews()
 
         // Load reviews from PocketBase
-        const records = await pb.collection('reviews').getFullList({
-          sort: '-created',
-          // Only filter by isVisible if the field exists (backwards compatibility)
-          filter: 'isVisible != false' // This will include records where isVisible is true or null/undefined
+        const result = await pb.collection('reviews').getList(1, 200, {
+          sort: '-date',
+          filter: 'isVisible != false'
         })
+        const records = result.items
 
         // Convert PocketBase records to the expected format
         const pbReviews = records.map(record => ({
@@ -69,7 +69,7 @@ export const useReviews = () => {
         const parsed = JSON.parse(stored)
 
         // Check if we've already migrated (avoid duplicate migrations)
-        const existingCount = await pb.collection('reviews').getFullList({ limit: 1 })
+        const existingCount = await pb.collection('reviews').getList(1, 1)
         if (existingCount.length === 0 && parsed.length > 0) {
           // Migrate each review to PocketBase
           for (const review of parsed) {
