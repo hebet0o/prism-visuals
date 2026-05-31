@@ -70,44 +70,7 @@ const AdminDashboard = () => {
       const gallery = await pb.collection('galleries').create(galleryData)
 
       if (galleryForm.images.length > 0) {
-        const total = galleryForm.images.length
-        let done = 0
-        setUploadProgress({ done: 0, total })
-
-        const CONCURRENCY = 10
-        const MAX_RETRIES = 2
-        const queue = [...galleryForm.images]
-        const failed = []
-
-        const uploadOne = async (image) => {
-          let succeeded = false
-          for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
-            try {
-              const formData = new FormData()
-              formData.append('image', image)
-              formData.append('gallery', gallery.id)
-              await pb.collection('pictures').create(formData)
-              succeeded = true
-              break
-            } catch (err) {
-              if (attempt < MAX_RETRIES) {
-                await new Promise(r => setTimeout(r, 500))
-              }
-            }
-          }
-          if (!succeeded) failed.push(image.name)
-          done++
-          setUploadProgress({ done, total })
-        }
-
-        while (queue.length > 0) {
-          const batch = queue.splice(0, CONCURRENCY)
-          await Promise.all(batch.map(uploadOne))
-        }
-
-        if (failed.length > 0) {
-          alert(`Uploaded ${done - failed.length} / ${total} photos. ${failed.length} failed: ${failed.slice(0, 5).join(', ')}${failed.length > 5 ? '...' : ''}`)
-        }
+        await uploadGalleryImages(gallery.id, galleryForm.images)
       }
 
       setGalleryForm({ name: '', slug: '', password: '', images: [] })
@@ -123,6 +86,49 @@ const AdminDashboard = () => {
     } finally {
       setGalleryFormLoading(false)
       setUploadProgress(null)
+    }
+  }
+
+  const uploadGalleryImages = async (galleryId, images) => {
+    if (images.length === 0) return
+
+    const total = images.length
+    let done = 0
+    setUploadProgress({ done: 0, total })
+
+    const CONCURRENCY = 10
+    const MAX_RETRIES = 2
+    const queue = [...images]
+    const failed = []
+
+    const uploadOne = async (image) => {
+      let succeeded = false
+      for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+        try {
+          const formData = new FormData()
+          formData.append('image', image)
+          formData.append('gallery', galleryId)
+          await pb.collection('pictures').create(formData)
+          succeeded = true
+          break
+        } catch (err) {
+          if (attempt < MAX_RETRIES) {
+            await new Promise(r => setTimeout(r, 500))
+          }
+        }
+      }
+      if (!succeeded) failed.push(image.name)
+      done++
+      setUploadProgress({ done, total })
+    }
+
+    while (queue.length > 0) {
+      const batch = queue.splice(0, CONCURRENCY)
+      await Promise.all(batch.map(uploadOne))
+    }
+
+    if (failed.length > 0) {
+      alert(`Uploaded ${done - failed.length} / ${total} photos. ${failed.length} failed: ${failed.slice(0, 5).join(', ')}${failed.length > 5 ? '...' : ''}`)
     }
   }
 
@@ -184,12 +190,17 @@ const AdminDashboard = () => {
 
       await pb.collection('galleries').update(editingGallery.id, updateData)
 
+      if (galleryForm.images.length > 0) {
+        await uploadGalleryImages(editingGallery.id, galleryForm.images)
+      }
+
       // Reload galleries
       loadGalleries()
 
       // Reset form
       setEditingGallery(null)
       setGalleryForm({ name: '', slug: '', password: '', images: [] })
+      setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
 
       alert(t('admin.galleries.updateSuccess') || 'Gallery updated successfully!')
