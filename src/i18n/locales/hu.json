@@ -262,6 +262,13 @@
   "gallery": {
     "title": "Galéria Hozzáférés",
     "subtitle": "Add meg a jelszót a galéria eléréséhez",
+    "guestTitle": "Ki vagy te?",
+    "guestSubtitle": "Add meg a neved, hogy a kedvenceidet elmenthessük a következő látogatáskor.",
+    "guestName": "A neved",
+    "guestNamePlaceholder": "Add meg a neved",
+    "guestContinue": "Folytatás",
+    "guestLoading": "Mentés...",
+    "guestNameRequired": "Kérjük add meg a neved",
     "password": "Jelszó",
     "passwordPlaceholder": "Add meg a galéria jelszavát",
     "submit": "Galéria Megtekintése",

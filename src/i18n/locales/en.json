@@ -190,6 +190,13 @@
   "gallery": {
     "title": "Gallery Access",
     "subtitle": "Enter the password to access this gallery",
+    "guestTitle": "Who are you?",
+    "guestSubtitle": "Enter your name so your liked photos can be saved for your next visit.",
+    "guestName": "Your name",
+    "guestNamePlaceholder": "Enter your name",
+    "guestContinue": "Continue",
+    "guestLoading": "Saving...",
+    "guestNameRequired": "Please enter your name",
     "password": "Password",
     "passwordPlaceholder": "Enter gallery password",
     "submit": "Access Gallery",
