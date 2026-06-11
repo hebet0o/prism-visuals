@@ -69,6 +69,10 @@ export const registerGuest = async (galleryId, name, pin, token) => {
   if (!galleryId || !name || !pin || !token) {
     return { ok: false, reason: 'invalid' }
   }
+  const existing = await loginGuest(galleryId, name, pin)
+  if (existing) {
+    return { ok: false, reason: 'duplicate' }
+  }
   try {
     const record = await pb.collection(GUEST_COLLECTION).create({
       gallery: galleryId,
