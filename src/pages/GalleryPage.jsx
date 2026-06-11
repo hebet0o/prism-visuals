@@ -12,7 +12,8 @@ import {
   clearGuest,
   generateGuestToken,
   loadGuestUserByToken,
-  createGuestUser,
+  loginGuest,
+  registerGuest,
   updateGuestUserLikes,
 } from '../utils/guestAuth'
 
@@ -70,6 +71,8 @@ const GalleryPage = () => {
 
   const [guest, setGuest] = useState(null)
   const [guestNameInput, setGuestNameInput] = useState('')
+  const [guestPinInput, setGuestPinInput] = useState('')
+  const [guestMode, setGuestMode] = useState('new')
   const [guestSaving, setGuestSaving] = useState(false)
   const [guestError, setGuestError] = useState('')
   const [showGuestModal, setShowGuestModal] = useState(false)
@@ -99,14 +102,19 @@ const GalleryPage = () => {
   useEffect(() => {
     const init = async () => {
       const token = getStoredGuestToken()
+      const storedName = getStoredGuestName() || ''
       if (token) {
         const loaded = await loadGuestUserByToken(token)
         if (loaded) {
           setGuest(loaded)
           setLikedIds(new Set(loaded.likedPhotos))
-        } else {
-          setGuestNameInput(getStoredGuestName() || '')
+        } else if (storedName) {
+          setGuestNameInput(storedName)
+          setGuestMode('returning')
         }
+      } else if (storedName) {
+        setGuestNameInput(storedName)
+        setGuestMode('returning')
       }
 
       const isAuth = localStorage.getItem(`gallery_auth_${name}`) === 'true'
@@ -205,38 +213,78 @@ const GalleryPage = () => {
     e.preventDefault()
     setGuestError('')
 
-    const trimmed = guestNameInput.trim()
-    if (!trimmed) {
-      setGuestError(t('gallery.guestNameRequired') || 'Please enter your name')
+    const trimmedName = guestNameInput.trim()
+    const trimmedPin = guestPinInput.trim()
+
+    if (!trimmedName) {
+      setGuestError(t('gallery.guestNameRequired'))
+      return
+    }
+    if (!/^[0-9]{4}$/.test(trimmedPin)) {
+      setGuestError(t('gallery.guestPinRequired'))
+      return
+    }
+    if (!gallery?.id) {
+      setGuestError(t('gallery.guestGenericError'))
       return
     }
 
     setGuestSaving(true)
-    const token = getStoredGuestToken() || generateGuestToken()
-    const created = await createGuestUser(trimmed, token)
 
-    if (created) {
+    if (guestMode === 'returning') {
+      const found = await loginGuest(gallery.id, trimmedName, trimmedPin)
+      if (found) {
+        storeGuestToken(found.token)
+        storeGuestName(found.name)
+        const mergedLikes = Array.from(new Set([...found.likedPhotos, ...likedIds]))
+        setGuest(found)
+        setLikedIds(new Set(mergedLikes))
+        if (mergedLikes.length > found.likedPhotos.length) {
+          const updated = await updateGuestUserLikes(found.id, mergedLikes)
+          if (updated) setGuest(prev => ({ ...prev, likedPhotos: updated }))
+        }
+        setShowGuestModal(false)
+        setHasSeenGuestPrompt(true)
+      } else {
+        setGuestError(t('gallery.guestNoMatch'))
+      }
+      setGuestSaving(false)
+      return
+    }
+
+    const token = generateGuestToken()
+    const result = await registerGuest(gallery.id, trimmedName, trimmedPin, token)
+
+    if (result.ok) {
       storeGuestToken(token)
-      storeGuestName(created.name)
-      const mergedLikes = Array.from(new Set([...created.likedPhotos, ...likedIds]))
-      setGuest(created)
+      storeGuestName(result.guest.name)
+      const mergedLikes = Array.from(new Set([...result.guest.likedPhotos, ...likedIds]))
+      setGuest(result.guest)
       setLikedIds(new Set(mergedLikes))
-      if (mergedLikes.length > created.likedPhotos.length) {
-        const updated = await updateGuestUserLikes(created.id, mergedLikes)
+      if (mergedLikes.length > result.guest.likedPhotos.length) {
+        const updated = await updateGuestUserLikes(result.guest.id, mergedLikes)
         if (updated) setGuest(prev => ({ ...prev, likedPhotos: updated }))
       }
+      setShowGuestModal(false)
+      setHasSeenGuestPrompt(true)
+    } else if (result.reason === 'duplicate') {
+      setGuestError(t('gallery.guestPinTaken'))
     } else {
-      setGuestError(t('gallery.authError') || 'Could not save your name. Try again.')
+      setGuestError(t('gallery.guestGenericError'))
     }
 
     setGuestSaving(false)
-    setShowGuestModal(false)
-    setHasSeenGuestPrompt(true)
   }
 
   const handleGuestSkip = () => {
     setShowGuestModal(false)
     setHasSeenGuestPrompt(true)
+    setGuestError('')
+  }
+
+  const switchGuestMode = (mode) => {
+    setGuestMode(mode)
+    setGuestError('')
   }
 
   const toggleLike = useCallback(async (id) => {
@@ -650,23 +698,57 @@ const GalleryPage = () => {
           >
             <div className="text-center mb-6">
               <h2 className="font-display text-3xl text-brand-warm mb-3">
-                {t('gallery.guestTitle') || 'Who are you?'}
+                {t('gallery.guestTitle')}
               </h2>
               <p className="text-brand-muted">
                 {t('gallery.guestDescription')}
               </p>
             </div>
 
-            <form onSubmit={handleGuestSubmit} className="space-y-6">
+            <div className="flex rounded-md border border-brand-charcoal overflow-hidden mb-6">
+              <button
+                type="button"
+                onClick={() => switchGuestMode('new')}
+                className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+                  guestMode === 'new'
+                    ? 'bg-brand-bronze text-brand-black'
+                    : 'bg-transparent text-brand-muted hover:text-brand-warm'
+                }`}
+              >
+                {t('gallery.guestModeNew')}
+              </button>
+              <button
+                type="button"
+                onClick={() => switchGuestMode('returning')}
+                className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+                  guestMode === 'returning'
+                    ? 'bg-brand-bronze text-brand-black'
+                    : 'bg-transparent text-brand-muted hover:text-brand-warm'
+                }`}
+              >
+                {t('gallery.guestModeReturning')}
+              </button>
+            </div>
+
+            <form onSubmit={handleGuestSubmit} className="space-y-5">
               {guestError && (
-                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-md">
+                <div className="p-4 bg-red-900/20 border border-red-500/50 rounded-md space-y-2">
                   <p className="text-red-400 text-sm">{guestError}</p>
+                  {guestMode === 'returning' && guestError === t('gallery.guestNoMatch') && (
+                    <button
+                      type="button"
+                      onClick={() => switchGuestMode('new')}
+                      className="text-brand-bronze text-sm underline hover:text-brand-bronze/80"
+                    >
+                      {t('gallery.guestSwitchToNew')}
+                    </button>
+                  )}
                 </div>
               )}
 
               <div>
                 <label htmlFor="guestName" className="block text-brand-warm font-medium mb-2">
-                  {t('gallery.guestName') || 'Your name'}
+                  {t('gallery.guestName')}
                 </label>
                 <input
                   id="guestName"
@@ -674,26 +756,52 @@ const GalleryPage = () => {
                   value={guestNameInput}
                   onChange={(e) => setGuestNameInput(e.target.value)}
                   className="w-full px-4 py-3 bg-brand-black border border-brand-charcoal rounded-md text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze"
-                  placeholder={t('gallery.guestNamePlaceholder') || 'Enter your name'}
+                  placeholder={t('gallery.guestNamePlaceholder')}
                   autoFocus
                 />
               </div>
 
-              <div className="flex flex-col gap-3 sm:flex-row">
+              <div>
+                <label htmlFor="guestPin" className="block text-brand-warm font-medium mb-2">
+                  {t('gallery.guestPin')}
+                </label>
+                <input
+                  id="guestPin"
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]{4}"
+                  maxLength={4}
+                  value={guestPinInput}
+                  onChange={(e) => setGuestPinInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 4))}
+                  className="w-full px-4 py-3 bg-brand-black border border-brand-charcoal rounded-md text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze tracking-[0.5em] text-center font-mono"
+                  placeholder={t('gallery.guestPinPlaceholder')}
+                />
+                <p className="text-brand-muted text-xs mt-2">
+                  {guestMode === 'new' ? t('gallery.guestPinHelpNew') : t('gallery.guestPinHelpReturning')}
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3 sm:flex-row pt-2">
                 <button
                   type="submit"
                   disabled={guestSaving}
                   className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 >
                   {guestSaving && <LoadingSpinner size="sm" />}
-                  <span>{guestSaving ? (t('gallery.guestLoading') || 'Saving...') : (t('gallery.guestContinue') || 'Continue')}</span>
+                  <span>
+                    {guestSaving
+                      ? t('gallery.guestLoading')
+                      : guestMode === 'new'
+                        ? t('gallery.guestContinue')
+                        : t('gallery.guestLogin')}
+                  </span>
                 </button>
                 <button
                   type="button"
                   onClick={handleGuestSkip}
                   className="flex-1 px-5 py-3 border border-brand-charcoal rounded-md text-brand-muted hover:text-brand-warm transition-colors"
                 >
-                  {t('gallery.skipGuest') || 'Skip for now'}
+                  {t('gallery.skipGuest')}
                 </button>
               </div>
             </form>

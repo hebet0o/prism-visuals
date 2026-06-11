@@ -17,6 +17,15 @@ const parseLikedPhotos = (value) => {
   }
 }
 
+const toGuest = (record) => ({
+  id: record.id,
+  name: record.name || '',
+  token: record.token,
+  gallery: record.gallery,
+  pin: record.pin,
+  likedPhotos: parseLikedPhotos(record.likedPhotos),
+})
+
 export const getStoredGuestToken = () => localStorage.getItem(STORAGE_KEYS.token)
 export const getStoredGuestName = () => localStorage.getItem(STORAGE_KEYS.name)
 export const storeGuestToken = (token) => localStorage.setItem(STORAGE_KEYS.token, token)
@@ -36,44 +45,51 @@ export const generateGuestToken = () => {
 
 export const loadGuestUserByToken = async (token) => {
   if (!token) return null
-
   try {
     const record = await pb.collection(GUEST_COLLECTION).getFirstListItem(`token = "${token}"`)
-    return {
-      id: record.id,
-      name: record.name || '',
-      token,
-      likedPhotos: parseLikedPhotos(record.likedPhotos),
-    }
+    return toGuest(record)
   } catch {
     return null
   }
 }
 
-export const createGuestUser = async (name, token) => {
-  if (!name || !token) return null
+export const loginGuest = async (galleryId, name, pin) => {
+  if (!galleryId || !name || !pin) return null
+  try {
+    const record = await pb.collection(GUEST_COLLECTION).getFirstListItem(
+      `gallery = "${galleryId}" && name = "${name}" && pin = "${pin}"`
+    )
+    return toGuest(record)
+  } catch {
+    return null
+  }
+}
 
+export const registerGuest = async (galleryId, name, pin, token) => {
+  if (!galleryId || !name || !pin || !token) {
+    return { ok: false, reason: 'invalid' }
+  }
   try {
     const record = await pb.collection(GUEST_COLLECTION).create({
+      gallery: galleryId,
       name,
+      pin,
       token,
       likedPhotos: JSON.stringify([]),
     })
-
-    return {
-      id: record.id,
-      name: record.name || '',
-      token,
-      likedPhotos: [],
+    return { ok: true, guest: toGuest(record) }
+  } catch (err) {
+    console.error('Guest registration failed:', err)
+    const status = err?.status
+    if (status === 400) {
+      return { ok: false, reason: 'duplicate' }
     }
-  } catch {
-    return null
+    return { ok: false, reason: 'unknown' }
   }
 }
 
 export const updateGuestUserLikes = async (guestId, likedPhotoIds) => {
   if (!guestId) return null
-
   try {
     const record = await pb.collection(GUEST_COLLECTION).update(guestId, {
       likedPhotos: JSON.stringify(likedPhotoIds),
