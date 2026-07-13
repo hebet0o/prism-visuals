@@ -1,7 +1,8 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
-import MaintenancePage from './pages/MaintenancePage'
+// import MaintenancePage from './pages/MaintenancePage'
+import HomePage from './pages/HomePage'
 import AboutPage from './pages/AboutPage'
 import WeddingGalleriesPage from './pages/WeddingGalleriesPage'
 import PortfolioPage from './pages/PortfolioPage'
@@ -14,8 +15,7 @@ import GalleryPage from './pages/GalleryPage'
 function App() {
   return (
     <Routes>
-      {/* Maintenance page without layout */}
-      <Route path="/" element={<MaintenancePage />} />
+      <Route path="/" element={<Layout><HomePage /></Layout>} />
       <Route path="/about" element={<Layout><AboutPage /></Layout>} />
       <Route path="/wedding-galleries" element={<Layout><WeddingGalleriesPage /></Layout>} />
       <Route path="/portfolio" element={<Layout><PortfolioPage /></Layout>} />

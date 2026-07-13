@@ -41,13 +41,16 @@ const AboutPage = () => {
           <div className="space-y-6 order-2 lg:order-1">
             <p className="section-label">{t('about.partner.role')}</p>
             <h2 className="font-display text-4xl text-brand-warm">{t('about.partner.name')}</h2>
-            <p className="text-brand-muted text-sm leading-loose font-body font-light">
-              {t('about.partner.placeholderText')}
+            <p className="text-brand-bronze uppercase tracking-display text-xs">
+              {t('about.partner.title')}
             </p>
+            <div className="space-y-6 text-brand-warm text-sm leading-loose font-body font-light whitespace-pre-line">
+              {t('about.partner.bio')}
+            </div>
           </div>
           <div className="overflow-hidden rounded-[32px] bg-brand-charcoal min-h-[420px] order-1 lg:order-2">
             <img
-              src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1200&h=900&fit=crop"
+              src="/statikus-kepek/about-me/4L5A3466.jpg"
               alt={t('about.partner.imageAlt')}
               className="w-full h-full object-cover"
             />
