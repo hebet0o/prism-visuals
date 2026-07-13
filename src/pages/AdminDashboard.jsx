@@ -14,10 +14,13 @@ const AdminDashboard = () => {
   const [galleries, setGalleries] = useState([])
   const [galleriesLoading, setGalleriesLoading] = useState(true)
   const [showCreateGallery, setShowCreateGallery] = useState(false)
+  const GALLERY_TYPES = ['portrait', 'event', 'commercial', 'video', 'wedding']
   const [galleryForm, setGalleryForm] = useState({
     name: '',
     slug: '',
     password: '',
+    type: 'portrait',
+    isVisible: true,
     images: []
   })
   const [galleryFormLoading, setGalleryFormLoading] = useState(false)
@@ -27,6 +30,11 @@ const AdminDashboard = () => {
   const [deletingGalleryId, setDeletingGalleryId] = useState(null)
   const [togglingReviewId, setTogglingReviewId] = useState(null)
   const [deletingReviewId, setDeletingReviewId] = useState(null)
+  const [togglingGalleryId, setTogglingGalleryId] = useState(null)
+  const [managingPicturesGalleryId, setManagingPicturesGalleryId] = useState(null)
+  const [galleryPictures, setGalleryPictures] = useState([])
+  const [picturesLoading, setPicturesLoading] = useState(false)
+  const [togglingPictureId, setTogglingPictureId] = useState(null)
 
   // Auto-generate slug when name changes
   useEffect(() => {
@@ -64,6 +72,8 @@ const AdminDashboard = () => {
         name: galleryForm.name,
         slug: galleryForm.slug,
         passwordHash: galleryForm.password,
+        type: galleryForm.type,
+        isVisible: galleryForm.isVisible,
         createdBy: pb.authStore.model?.id
       }
 
@@ -73,7 +83,7 @@ const AdminDashboard = () => {
         await uploadGalleryImages(gallery.id, galleryForm.images)
       }
 
-      setGalleryForm({ name: '', slug: '', password: '', images: [] })
+      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
       setUploadProgress(null)
@@ -108,6 +118,7 @@ const AdminDashboard = () => {
           const formData = new FormData()
           formData.append('image', image)
           formData.append('gallery', galleryId)
+          formData.append('isVisible', 'true')
           await pb.collection('pictures').create(formData)
           succeeded = true
           break
@@ -160,6 +171,8 @@ const AdminDashboard = () => {
       name: gallery.name,
       slug: gallery.slug,
       password: gallery.passwordHash,
+      type: gallery.type || 'portrait',
+      isVisible: gallery.isVisible !== false,
       images: [] // Don't pre-populate images for editing
     })
     setShowCreateGallery(true)
@@ -167,7 +180,7 @@ const AdminDashboard = () => {
 
   const cancelEditing = () => {
     setEditingGallery(null)
-    setGalleryForm({ name: '', slug: '', password: '', images: [] })
+    setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
     setShowCreateGallery(false)
   }
 
@@ -180,7 +193,9 @@ const AdminDashboard = () => {
       const updateData = {
         name: galleryForm.name,
         slug: galleryForm.slug,
-        passwordHash: galleryForm.password
+        passwordHash: galleryForm.password,
+        type: galleryForm.type,
+        isVisible: galleryForm.isVisible
       }
 
       // Only update password if it was changed
@@ -199,7 +214,7 @@ const AdminDashboard = () => {
 
       // Reset form
       setEditingGallery(null)
-      setGalleryForm({ name: '', slug: '', password: '', images: [] })
+      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
 
@@ -263,6 +278,57 @@ const AdminDashboard = () => {
       alert(t('admin.reviews.visibilityError') || 'Failed to update review visibility')
     } finally {
       setTogglingReviewId(null)
+    }
+  }
+
+  const handleToggleGalleryVisibility = async (galleryId, currentVisibility) => {
+    setTogglingGalleryId(galleryId)
+    try {
+      await pb.collection('galleries').update(galleryId, { isVisible: !currentVisibility })
+      loadGalleries()
+    } catch (error) {
+      alert(t('admin.galleries.visibilityError') || 'Failed to update gallery visibility')
+    } finally {
+      setTogglingGalleryId(null)
+    }
+  }
+
+  const loadGalleryPictures = async (galleryId) => {
+    setPicturesLoading(true)
+    try {
+      const records = await pb.collection('pictures').getFullList({
+        filter: `gallery = "${galleryId}"`,
+        sort: 'created'
+      })
+      setGalleryPictures(records)
+    } catch (error) {
+      console.error('Failed to load pictures:', error)
+    } finally {
+      setPicturesLoading(false)
+    }
+  }
+
+  const toggleManagePictures = (galleryId) => {
+    if (managingPicturesGalleryId === galleryId) {
+      setManagingPicturesGalleryId(null)
+      setGalleryPictures([])
+    } else {
+      setManagingPicturesGalleryId(galleryId)
+      loadGalleryPictures(galleryId)
+    }
+  }
+
+  const handleTogglePictureVisibility = async (pictureId, currentVisibility) => {
+    setTogglingPictureId(pictureId)
+    try {
+      await pb.collection('pictures').update(pictureId, { isVisible: !currentVisibility })
+      setGalleryPictures(prev => prev.map(p =>
+        p.id === pictureId ? { ...p, isVisible: !currentVisibility } : p
+      ))
+    } catch (error) {
+      alert(t('admin.galleries.pictureVisibilityError') || 'Failed to update picture visibility')
+    } finally {
+      setTogglingPictureId(null)
     }
   }
 
@@ -454,6 +520,39 @@ const AdminDashboard = () => {
 
                   <div>
                     <label className="block text-brand-warm font-medium mb-2">
+                      {t('admin.galleries.createForm.type') || 'Gallery Type'}
+                    </label>
+                    <select
+                      value={galleryForm.type}
+                      onChange={(e) => setGalleryForm(prev => ({ ...prev, type: e.target.value }))}
+                      className="w-full px-4 py-3 bg-brand-black border border-brand-charcoal rounded-md text-brand-warm focus:outline-none focus:border-brand-bronze"
+                    >
+                      {GALLERY_TYPES.map((type) => (
+                        <option key={type} value={type}>
+                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-brand-muted text-sm mt-1">
+                      {t('admin.galleries.createForm.typeHelp') || 'Wedding galleries appear on the Wedding Galleries page; all other types appear on the Portfolio page.'}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <input
+                      type="checkbox"
+                      id="galleryVisible"
+                      checked={galleryForm.isVisible}
+                      onChange={(e) => setGalleryForm(prev => ({ ...prev, isVisible: e.target.checked }))}
+                      className="w-4 h-4 accent-brand-bronze"
+                    />
+                    <label htmlFor="galleryVisible" className="text-brand-warm font-medium">
+                      {t('admin.galleries.createForm.visible') || 'Visible on public site'}
+                    </label>
+                  </div>
+
+                  <div>
+                    <label className="block text-brand-warm font-medium mb-2">
                       {t('admin.galleries.createForm.password') || 'Password'}
                     </label>
                     <input
@@ -556,9 +655,14 @@ const AdminDashboard = () => {
                   <div key={gallery.id} className="bg-brand-dark p-6 rounded-lg">
                     <div className="flex justify-between items-center">
                       <div>
-                        <h3 className="font-heading text-lg text-brand-warm mb-1">
-                          {gallery.name}
-                        </h3>
+                        <div className="flex items-center gap-2 mb-1">
+                          <h3 className="font-heading text-lg text-brand-warm">
+                            {gallery.name}
+                          </h3>
+                          <span className="px-2 py-0.5 bg-brand-charcoal text-brand-bronze text-xs uppercase tracking-wide rounded">
+                            {gallery.type || 'portrait'}
+                          </span>
+                        </div>
                         <p className="text-brand-muted text-sm">
                           Created: {new Date(gallery.created).toLocaleDateString()}
                         </p>
@@ -567,13 +671,33 @@ const AdminDashboard = () => {
                         </p>
                       </div>
                       <div className="flex space-x-2">
-                        <button 
+                        <button
+                          onClick={() => handleToggleGalleryVisibility(gallery.id, gallery.isVisible !== false)}
+                          disabled={togglingGalleryId === gallery.id}
+                          className={`px-3 py-1 rounded text-sm flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed ${
+                            gallery.isVisible !== false
+                              ? 'bg-green-900/20 text-green-400 border border-green-500/50'
+                              : 'bg-red-900/20 text-red-400 border border-red-500/50'
+                          }`}
+                        >
+                          {togglingGalleryId === gallery.id && <LoadingSpinner size="xs" />}
+                          <span>{gallery.isVisible !== false ? (t('admin.galleries.visible') || 'Visible') : (t('admin.galleries.hidden') || 'Hidden')}</span>
+                        </button>
+                        <button
+                          onClick={() => toggleManagePictures(gallery.id)}
+                          className="px-3 py-1 bg-brand-charcoal text-brand-warm rounded text-sm hover:bg-brand-charcoal/80"
+                        >
+                          {managingPicturesGalleryId === gallery.id
+                            ? (t('admin.galleries.hidePhotos') || 'Hide Photos')
+                            : (t('admin.galleries.managePhotos') || 'Manage Photos')}
+                        </button>
+                        <button
                           onClick={() => startEditingGallery(gallery)}
                           className="px-3 py-1 bg-brand-charcoal text-brand-warm rounded text-sm hover:bg-brand-charcoal/80"
                         >
                           {t('admin.galleries.edit') || 'Edit'}
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDeleteGallery(gallery.id, gallery.name)}
                           disabled={deletingGalleryId === gallery.id}
                           className="px-3 py-1 bg-red-900/20 text-red-400 border border-red-500/50 rounded text-sm hover:bg-red-900/40 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1"
@@ -583,6 +707,46 @@ const AdminDashboard = () => {
                         </button>
                       </div>
                     </div>
+
+                    {managingPicturesGalleryId === gallery.id && (
+                      <div className="mt-4 pt-4 border-t border-brand-charcoal">
+                        {picturesLoading ? (
+                          <div className="flex items-center py-4">
+                            <LoadingSpinner size="sm" className="mr-2" />
+                            <span className="text-brand-muted text-sm">{t('admin.galleries.loadingPhotos') || 'Loading photos...'}</span>
+                          </div>
+                        ) : galleryPictures.length === 0 ? (
+                          <p className="text-brand-muted text-sm py-2">{t('admin.galleries.noPhotos') || 'No photos in this gallery'}</p>
+                        ) : (
+                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                            {galleryPictures.map((picture) => {
+                              const visible = picture.isVisible !== false
+                              return (
+                                <div key={picture.id} className="relative group">
+                                  <img
+                                    src={pb.files.getURL(picture, picture.image, { thumb: '200x200' })}
+                                    alt=""
+                                    className={`w-full aspect-square object-cover rounded ${visible ? '' : 'opacity-40'}`}
+                                  />
+                                  <button
+                                    onClick={() => handleTogglePictureVisibility(picture.id, visible)}
+                                    disabled={togglingPictureId === picture.id}
+                                    className={`absolute inset-x-1 bottom-1 px-1 py-0.5 rounded text-[10px] font-medium flex items-center justify-center space-x-1 disabled:opacity-50 ${
+                                      visible
+                                        ? 'bg-green-900/70 text-green-300'
+                                        : 'bg-red-900/70 text-red-300'
+                                    }`}
+                                  >
+                                    {togglingPictureId === picture.id && <LoadingSpinner size="xs" />}
+                                    <span>{visible ? (t('admin.galleries.visible') || 'Visible') : (t('admin.galleries.hidden') || 'Hidden')}</span>
+                                  </button>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
                 {galleries.length === 0 && !showCreateGallery && (

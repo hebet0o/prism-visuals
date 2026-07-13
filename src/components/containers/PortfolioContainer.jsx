@@ -1,41 +1,28 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import GalleryGrid from '../presentational/GalleryGrid'
-import { PLACEHOLDER_IMAGES, CATEGORIES } from '../../utils/constants'
+import { useVisibleGalleries } from '../../hooks/useVisibleGalleries'
+import GalleryCardGrid from '../presentational/GalleryCardGrid'
+
+const PORTFOLIO_TYPES = ['portrait', 'event', 'commercial', 'video']
 
 const PortfolioContainer = () => {
   const { t } = useTranslation()
+  const { galleries, loading } = useVisibleGalleries()
   const [selectedCategory, setSelectedCategory] = useState('all')
+
+  const portfolioGalleries = galleries.filter(g => PORTFOLIO_TYPES.includes(g.type))
 
   const categories = [
     { id: 'all', label: t('portfolio.allCategories') },
-    { id: CATEGORIES.PORTRAIT, label: t('portfolio.portrait') },
-    { id: CATEGORIES.EVENT, label: t('portfolio.event') },
-    { id: CATEGORIES.COMMERCIAL, label: t('portfolio.commercial') },
-    { id: CATEGORIES.VIDEOGRAPHY, label: t('portfolio.videography') },
+    { id: 'portrait', label: t('portfolio.portrait') },
+    { id: 'event', label: t('portfolio.event') },
+    { id: 'commercial', label: t('portfolio.commercial') },
+    { id: 'video', label: t('portfolio.videography') },
   ]
 
-  const getImagesForCategory = (category) => {
-    switch (category) {
-      case CATEGORIES.PORTRAIT:
-        return PLACEHOLDER_IMAGES.portrait
-      case CATEGORIES.EVENT:
-        return PLACEHOLDER_IMAGES.event
-      case CATEGORIES.COMMERCIAL:
-        return PLACEHOLDER_IMAGES.commercial
-      case CATEGORIES.VIDEOGRAPHY:
-        return [] // No work yet
-      default:
-        // 'all' - combine all categories
-        return [
-          ...PLACEHOLDER_IMAGES.portrait,
-          ...PLACEHOLDER_IMAGES.event,
-          ...PLACEHOLDER_IMAGES.commercial,
-        ]
-    }
-  }
-
-  const images = getImagesForCategory(selectedCategory)
+  const visibleGalleries = selectedCategory === 'all'
+    ? portfolioGalleries
+    : portfolioGalleries.filter(g => g.type === selectedCategory)
 
   return (
     <div>
@@ -56,13 +43,16 @@ const PortfolioContainer = () => {
         ))}
       </div>
 
-      {images.length > 0 ? (
-        <GalleryGrid images={images} columns={3} />
-      ) : (
-        <div className="text-center py-16">
-          <p className="text-brand-muted text-lg">{t('portfolio.noWorkYet')}</p>
-        </div>
-      )}
+      <GalleryCardGrid
+        galleries={visibleGalleries}
+        loading={loading}
+        labels={{
+          loadingText: t('portfolio.loading') || 'Loading...',
+          emptyText: t('portfolio.noWorkYet'),
+          photosText: t('weddingGalleries.photos'),
+          viewGalleryText: t('weddingGalleries.viewGallery'),
+        }}
+      />
     </div>
   )
 }
