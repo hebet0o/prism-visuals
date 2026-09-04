@@ -34,7 +34,9 @@ const AdminDashboard = () => {
   const [managingPicturesGalleryId, setManagingPicturesGalleryId] = useState(null)
   const [galleryPictures, setGalleryPictures] = useState([])
   const [picturesLoading, setPicturesLoading] = useState(false)
-  const [togglingPictureId, setTogglingPictureId] = useState(null)
+  // Map<pictureId, boolean> — local draft of desired visibility, not yet saved
+  const [pendingVisibility, setPendingVisibility] = useState({})
+  const [committingPictures, setCommittingPictures] = useState(false)
 
   // Auto-generate slug when name changes
   useEffect(() => {
@@ -301,6 +303,10 @@ const AdminDashboard = () => {
         sort: 'created'
       })
       setGalleryPictures(records)
+      // Initialise pending map from actual DB state — no unsaved changes yet
+      const initial = {}
+      records.forEach(p => { initial[p.id] = p.isVisible !== false })
+      setPendingVisibility(initial)
     } catch (error) {
       console.error('Failed to load pictures:', error)
     } finally {
@@ -312,24 +318,53 @@ const AdminDashboard = () => {
     if (managingPicturesGalleryId === galleryId) {
       setManagingPicturesGalleryId(null)
       setGalleryPictures([])
+      setPendingVisibility({})
     } else {
       setManagingPicturesGalleryId(galleryId)
       loadGalleryPictures(galleryId)
     }
   }
 
-  const handleTogglePictureVisibility = async (pictureId, currentVisibility) => {
-    setTogglingPictureId(pictureId)
+  // Instantly toggle the local draft — no network call yet
+  const handleTogglePictureVisibility = (pictureId) => {
+    setPendingVisibility(prev => ({ ...prev, [pictureId]: !prev[pictureId] }))
+  }
+
+  // Count how many pictures have a pending change vs their saved DB state
+  const pendingChangeCount = galleryPictures.filter(
+    p => (p.isVisible !== false) !== pendingVisibility[p.id]
+  ).length
+
+  // Fire all changed updates in parallel, then sync local picture records
+  const commitPictureVisibility = async () => {
+    const changed = galleryPictures.filter(
+      p => (p.isVisible !== false) !== pendingVisibility[p.id]
+    )
+    if (changed.length === 0) return
+
+    setCommittingPictures(true)
     try {
-      await pb.collection('pictures').update(pictureId, { isVisible: !currentVisibility })
-      setGalleryPictures(prev => prev.map(p =>
-        p.id === pictureId ? { ...p, isVisible: !currentVisibility } : p
-      ))
+      await Promise.all(
+        changed.map(p =>
+          pb.collection('pictures').update(p.id, { isVisible: pendingVisibility[p.id] })
+        )
+      )
+      // Sync the local picture list so the saved state reflects the commit
+      setGalleryPictures(prev =>
+        prev.map(p => ({ ...p, isVisible: pendingVisibility[p.id] }))
+      )
     } catch (error) {
+      console.error('Failed to commit picture visibility:', error)
       alert(t('admin.galleries.pictureVisibilityError') || 'Failed to update picture visibility')
     } finally {
-      setTogglingPictureId(null)
+      setCommittingPictures(false)
     }
+  }
+
+  const discardPictureChanges = () => {
+    const reset = {}
+    galleryPictures.forEach(p => { reset[p.id] = p.isVisible !== false })
+    setPendingVisibility(reset)
   }
 
   const tabs = [
@@ -718,31 +753,110 @@ const AdminDashboard = () => {
                         ) : galleryPictures.length === 0 ? (
                           <p className="text-brand-muted text-sm py-2">{t('admin.galleries.noPhotos') || 'No photos in this gallery'}</p>
                         ) : (
-                          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                            {galleryPictures.map((picture) => {
-                              const visible = picture.isVisible !== false
-                              return (
-                                <div key={picture.id} className="relative group">
-                                  <img
-                                    src={pb.files.getURL(picture, picture.image, { thumb: '200x200' })}
-                                    alt=""
-                                    className={`w-full aspect-square object-cover rounded ${visible ? '' : 'opacity-40'}`}
-                                  />
-                                  <button
-                                    onClick={() => handleTogglePictureVisibility(picture.id, visible)}
-                                    disabled={togglingPictureId === picture.id}
-                                    className={`absolute inset-x-1 bottom-1 px-1 py-0.5 rounded text-[10px] font-medium flex items-center justify-center space-x-1 disabled:opacity-50 ${
-                                      visible
-                                        ? 'bg-green-900/70 text-green-300'
-                                        : 'bg-red-900/70 text-red-300'
-                                    }`}
+                          <div>
+                            {/* Helper row */}
+                            <div className="flex items-center justify-between mb-3">
+                              <p className="text-brand-muted text-xs">
+                                {t('admin.galleries.photoSelectHint') || 'Click a photo to toggle its visibility. Changes are saved only when you click Commit.'}
+                              </p>
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const allVisible = {}
+                                    galleryPictures.forEach(p => { allVisible[p.id] = true })
+                                    setPendingVisibility(allVisible)
+                                  }}
+                                  className="px-2 py-1 text-xs bg-brand-charcoal text-brand-warm rounded hover:bg-brand-charcoal/70"
+                                >
+                                  {t('admin.galleries.selectAll') || 'All visible'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const allHidden = {}
+                                    galleryPictures.forEach(p => { allHidden[p.id] = false })
+                                    setPendingVisibility(allHidden)
+                                  }}
+                                  className="px-2 py-1 text-xs bg-brand-charcoal text-brand-warm rounded hover:bg-brand-charcoal/70"
+                                >
+                                  {t('admin.galleries.selectNone') || 'All hidden'}
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Photo grid */}
+                            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                              {galleryPictures.map((picture) => {
+                                const savedVisible = picture.isVisible !== false
+                                const pendingVisible = pendingVisibility[picture.id] ?? savedVisible
+                                const isDirty = savedVisible !== pendingVisible
+                                return (
+                                  <div
+                                    key={picture.id}
+                                    className="relative group cursor-pointer select-none"
+                                    onClick={() => handleTogglePictureVisibility(picture.id)}
                                   >
-                                    {togglingPictureId === picture.id && <LoadingSpinner size="xs" />}
-                                    <span>{visible ? (t('admin.galleries.visible') || 'Visible') : (t('admin.galleries.hidden') || 'Hidden')}</span>
+                                    <img
+                                      src={pb.files.getURL(picture, picture.image, { thumb: '200x200' })}
+                                      alt=""
+                                      className={`w-full aspect-square object-cover rounded transition-opacity ${
+                                        pendingVisible ? 'opacity-100' : 'opacity-25'
+                                      }`}
+                                    />
+                                    {/* Dirty indicator ring */}
+                                    {isDirty && (
+                                      <div className="absolute inset-0 rounded ring-2 ring-brand-bronze pointer-events-none" />
+                                    )}
+                                    {/* Status badge */}
+                                    <div className={`absolute inset-x-1 bottom-1 px-1 py-0.5 rounded text-[10px] font-medium text-center pointer-events-none ${
+                                      pendingVisible
+                                        ? 'bg-green-900/80 text-green-300'
+                                        : 'bg-red-900/80 text-red-300'
+                                    }`}>
+                                      {pendingVisible
+                                        ? (t('admin.galleries.visible') || 'Visible')
+                                        : (t('admin.galleries.hidden') || 'Hidden')
+                                      }
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+
+                            {/* Sticky commit bar — only shown when there are unsaved changes */}
+                            {pendingChangeCount > 0 && (
+                              <div className="sticky bottom-0 mt-4 flex items-center justify-between gap-3 bg-brand-dark border border-brand-bronze/50 rounded-lg px-4 py-3 shadow-lg">
+                                <span className="text-brand-bronze text-sm font-medium">
+                                  {pendingChangeCount === 1
+                                    ? (t('admin.galleries.pendingChange') || '1 unsaved change')
+                                    : (t('admin.galleries.pendingChanges') || '{{count}} unsaved changes').replace('{{count}}', pendingChangeCount)
+                                  }
+                                </span>
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={discardPictureChanges}
+                                    disabled={committingPictures}
+                                    className="px-3 py-1.5 text-sm bg-brand-charcoal text-brand-warm rounded hover:bg-brand-charcoal/70 disabled:opacity-50"
+                                  >
+                                    {t('admin.galleries.discardChanges') || 'Discard'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={commitPictureVisibility}
+                                    disabled={committingPictures}
+                                    className="px-4 py-1.5 text-sm bg-brand-bronze text-brand-black font-semibold rounded hover:bg-brand-bronze/80 disabled:opacity-50 flex items-center gap-2"
+                                  >
+                                    {committingPictures && <LoadingSpinner size="xs" />}
+                                    {committingPictures
+                                      ? (t('admin.galleries.committing') || 'Saving...')
+                                      : (t('admin.galleries.commitChanges') || 'Commit Changes')
+                                    }
                                   </button>
                                 </div>
-                              )
-                            })}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>

@@ -312,6 +312,14 @@
       "hidePhotos": "Hide Photos",
       "visibilityError": "Failed to update gallery visibility",
       "pictureVisibilityError": "Failed to update picture visibility",
+      "photoSelectHint": "Click a photo to toggle visibility. Changes are only saved when you click Commit.",
+      "selectAll": "All visible",
+      "selectNone": "All hidden",
+      "pendingChange": "1 unsaved change",
+      "pendingChanges": "{{count}} unsaved changes",
+      "commitChanges": "Commit Changes",
+      "committing": "Saving...",
+      "discardChanges": "Discard",
       "editForm": {
         "title": "Edit Gallery"
       },

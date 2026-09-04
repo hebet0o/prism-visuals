@@ -252,6 +252,14 @@
       "hidePhotos": "Képek Elrejtése",
       "visibilityError": "A galéria láthatóságának módosítása sikertelen",
       "pictureVisibilityError": "A kép láthatóságának módosítása sikertelen",
+      "photoSelectHint": "Kattints egy képre a láthatóság váltásához. A változások csak a Mentés gombra kattintva kerülnek mentésre.",
+      "selectAll": "Minden látható",
+      "selectNone": "Minden rejtett",
+      "pendingChange": "1 nem mentett változás",
+      "pendingChanges": "{{count}} nem mentett változás",
+      "commitChanges": "Változások mentése",
+      "committing": "Mentés...",
+      "discardChanges": "Elvetés",
       "editForm": {
         "title": "Galéria Szerkesztése"
       },
