@@ -1,6 +1,6 @@
 export const PLACEHOLDER_IMAGES = {
   hero: [
-    '/statikus-kepek/main-page/219.jpg',
+    '/statikus-kepek/main-page/201.jpg',
     '/statikus-kepek/main-page/4L5A7533.jpg',
     '/statikus-kepek/main-page/IMG_0798.jpg',
     '/statikus-kepek/main-page/IMG_2178.jpg',
