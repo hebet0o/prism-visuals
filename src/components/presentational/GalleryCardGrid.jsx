@@ -227,7 +227,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
           </div>
 
           {/* Gallery Pictures Body — Masonry vs Grid */}
-          <div className="flex-1 overflow-y-auto px-6 py-8 max-w-7xl w-full mx-auto">
+          <div className="flex-1 overflow-y-auto no-scrollbar px-6 py-8 max-w-7xl w-full mx-auto">
             {layout === 'masonry' ? (
               <div ref={masonryRef} className="flex gap-2">
                 {buildColumns(openGallery.pictures, colCount, imgHeights).map(
