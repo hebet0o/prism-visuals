@@ -12,7 +12,6 @@ export const PLACEHOLDER_IMAGES = {
     '/statikus-kepek/featured/IMG_3661.jpg',
     '/statikus-kepek/featured/IMG_3723.jpg',
     '/statikus-kepek/featured/IMG_5894.jpg',
-    '/statikus-kepek/featured/IMG_9782.jpg',
   ],
 }
 
