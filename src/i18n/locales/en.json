@@ -248,5 +248,87 @@
   "maintenance": {
     "title": "Under Maintenance",
     "subtitle": "We're currently performing maintenance. Thank you for your patience."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "logout": "Logout",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "reviews": "Reviews",
+      "galleries": "Galleries"
+    },
+    "login": {
+      "title": "Admin Login",
+      "subtitle": "Access the admin dashboard",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Log In",
+      "loading": "Logging in...",
+      "error": "Invalid email or password"
+    },
+    "dashboard": {
+      "title": "Dashboard Overview",
+      "totalReviews": "Total Reviews",
+      "totalGalleries": "Total Galleries",
+      "welcome": "Welcome"
+    },
+    "reviews": {
+      "title": "Review Management",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this review?",
+      "deleteError": "Failed to delete review",
+      "visibilityError": "Failed to update review visibility"
+    },
+    "galleries": {
+      "title": "Gallery Management",
+      "visible": "Visible",
+      "hidden": "Hidden",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noGalleries": "No galleries created yet",
+      "createFirst": "Create Your First Gallery",
+      "createNew": "Create New Gallery",
+      "cancel": "Cancel",
+      "create": "Create Gallery",
+      "creating": "Creating...",
+      "createSuccess": "Gallery created successfully!",
+      "createError": "Failed to create gallery",
+      "update": "Update Gallery",
+      "updating": "Updating...",
+      "updateSuccess": "Gallery updated successfully!",
+      "updateError": "Failed to update gallery",
+      "cancelEdit": "Cancel Edit",
+      "confirmDelete": "Are you sure you want to delete the gallery \"{{name}}\"? This action cannot be undone.",
+      "deleteSuccess": "Gallery deleted successfully!",
+      "deleteError": "Failed to delete gallery",
+      "loading": "Loading galleries...",
+      "loadingPhotos": "Loading photos...",
+      "noPhotos": "No photos in this gallery",
+      "managePhotos": "Manage Photos",
+      "hidePhotos": "Hide Photos",
+      "visibilityError": "Failed to update gallery visibility",
+      "pictureVisibilityError": "Failed to update picture visibility",
+      "editForm": {
+        "title": "Edit Gallery"
+      },
+      "createForm": {
+        "title": "Create New Gallery",
+        "name": "Gallery Name",
+        "namePlaceholder": "e.g., Barbi & Andor",
+        "slug": "URL Slug",
+        "slugPlaceholder": "barbi-andor",
+        "slugHelp": "Auto-generated from gallery name for clean URLs",
+        "type": "Gallery Type",
+        "typeHelp": "Wedding galleries appear on the Wedding Galleries page; all other types appear on the Portfolio page.",
+        "visible": "Visible on public site",
+        "password": "Password",
+        "passwordPlaceholder": "Enter access password",
+        "images": "Images"
+      }
+    }
   }
 }

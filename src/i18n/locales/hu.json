@@ -225,6 +225,8 @@
     },
     "galleries": {
       "title": "Galéria Kezelés",
+      "visible": "Látható",
+      "hidden": "Rejtett",
       "edit": "Szerkesztés",
       "delete": "Törlés",
       "noGalleries": "Még nincs galéria létrehozva",
@@ -240,10 +242,16 @@
       "updateSuccess": "A galéria sikeresen frissítve!",
       "updateError": "A galéria frissítése sikertelen",
       "cancelEdit": "Szerkesztés Mégse",
-      "confirmDelete": "Biztosan törölni szeretnéd a(z) „{{name}}” galériát? Ez a művelet nem vonható vissza.",
+      "confirmDelete": "Biztosan törölni szeretnéd a(z) \"{{name}}\" galériát? Ez a művelet nem vonható vissza.",
       "deleteSuccess": "A galéria sikeresen törölve!",
       "deleteError": "A galéria törlése sikertelen",
       "loading": "Galériák betöltése...",
+      "loadingPhotos": "Képek betöltése...",
+      "noPhotos": "Még nincsenek képek ebben a galériában",
+      "managePhotos": "Képek Kezelése",
+      "hidePhotos": "Képek Elrejtése",
+      "visibilityError": "A galéria láthatóságának módosítása sikertelen",
+      "pictureVisibilityError": "A kép láthatóságának módosítása sikertelen",
       "editForm": {
         "title": "Galéria Szerkesztése"
       },
@@ -254,6 +262,9 @@
         "slug": "URL Slug",
         "slugPlaceholder": "barbi-andor",
         "slugHelp": "Automatikusan generálódik a galéria névből a tiszta URL-ek érdekében",
+        "type": "Galéria Típusa",
+        "typeHelp": "Az esküvői galériák az Esküvői Galériák oldalon jelennek meg; minden más típus a Portfólió oldalon.",
+        "visible": "Látható a nyilvános oldalon",
         "password": "Jelszó",
         "passwordPlaceholder": "Add meg a hozzáférési jelszót",
         "images": "Képek"
