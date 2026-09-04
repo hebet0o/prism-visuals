@@ -61,11 +61,27 @@
   }
 }
 
-@keyframes slow-zoom {
+/* Two identical keyframes with different names.
+   The Hero component alternates between slow-zoom-0 and slow-zoom-1
+   so the browser always sees a *changed* animation-name and restarts
+   the keyframe on the incoming slot – without any DOM remounting. */
+@keyframes slow-zoom-0 {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.12); }
+}
+@keyframes slow-zoom-1 {
   from { transform: scale(1.05); }
   to   { transform: scale(1.12); }
 }
 
-.animate-slow-zoom {
-  animation: slow-zoom 8s ease-in-out forwards;
+/* Applied by the Hero component via inline style { animationName } */
+[style*="slow-zoom"] {
+  animation-duration: 8s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+/* Crossfade transition duration – mirrors TRANSITION_DURATION in Hero.jsx */
+.transition-opacity {
+  transition-duration: 800ms;
 }
