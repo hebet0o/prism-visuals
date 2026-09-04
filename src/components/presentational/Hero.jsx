@@ -1,43 +1,16 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Hero slider – persistent two-layer crossfade with Ken Burns zoom.
- *
- * Architecture (two-slot pattern)
- * ────────────────────────────────────────────────────────────────
- * Two <img> elements (slot 0 and slot 1) live permanently in the DOM.
- * We alternate which slot holds the "active" image and which holds
- * the "incoming" image, swapping roles each transition.
- *
- * Transition sequence
- *  1. Timer fires → pick nextIdx.
- *  2. Preload nextIdx image (Image() object).
- *  3. Once loaded: write src + bump zoomKey on the *inactive* slot.
- *  4. Double-rAF: wait for the browser to paint the new src into the
- *     inactive slot, then flip activeSlot → crossfade begins.
- *  5. After TRANSITION_DURATION ms the inactive slot is now visually
- *     on top; it becomes the new activeSlot in state.
- *  6. Repeat.
- *
- * Why this eliminates the flash
- * ────────────────────────────────────────────────────────────────
- * ✓ No conditional mount/unmount → the browser never discards the
- *   <img> element, so CSS transitions always have a painted baseline.
- * ✓ The incoming image is fully painted (opacity-0) before the
- *   crossfade starts, so frame 1 of the transition is already clean.
- * ✓ zoomKey alternates between 0 and 1, toggling the CSS
- *   animation-name between slow-zoom-0 and slow-zoom-1.  The browser
- *   detects a name change and restarts the keyframe from scale(1.05)
- *   only on the slot that received a new image.
- * ✓ transitioningRef prevents overlapping transitions even if an
- *   image loads unusually fast or slow.
  */
 
 const TRANSITION_DURATION = 800  // ms – keep in sync with CSS transition
 const SLIDE_INTERVAL      = 6000 // ms – net display time per slide
 
 const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
+  const { t } = useTranslation()
   const [activeSlot, setActiveSlot] = useState(0)
   const [slots, setSlots] = useState(() => [
     { src: images?.[0] ?? null, zoomKey: 0 },

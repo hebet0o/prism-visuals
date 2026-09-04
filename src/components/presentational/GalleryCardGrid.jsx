@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import pb from '../../utils/pocketbase'
 import LoadingSpinner from '../LoadingSpinner'
 
@@ -33,6 +34,7 @@ function useColCount(containerRef) {
 }
 
 const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
+  const { t } = useTranslation()
   const [openGalleryId, setOpenGalleryId] = useState(null)
   const [lightboxIndex, setLightboxIndex] = useState(null)
   const [layout, setLayout] = useState('masonry')
