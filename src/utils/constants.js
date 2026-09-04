@@ -6,11 +6,12 @@ export const PLACEHOLDER_IMAGES = {
     '/statikus-kepek/main-page/IMG_2178.jpg',
   ],
   featured: [
-    '/statikus-kepek/featured/4L5A1866.jpg',
+    '/statikus-kepek/featured/202.jpg',
     '/statikus-kepek/featured/4L5A2051.jpg',
-    '/statikus-kepek/featured/IMG_1494.jpg',
     '/statikus-kepek/featured/IMG_2224-2.jpg',
-    '/statikus-kepek/featured/IMG_8231.jpg',
+    '/statikus-kepek/featured/IMG_3661.jpg',
+    '/statikus-kepek/featured/IMG_3723.jpg',
+    '/statikus-kepek/featured/IMG_5894.jpg',
     '/statikus-kepek/featured/IMG_9782.jpg',
   ],
 }
