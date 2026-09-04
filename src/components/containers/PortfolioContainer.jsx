@@ -43,16 +43,19 @@ const PortfolioContainer = () => {
         ))}
       </div>
 
-      <GalleryCardGrid
-        galleries={visibleGalleries}
-        loading={loading}
-        labels={{
-          loadingText: t('portfolio.loading') || 'Loading...',
-          emptyText: t('portfolio.noWorkYet'),
-          photosText: t('weddingGalleries.photos'),
-          viewGalleryText: t('weddingGalleries.viewGallery'),
-        }}
-      />
+      <div className="max-w-7xl mx-auto px-6">
+        <GalleryCardGrid
+          galleries={visibleGalleries}
+          loading={loading}
+          columns={3}
+          labels={{
+            loadingText: t('portfolio.loading') || 'Loading...',
+            emptyText: t('portfolio.noWorkYet'),
+            photosText: t('weddingGalleries.photos'),
+            viewGalleryText: t('weddingGalleries.viewGallery'),
+          }}
+        />
+      </div>
     </div>
   )
 }

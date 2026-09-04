@@ -32,7 +32,7 @@ function useColCount(containerRef) {
   return colCount
 }
 
-const GalleryCardGrid = ({ galleries, loading, labels = {} }) => {
+const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
   const [openGalleryId, setOpenGalleryId] = useState(null)
   const [lightboxIndex, setLightboxIndex] = useState(null)
   const [layout, setLayout] = useState('masonry')
@@ -107,10 +107,17 @@ const GalleryCardGrid = ({ galleries, loading, labels = {} }) => {
     return <p className="text-center text-brand-muted py-24">{emptyText}</p>
   }
 
+  const gridClass =
+    columns === 2
+      ? 'grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10'
+      : columns === 4
+      ? 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'
+      : 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8'
+
   return (
     <>
       {/* Clean full-bleed picture cards — hover dark overlay with gallery title */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className={gridClass}>
         {galleries.map((gallery) => {
           const cover = gallery.pictures[0]
 

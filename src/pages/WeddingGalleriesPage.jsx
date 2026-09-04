@@ -25,6 +25,7 @@ const WeddingGalleriesPage = () => {
         <GalleryCardGrid
           galleries={weddingGalleries}
           loading={loading}
+          columns={2}
           labels={{
             loadingText: t('weddingGalleries.loading'),
             emptyText: t('weddingGalleries.noGalleries'),
