@@ -38,6 +38,14 @@
       hover:bg-brand-warm hover:text-brand-black;
   }
 
+  .btn-secondary {
+    @apply inline-block uppercase tracking-display text-xs font-heading font-semibold
+      border border-brand-charcoal text-brand-warm
+      px-8 py-3
+      transition-all duration-400
+      hover:border-brand-bronze hover:text-brand-bronze;
+  }
+
   .section-label {
     @apply uppercase tracking-widest text-xs font-heading font-semibold text-brand-bronze;
   }

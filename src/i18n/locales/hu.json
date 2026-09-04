@@ -85,52 +85,189 @@
   },
   "pricing": {
     "title": "Árazás",
-    "description": "Válassz a csomagjaink közül",
-    "weddingFull": {
-      "name": "Esküvő teljes nap",
-      "price": "Ár egyeztetés alapján",
-      "features": [
-        "Teljes napos lefedettség",
-        "2 professzionális fotós",
-        "500+ szerkesztett fotó",
-        "Online galéria",
-        "Videó highlight (opcionális)"
-      ]
+    "description": "Átlátható csomagok minden alkalomra",
+    "subtitle": "Minden csomag tartalmaz egy privát online galériát, amelyet egy hónapon belül átadunk. Budapesten belüli kiszállás minden esetben díjmentes.",
+    "tabPhoto": "Fotózás",
+    "tabVideo": "Videózás",
+    "tabBundle": "Fotó + Videó",
+    "tabMarketing": "Marketing",
+    "mostPopular": "Legnépszerűbb",
+    "saves": "{{amount}} Ft megtakarítás",
+    "contactButton": "Ajánlatkérés",
+    "from": "tól",
+    "ft": "Ft",
+    "customPrice": "Egyedi árajánlat",
+    "note": "Az árak nettó árak. Az előzetes konzultáció minden esetben ingyenes.",
+    "offseason": "Téli kedvezmény (nov. – feb.): kérdezz kedvezményes árainkról!",
+    "photo": {
+      "heading": "Esküvői Fotózás",
+      "subheading": "Egy profi fotós, teljes művészi irányítás, teljesen szerkesztett galéria átadva egy hónapon belül.",
+      "alap": {
+        "name": "Alap",
+        "price": "165 000",
+        "badge": "",
+        "features": [
+          "8–10 óra rendelkezésre állás",
+          "Ceremónia és lakodalom fotózása",
+          "400+ professzionálisan szerkesztett fotó",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe",
+        "price": "185 000",
+        "badge": "Legnépszerűbb",
+        "features": [
+          "10–12 óra rendelkezésre állás",
+          "Készülődés, ceremónia és lakodalom fotózása",
+          "500+ professzionálisan szerkesztett fotó",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "premium": {
+        "name": "Prémium",
+        "price": "200 000",
+        "badge": "",
+        "features": [
+          "10–12 óra rendelkezésre állás",
+          "Készülődés, ceremónia és lakodalom fotózása",
+          "Kreatív páros fotózás (esküvő napján vagy külön napon)",
+          "600+ professzionálisan szerkesztett fotó",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      }
     },
-    "eventHalf": {
-      "name": "Esemény félnapos",
-      "price": "Ár egyeztetés alapján",
-      "features": [
-        "4 órás lefedettség",
-        "1 professzionális fotós",
-        "200+ szerkesztett fotó",
-        "Online galéria",
-        "Gyors szerkesztés 48 órán belül"
-      ]
+    "video": {
+      "heading": "Esküvői Videózás",
+      "subheading": "Mozis stílusú történetmesélés videósunktól. Drónfelvétel elérhető. Minden film színkalibrált és zenével aláfestett.",
+      "alap": {
+        "name": "Alap",
+        "price": "120 000",
+        "badge": "",
+        "features": [
+          "8–10 óra rendelkezésre állás",
+          "Ceremónia és lakodalom videózása",
+          "Mozis highlight aftermovie (3–5 perc)",
+          "Professzionális színkalibráció és zene",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe",
+        "price": "150 000",
+        "badge": "Legnépszerűbb",
+        "features": [
+          "10–12 óra rendelkezésre állás",
+          "Készülődés, ceremónia és lakodalom videózása",
+          "Highlight aftermovie (4–6 perc)",
+          "Teljes ceremónia vágat",
+          "Drónfelvétel",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "premium": {
+        "name": "Prémium",
+        "price": "185 000",
+        "badge": "",
+        "features": [
+          "10–12 óra rendelkezésre állás",
+          "Készülődés, ceremónia és lakodalom videózása",
+          "Teljes mozis film (20–40 perc)",
+          "Highlight aftermovie (5–8 perc)",
+          "Drónfelvétel",
+          "Átadás 1 hónapon belül"
+        ]
+      }
     },
-    "portrait": {
-      "name": "Portré szekció",
-      "price": "Ár egyeztetés alapján",
-      "features": [
-        "1-2 órás fotózás",
-        "50+ szerkesztett fotó",
-        "Személyre szabott lokáció",
-        "Online galéria",
-        "Nyomtatási jogok"
-      ]
+    "bundle": {
+      "heading": "Fotó + Videó Csomag",
+      "subheading": "Kösd le mindkét szolgáltatást együtt és spórolj. Egy csapat, egy nap, egy feledhetetlen történet — képekben és filmen.",
+      "alap": {
+        "name": "Alap Csomag",
+        "price": "245 000",
+        "badge": "40 000 Ft megtakarítás",
+        "features": [
+          "8–10 óra · 1 fotós + 1 videós",
+          "Ceremónia és lakodalom",
+          "400+ szerkesztett fotó",
+          "Mozis highlight aftermovie (3–5 perc)",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe Csomag",
+        "price": "285 000",
+        "badge": "50 000 Ft megtakarítás",
+        "features": [
+          "10–12 óra · 1 fotós + 1 videós",
+          "Készülődés, ceremónia és lakodalom",
+          "500+ szerkesztett fotó",
+          "Highlight aftermovie (4–6 perc) + teljes ceremónia vágat",
+          "Drónfelvétel",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      },
+      "premium": {
+        "name": "Prémium Csomag",
+        "price": "329 000",
+        "badge": "56 000 Ft megtakarítás",
+        "features": [
+          "10–12 óra · 1 fotós + 1 videós",
+          "Készülődés, ceremónia és lakodalom",
+          "Kreatív páros fotózás (esküvő napján vagy külön napon)",
+          "600+ szerkesztett fotó",
+          "Teljes mozis film (20–40 perc) + highlight aftermovie",
+          "Drónfelvétel",
+          "Privát online galéria",
+          "Átadás 1 hónapon belül"
+        ]
+      }
     },
-    "custom": {
-      "name": "Egyedi ajánlat",
-      "price": "Egyedi ár",
-      "features": [
-        "Teljesen testreszabható",
-        "Kereskedelmi projektekhez",
-        "Videó produkció",
-        "Különleges kérések",
-        "Lépj velünk kapcsolatba"
-      ]
-    },
-    "contactButton": "Ajánlatkérés"
+    "marketing": {
+      "heading": "Marketing és Reklámvideó",
+      "subheading": "Brand filmek, közösségi tartalom, termékvideók, rendezvény aftermovie-k. Az árak a projekt terjedelmétől függnek — írj nekünk egy ingyenes konzultációért.",
+      "social": {
+        "name": "Közösségi Tartalom",
+        "price": "Egyedi árajánlat",
+        "badge": "",
+        "features": [
+          "Rövid formátumú vertikális tartalom (Reels, TikTok, Shorts)",
+          "Akár 3 kész klip forgatási naponként",
+          "Professzionális színkalibráció",
+          "Drónfelvétel elérhető",
+          "Ideális márkáknak, helyszíneknek és éttermeknek"
+        ]
+      },
+      "promo": {
+        "name": "Promó / Rendezvény Film",
+        "price": "Egyedi árajánlat",
+        "badge": "",
+        "features": [
+          "Céges rendezvények, gálák, termékbemutatók",
+          "2–8 órás forgatási lefedettség",
+          "Szerkesztett highlight film (2–5 perc)",
+          "Nyersanyag igény esetén elérhető",
+          "48 órás gyors átadás elérhető"
+        ]
+      },
+      "brand": {
+        "name": "Brand Film",
+        "price": "Egyedi árajánlat",
+        "badge": "Legkeresettebb",
+        "features": [
+          "Szkriptelt vagy dokumentarista stílusú brand történet",
+          "Többnapos forgatás lehetséges",
+          "Drón és stúdió opciók",
+          "Teljes utómunka és színkalibráció",
+          "Több formátumú átadás (16:9, 9:16, 1:1)"
+        ]
+      }
+    }
   },
   "contact": {
     "title": "Kapcsolat",

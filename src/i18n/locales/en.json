@@ -85,52 +85,189 @@
   },
   "pricing": {
     "title": "Pricing",
-    "description": "Choose from our packages",
-    "weddingFull": {
-      "name": "Full Day Wedding",
-      "price": "Custom Quote",
-      "features": [
-        "Full day coverage",
-        "2 professional photographers",
-        "500+ edited photos",
-        "Online gallery",
-        "Video highlight (optional)"
-      ]
+    "description": "Transparent packages for every occasion",
+    "subtitle": "All packages include a private online gallery delivered within one month. Travel within Budapest is always included.",
+    "tabPhoto": "Photography",
+    "tabVideo": "Videography",
+    "tabBundle": "Photo + Video",
+    "tabMarketing": "Marketing",
+    "mostPopular": "Most Popular",
+    "saves": "Saves {{amount}} Ft",
+    "contactButton": "Request Quote",
+    "from": "from",
+    "ft": "Ft",
+    "customPrice": "Custom Quote",
+    "note": "All prices are net prices. A preliminary consultation is always free of charge.",
+    "offseason": "Off-season discount (Nov – Feb): ask us about a reduced rate.",
+    "photo": {
+      "heading": "Wedding Photography",
+      "subheading": "One professional photographer, full artistic direction, fully edited gallery delivered within one month.",
+      "alap": {
+        "name": "Basic",
+        "price": "165 000",
+        "badge": "",
+        "features": [
+          "8–10 hours of availability",
+          "Ceremony & reception coverage",
+          "400+ professionally edited photos",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe",
+        "price": "185 000",
+        "badge": "Most Popular",
+        "features": [
+          "10–12 hours of availability",
+          "Preparations, ceremony & reception",
+          "500+ professionally edited photos",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "200 000",
+        "badge": "",
+        "features": [
+          "10–12 hours of availability",
+          "Preparations, ceremony & reception",
+          "Creative couple shoot (wedding day or separate)",
+          "600+ professionally edited photos",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      }
     },
-    "eventHalf": {
-      "name": "Half Day Event",
-      "price": "Custom Quote",
-      "features": [
-        "4 hours coverage",
-        "1 professional photographer",
-        "200+ edited photos",
-        "Online gallery",
-        "Fast editing within 48 hours"
-      ]
+    "video": {
+      "heading": "Wedding Videography",
+      "subheading": "Cinematic storytelling by our videographer. Drone footage available. Every film is colour-graded and scored.",
+      "alap": {
+        "name": "Basic",
+        "price": "120 000",
+        "badge": "",
+        "features": [
+          "8–10 hours of availability",
+          "Ceremony & reception coverage",
+          "Cinematic highlight aftermovie (3–5 min)",
+          "Professional colour grade & music",
+          "Delivery within 1 month"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe",
+        "price": "150 000",
+        "badge": "Most Popular",
+        "features": [
+          "10–12 hours of availability",
+          "Preparations, ceremony & reception",
+          "Highlight aftermovie (4–6 min)",
+          "Full ceremony cut",
+          "Drone aerial footage",
+          "Delivery within 1 month"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "185 000",
+        "badge": "",
+        "features": [
+          "10–12 hours of availability",
+          "Preparations, ceremony & reception",
+          "Full cinematic film (20–40 min)",
+          "Highlight aftermovie (5–8 min)",
+          "Drone aerial footage",
+          "Delivery within 1 month"
+        ]
+      }
     },
-    "portrait": {
-      "name": "Portrait Session",
-      "price": "Custom Quote",
-      "features": [
-        "1-2 hour session",
-        "50+ edited photos",
-        "Customized location",
-        "Online gallery",
-        "Print rights"
-      ]
+    "bundle": {
+      "heading": "Photo + Video Bundle",
+      "subheading": "Book both services together and save. One team, one day, one unforgettable story — in photos and on film.",
+      "alap": {
+        "name": "Basic Bundle",
+        "price": "245 000",
+        "badge": "Save 40 000 Ft",
+        "features": [
+          "8–10 hours · 1 photographer + 1 videographer",
+          "Ceremony & reception coverage",
+          "400+ edited photos",
+          "Cinematic highlight aftermovie (3–5 min)",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      },
+      "deluxe": {
+        "name": "Deluxe Bundle",
+        "price": "285 000",
+        "badge": "Save 50 000 Ft",
+        "features": [
+          "10–12 hours · 1 photographer + 1 videographer",
+          "Preparations, ceremony & reception",
+          "500+ edited photos",
+          "Highlight aftermovie (4–6 min) + full ceremony cut",
+          "Drone aerial footage",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      },
+      "premium": {
+        "name": "Premium Bundle",
+        "price": "329 000",
+        "badge": "Save 56 000 Ft",
+        "features": [
+          "10–12 hours · 1 photographer + 1 videographer",
+          "Preparations, ceremony & reception",
+          "Creative couple shoot (wedding day or separate)",
+          "600+ edited photos",
+          "Full cinematic film (20–40 min) + highlight aftermovie",
+          "Drone aerial footage",
+          "Private online gallery",
+          "Delivery within 1 month"
+        ]
+      }
     },
-    "custom": {
-      "name": "Custom Package",
-      "price": "Custom Price",
-      "features": [
-        "Fully customizable",
-        "For commercial projects",
-        "Video production",
-        "Special requests",
-        "Contact us"
-      ]
-    },
-    "contactButton": "Request Quote"
+    "marketing": {
+      "heading": "Marketing & Commercial Video",
+      "subheading": "Brand films, social content, product videos, event aftermovies. Prices depend on scope — get in touch for a free brief.",
+      "social": {
+        "name": "Social Content",
+        "price": "Custom Quote",
+        "badge": "",
+        "features": [
+          "Short-form vertical content (Reels, TikTok, Shorts)",
+          "Up to 3 deliverable clips per shoot day",
+          "Professional colour grade",
+          "Drone footage available",
+          "Ideal for brands, venues & restaurants"
+        ]
+      },
+      "promo": {
+        "name": "Promo / Event Film",
+        "price": "Custom Quote",
+        "badge": "",
+        "features": [
+          "Corporate events, galas, product launches",
+          "2–8 hour shoot coverage",
+          "Edited highlight film (2–5 min)",
+          "Raw footage available on request",
+          "48 hr fast-turnaround option available"
+        ]
+      },
+      "brand": {
+        "name": "Brand Film",
+        "price": "Custom Quote",
+        "badge": "Most Requested",
+        "features": [
+          "Scripted or documentary-style brand story",
+          "Multi-day shoot available",
+          "Drone & studio options",
+          "Full post-production & colour grade",
+          "Multiple format deliverables (16:9, 9:16, 1:1)"
+        ]
+      }
+    }
   },
   "contact": {
     "title": "Contact",
