@@ -30,7 +30,7 @@ const AboutPage = () => {
               {t('about.gabor.subtitle')}
             </p>
             <div className="space-y-6 text-brand-warm text-sm leading-loose font-body font-light whitespace-pre-line">
-              {currentLanguage === 'hu' ? t('about.gabor.huBio') : t('about.gabor.enBio')}
+              {t('about.gabor.bio')}
             </div>
           </div>
         </div>

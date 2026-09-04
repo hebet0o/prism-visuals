@@ -9,7 +9,9 @@
   "hero": {
     "title": "Prism Visuals Budapest",
     "tagline": "Professional Photography & Videography Services for Every Occasion",
-    "cta": "View Our Portfolio"
+    "cta": "View Our Portfolio",
+    "location": "Budapest, Hungary",
+    "scroll": "scroll"
   },
   "home": {
     "featuredTitle": "Featured Work",
@@ -53,7 +55,8 @@
       "role": "Founder & Photographer",
       "subtitle": "Photographer, software developer, wannabe graphic designer",
       "huBio": "Iszak Gábor vagyok – fotós, szoftverfejlesztő, wannabe grafikus.\n\nGyerekkorom óta a szoftverfejlesztés volt a fő célom, és ezt sikerült is megvalósítanom.\n2019-ben azonban a kezembe nyomtak egy kamerát, hogy segítsek az akkori otthonom önkormányzati kampányában – és ott valami teljesen új kezdődött. Akkor szerettem bele a fotózásba, a különleges pillanatok megörökítésébe és a kreatív munka világába.\n\nAzóta lediplomáztam, külön költöztem, munkát találtam, de a fotózás végig velem maradt – és idővel sokkal több lett egyszerű hobbinál.\n\nSzámomra a legnagyobb öröm az, amikor azokat a pillanatokat örökíthetem meg, amelyek igazán rólad szólnak. Az őszinte mosolyokat, a spontán nevetést, a csendes, meghitt pillanatokat – azokat az apró részleteket, amelyekből igazi, értékes emlékek születnek.\n\nA Prism Visuals számomra sokkal több mint munka. Ez az a tér, ahol egy saját álom, a kreativitás és az emberi történetek találkoznak. Egy hely, ahol képekben mesélhetek, hangulatokat örökíthetek meg, és segíthetek abban, hogy a fontos pillanatok ne csak emlékek legyenek, hanem időtálló történetek.",
-      "enBio": "I’m Gábor Iszak — photographer, software developer, wannabe graphic designer.\n\nSince childhood, software development has been my main goal, and I managed to make that happen. In 2019, however, a camera was put in my hand so I could help with the municipal campaign in my then-home — and something completely new began there. That’s when I fell in love with photography, with capturing special moments, and with the world of creative work.\n\nSince then, I have graduated, moved out on my own, found a job, but photography has stayed with me all along — and over time it became much more than a simple hobby.\n\nFor me, the greatest joy is when I can capture those moments that are truly about you. The honest smiles, the spontaneous laughter, the quiet, intimate moments — those little details from which real, valuable memories are born.\n\nFor me, Prism Visuals is much more than work. It’s a space where a personal dream, creativity, and human stories meet. A place where I can tell stories in images, capture moods, and help ensure that the important moments become not just memories, but timeless stories."
+      "enBio": "I’m Gábor Iszak — photographer, software developer, wannabe graphic designer.\n\nSince childhood, software development has been my main goal, and I managed to make that happen. In 2019, however, a camera was put in my hand so I could help with the municipal campaign in my then-home — and something completely new began there. That’s when I fell in love with photography, with capturing special moments, and with the world of creative work.\n\nSince then, I have graduated, moved out on my own, found a job, but photography has stayed with me all along — and over time it became much more than a simple hobby.\n\nFor me, the greatest joy is when I can capture those moments that are truly about you. The honest smiles, the spontaneous laughter, the quiet, intimate moments — those little details from which real, valuable memories are born.\n\nFor me, Prism Visuals is much more than work. It’s a space where a personal dream, creativity, and human stories meet. A place where I can tell stories in images, capture moods, and help ensure that the important moments become not just memories, but timeless stories.",
+      "bio": "I’m Gábor Iszak — photographer, software developer, wannabe graphic designer.\n\nSince childhood, software development has been my main goal, and I managed to make that happen. In 2019, however, a camera was put in my hand so I could help with the municipal campaign in my then-home — and something completely new began there. That’s when I fell in love with photography, with capturing special moments, and with the world of creative work.\n\nSince then, I have graduated, moved out on my own, found a job, but photography has stayed with me all along — and over time it became much more than a simple hobby.\n\nFor me, the greatest joy is when I can capture those moments that are truly about you. The honest smiles, the spontaneous laughter, the quiet, intimate moments — those little details from which real, valuable memories are born.\n\nFor me, Prism Visuals is much more than work. It’s a space where a personal dream, creativity, and human stories meet. A place where I can tell stories in images, capture moods, and help ensure that the important moments become not just memories, but timeless stories."
     },
     "partner": {
       "role": "Videographer",
@@ -81,7 +84,8 @@
     "event": "Event",
     "commercial": "Commercial",
     "videography": "Video",
-    "noWorkYet": "No work yet"
+    "noWorkYet": "No work yet",
+    "subtitle": "Selected Work"
   },
   "pricing": {
     "title": "Pricing",
@@ -319,11 +323,16 @@
       "submitting": "Submitting...",
       "success": "Thank you! Your review has been added.",
       "error": "Failed to submit review. Please try again."
-    }
+    },
+    "loading": "Loading reviews..."
   },
   "footer": {
     "copyright": "© 2026 Prism Visuals Budapest. All rights reserved.",
-    "followUs": "Follow Us"
+    "followUs": "Follow Us",
+    "navigate": "Navigate",
+    "location": "Budapest, Hungary",
+    "tagline": "Photography & Cinematography",
+    "crafted": "Crafted with intention."
   },
   "gallery": {
     "title": "Gallery Access",
@@ -380,7 +389,9 @@
     "filterLiked": "Filter by liked",
     "filterLikedActive": "Showing liked photos",
     "noLikedYet": "No liked photos yet",
-    "noLikedHint": "Tap the heart on any photo to save it here"
+    "noLikedHint": "Tap the heart on any photo to save it here",
+    "clickPhotoHint": "Click any photo for lightbox view",
+    "close": "Close"
   },
   "maintenance": {
     "title": "Under Maintenance",
@@ -475,5 +486,12 @@
         "images": "Images"
       }
     }
+  },
+  "galleryTypes": {
+    "wedding": "Wedding",
+    "portrait": "Portrait",
+    "event": "Event",
+    "commercial": "Commercial",
+    "video": "Video"
   }
 }

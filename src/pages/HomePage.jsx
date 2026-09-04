@@ -60,7 +60,7 @@ const HomePage = () => {
           {reviewsLoading ? (
             <div className="flex items-center justify-center py-12">
               <LoadingSpinner size="lg" className="mr-3" />
-              <span className="text-brand-warm text-lg">{t('reviews.loading') || 'Loading reviews...'}</span>
+              <span className="text-brand-warm text-lg">{t('reviews.loading')}</span>
             </div>
           ) : (
             <ReviewCarousel reviews={reviews} />
@@ -72,10 +72,10 @@ const HomePage = () => {
       <section className="py-28 px-6 bg-brand-black">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <p className="section-label mb-3">{t('reviews.formTitle') || 'Share Your Experience'}</p>
+            <p className="section-label mb-3">{t('reviews.formTitle')}</p>
             <span className="divider-line" />
             <p className="text-brand-muted text-base leading-loose font-body font-light max-w-2xl mx-auto mt-6">
-              {t('reviews.formDescription') || 'We\'d love to hear about your experience. Your review helps others discover us and inspires our work.'}
+              {t('reviews.formDescription')}
             </p>
           </div>
           <ReviewForm onSubmit={addReview} />

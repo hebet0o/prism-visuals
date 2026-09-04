@@ -173,7 +173,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
       {/* Content */}
       <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
         {/* Eyebrow label */}
-        <p className="section-label mb-8 opacity-80">Budapest, Hungary</p>
+        <p className="section-label mb-8 opacity-80">{t('hero.location') || 'Budapest, Hungary'}</p>
 
         {/* Main headline — serif display */}
         <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-brand-warm font-normal leading-tight mb-6 max-w-5xl text-balance">
@@ -196,7 +196,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
 
       {/* Scroll indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
-        <span className="section-label text-[10px]">scroll</span>
+        <span className="section-label text-[10px]">{t('hero.scroll') || 'scroll'}</span>
         <span className="block w-px h-8 bg-brand-warm animate-pulse" />
       </div>
 

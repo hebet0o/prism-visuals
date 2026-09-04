@@ -168,11 +168,11 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               className="absolute top-6 right-6 px-4 py-2 bg-brand-charcoal/80 hover:bg-brand-charcoal text-brand-warm rounded-md transition-colors text-sm font-medium flex items-center space-x-2"
             >
               <span>✕</span>
-              <span className="hidden sm:inline">Close</span>
+              <span className="hidden sm:inline">{t('gallery.close') || 'Close'}</span>
             </button>
 
             <p className="section-label mb-2 uppercase tracking-widest text-xs font-heading font-semibold text-brand-bronze">
-              {openGallery.type ? openGallery.type : 'Gallery'}
+              {openGallery.type ? (t(`galleryTypes.${openGallery.type}`) || openGallery.type) : t('gallery.privateGallery')}
             </p>
             <h1 className="font-display text-3xl md:text-5xl text-brand-warm tracking-display mb-3 font-normal italic">
               {openGallery.name}
@@ -188,7 +188,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setLayout('masonry')}
-                title="Masonry Layout"
+                title={t('gallery.layoutMasonry') || 'Masonry'}
                 className={`p-2 rounded-md transition-colors ${
                   layout === 'masonry'
                     ? 'text-brand-bronze bg-brand-dark'
@@ -206,7 +206,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               </button>
               <button
                 onClick={() => setLayout('grid')}
-                title="Grid Layout"
+                title={t('gallery.layoutGrid') || 'Grid'}
                 className={`p-2 rounded-md transition-colors ${
                   layout === 'grid'
                     ? 'text-brand-bronze bg-brand-dark'
@@ -222,7 +222,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               </button>
             </div>
             <p className="text-xs text-brand-muted font-body font-light hidden sm:block">
-              Click any photo for lightbox view
+              {t('gallery.clickPhotoHint')}
             </p>
           </div>
 
