@@ -109,8 +109,8 @@ const GalleryCardGrid = ({ galleries, loading, labels = {} }) => {
 
   return (
     <>
-      {/* Gallery Cards Grid — Responsive 4 columns max with consistent 3:2 ratio */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {/* Clean full-bleed picture cards — hover dark overlay with gallery title */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {galleries.map((gallery) => {
           const cover = gallery.pictures[0]
 
@@ -118,45 +118,30 @@ const GalleryCardGrid = ({ galleries, loading, labels = {} }) => {
             <div
               key={gallery.id}
               onClick={() => toggleGallery(gallery.id)}
-              className="group flex flex-col bg-brand-dark border border-brand-charcoal/70 rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:border-brand-bronze/60 hover:shadow-xl hover:shadow-brand-bronze/5"
+              className="group relative aspect-[4/5] overflow-hidden rounded-lg cursor-pointer"
             >
-              <div className="relative aspect-[3/2] overflow-hidden bg-brand-black">
-                {cover ? (
-                  <img
-                    src={pb.files.getURL(cover, cover.image, { thumb: '600x400' })}
-                    alt={gallery.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-brand-muted text-xs">
-                    {emptyText}
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-brand-black/80 via-brand-black/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
+              {cover ? (
+                <img
+                  src={pb.files.getURL(cover, cover.image, { thumb: '600x800' })}
+                  alt={gallery.name}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full bg-brand-dark flex items-center justify-center">
+                  <span className="text-brand-muted text-sm">{emptyText}</span>
+                </div>
+              )}
 
-                {gallery.type && (
-                  <span className="absolute top-3 left-3 px-2.5 py-1 bg-brand-black/70 backdrop-blur-md border border-brand-charcoal text-[10px] font-heading font-semibold uppercase tracking-wider text-brand-bronze rounded-full">
-                    {gallery.type}
-                  </span>
-                )}
-
-                <span className="absolute bottom-3 right-3 px-2.5 py-1 bg-brand-black/70 backdrop-blur-md text-[11px] font-body text-brand-offwhite/90 rounded-full">
+              <div className="absolute inset-0 bg-brand-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col items-center justify-center px-6 text-center">
+                <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-brand-warm italic mb-2">
+                  {gallery.name}
+                </h2>
+                <p className="text-brand-bronze text-xs tracking-widest uppercase">
                   {gallery.pictures.length} {photosText}
+                </p>
+                <span className="mt-4 text-brand-offwhite text-xs tracking-display uppercase opacity-80 border-b border-brand-bronze/40 pb-1">
+                  {viewGalleryText}
                 </span>
-              </div>
-
-              <div className="p-5 flex flex-col justify-between flex-1">
-                <div>
-                  <h3 className="font-display text-xl text-brand-warm group-hover:text-brand-bronze transition-colors line-clamp-1 italic">
-                    {gallery.name}
-                  </h3>
-                </div>
-                <div className="mt-4 flex items-center justify-between text-xs text-brand-muted font-heading uppercase tracking-widest pt-3 border-t border-brand-charcoal/40">
-                  <span>{viewGalleryText}</span>
-                  <span className="text-brand-bronze transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </div>
               </div>
             </div>
           )
