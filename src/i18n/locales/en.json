@@ -117,7 +117,7 @@
       "deluxe": {
         "name": "Deluxe",
         "price": "185 000",
-        "badge": "Most Popular",
+        "badge": "",
         "features": [
           "10–12 hours of availability",
           "Preparations, ceremony & reception",
@@ -129,7 +129,7 @@
       "premium": {
         "name": "Premium",
         "price": "200 000",
-        "badge": "",
+        "badge": "Most Popular",
         "features": [
           "10–12 hours of availability",
           "Preparations, ceremony & reception",

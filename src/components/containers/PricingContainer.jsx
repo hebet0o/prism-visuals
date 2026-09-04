@@ -65,7 +65,7 @@ const PricingContainer = () => {
               badge={pkgData.badge}
               features={pkgData.features || []}
               buttonText={t('pricing.contactButton')}
-              featured={key === 'deluxe' || (activeCategory === 'bundle' && key === 'deluxe')}
+              featured={Boolean(pkgData.badge)}
             />
           )
         })}

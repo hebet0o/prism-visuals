@@ -117,7 +117,7 @@
       "deluxe": {
         "name": "Deluxe",
         "price": "185 000",
-        "badge": "Legnépszerűbb",
+        "badge": "",
         "features": [
           "10–12 óra rendelkezésre állás",
           "Készülődés, ceremónia és lakodalom fotózása",
@@ -129,7 +129,7 @@
       "premium": {
         "name": "Prémium",
         "price": "200 000",
-        "badge": "",
+        "badge": "Legnépszerűbb",
         "features": [
           "10–12 óra rendelkezésre állás",
           "Készülődés, ceremónia és lakodalom fotózása",
