@@ -397,7 +397,7 @@
       "hidePhotos": "Képek Elrejtése",
       "visibilityError": "A galéria láthatóságának módosítása sikertelen",
       "pictureVisibilityError": "A kép láthatóságának módosítása sikertelen",
-      "photoSelectHint": "Kattints egy képre a láthatóság váltásához. A változások csak a Mentés gombra kattintva kerülnek mentésre.",
+      "photoSelectHint": "Kattints egy képre a láthatóság váltásához. Kattints a ★ ikonra a borítókép beállításához.",
       "selectAll": "Minden látható",
       "selectNone": "Minden rejtett",
       "pendingChange": "1 nem mentett változás",
@@ -421,7 +421,11 @@
         "password": "Jelszó",
         "passwordPlaceholder": "Add meg a hozzáférési jelszót",
         "images": "Képek"
-      }
+      },
+      "setCover": "Beállítás borítóképnek",
+      "coverPhoto": "Borítókép",
+      "isCover": "Borító",
+      "coverUpdated": "Borítókép frissítve!"
     }
   },
   "gallery": {

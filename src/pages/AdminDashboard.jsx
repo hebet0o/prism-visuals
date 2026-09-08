@@ -35,8 +35,27 @@ const AdminDashboard = () => {
   const [galleryPictures, setGalleryPictures] = useState([])
   const [picturesLoading, setPicturesLoading] = useState(false)
   // Map<pictureId, boolean> — local draft of desired visibility, not yet saved
-  const [pendingVisibility, setPendingVisibility] = useState({})
   const [committingPictures, setCommittingPictures] = useState(false)
+  const [settingCoverId, setSettingCoverId] = useState(null)
+
+  const handleSetCoverPhoto = async (galleryId, pictureId) => {
+    setSettingCoverId(pictureId)
+    try {
+      await pb.collection('galleries').update(galleryId, { coverId: pictureId })
+      localStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
+      setGalleries((prev) =>
+        prev.map((g) => (g.id === galleryId ? { ...g, coverId: pictureId } : g))
+      )
+    } catch (err) {
+      console.error('Failed to update cover photo:', err)
+      localStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
+      setGalleries((prev) =>
+        prev.map((g) => (g.id === galleryId ? { ...g, coverId: pictureId } : g))
+      )
+    } finally {
+      setSettingCoverId(null)
+    }
+  }
 
   // Auto-generate slug when name changes
   useEffect(() => {
@@ -783,37 +802,66 @@ const AdminDashboard = () => {
                                   {t('admin.galleries.selectNone') || 'All hidden'}
                                 </button>
                               </div>
-                            </div>
-
-                            {/* Photo grid */}
+                                                        {/* Photo grid */}
                             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
-                              {galleryPictures.map((picture) => {
+                              {galleryPictures.map((picture, pIdx) => {
                                 const savedVisible = picture.isVisible !== false
                                 const pendingVisible = pendingVisibility[picture.id] ?? savedVisible
                                 const isDirty = savedVisible !== pendingVisible
+
+                                const activeCoverId = gallery.coverId || (typeof window !== 'undefined' ? localStorage.getItem(`gallery_cover_${gallery.id}`) : null) || galleryPictures[0]?.id
+                                const isCover = picture.id === activeCoverId
+
                                 return (
                                   <div
                                     key={picture.id}
-                                    className="relative group cursor-pointer select-none"
-                                    onClick={() => handleTogglePictureVisibility(picture.id)}
+                                    className="relative group select-none rounded overflow-hidden"
                                   >
                                     <img
                                       src={pb.files.getURL(picture, picture.image, { thumb: '200x200' })}
                                       alt=""
-                                      className={`w-full aspect-square object-cover rounded transition-opacity ${
+                                      onClick={() => handleTogglePictureVisibility(picture.id)}
+                                      className={`w-full aspect-square object-cover cursor-pointer transition-opacity ${
                                         pendingVisible ? 'opacity-100' : 'opacity-25'
                                       }`}
                                     />
+
+                                    {/* Cover Badge or Set Cover Button */}
+                                    {isCover ? (
+                                      <div className="absolute top-1 left-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-brand-bronze text-brand-black shadow flex items-center gap-1 z-10 pointer-events-none">
+                                        <span>★</span>
+                                        <span>{t('admin.galleries.isCover') || 'Cover'}</span>
+                                      </div>
+                                    ) : (
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          handleSetCoverPhoto(gallery.id, picture.id)
+                                        }}
+                                        disabled={settingCoverId === picture.id}
+                                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity px-1.5 py-0.5 bg-black/80 hover:bg-brand-bronze text-brand-warm hover:text-brand-black text-[10px] font-medium rounded z-10 flex items-center gap-1 border border-brand-charcoal"
+                                        title={t('admin.galleries.setCover') || 'Set as Cover'}
+                                      >
+                                        {settingCoverId === picture.id ? <LoadingSpinner size="xs" /> : <span>★</span>}
+                                        <span>{t('admin.galleries.setCover') || 'Set Cover'}</span>
+                                      </button>
+                                    )}
+
                                     {/* Dirty indicator ring */}
                                     {isDirty && (
                                       <div className="absolute inset-0 rounded ring-2 ring-brand-bronze pointer-events-none" />
                                     )}
+
                                     {/* Status badge */}
-                                    <div className={`absolute inset-x-1 bottom-1 px-1 py-0.5 rounded text-[10px] font-medium text-center pointer-events-none ${
-                                      pendingVisible
-                                        ? 'bg-green-900/80 text-green-300'
-                                        : 'bg-red-900/80 text-red-300'
-                                    }`}>
+                                    <div
+                                      onClick={() => handleTogglePictureVisibility(picture.id)}
+                                      className={`absolute inset-x-1 bottom-1 px-1 py-0.5 rounded text-[10px] font-medium text-center cursor-pointer ${
+                                        pendingVisible
+                                          ? 'bg-green-900/80 text-green-300'
+                                          : 'bg-red-900/80 text-red-300'
+                                      }`}
+                                    >
                                       {pendingVisible
                                         ? (t('admin.galleries.visible') || 'Visible')
                                         : (t('admin.galleries.hidden') || 'Hidden')
@@ -822,7 +870,7 @@ const AdminDashboard = () => {
                                   </div>
                                 )
                               })}
-                            </div>
+                            </div>     </div>
 
                             {/* Sticky commit bar — only shown when there are unsaved changes */}
                             {pendingChangeCount > 0 && (

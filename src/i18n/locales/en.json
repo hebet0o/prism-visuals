@@ -460,7 +460,7 @@
       "hidePhotos": "Hide Photos",
       "visibilityError": "Failed to update gallery visibility",
       "pictureVisibilityError": "Failed to update picture visibility",
-      "photoSelectHint": "Click a photo to toggle visibility. Changes are only saved when you click Commit.",
+      "photoSelectHint": "Click a photo to toggle visibility. Click ★ to set as cover photo.",
       "selectAll": "All visible",
       "selectNone": "All hidden",
       "pendingChange": "1 unsaved change",
@@ -484,7 +484,11 @@
         "password": "Password",
         "passwordPlaceholder": "Enter access password",
         "images": "Images"
-      }
+      },
+      "setCover": "Set as Cover",
+      "coverPhoto": "Cover Photo",
+      "isCover": "Cover",
+      "coverUpdated": "Cover photo updated!"
     }
   },
   "galleryTypes": {

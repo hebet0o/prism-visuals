@@ -121,7 +121,8 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
       {/* Clean full-bleed picture cards — hover dark overlay with gallery title */}
       <div className={gridClass}>
         {galleries.map((gallery) => {
-          const cover = gallery.pictures[0]
+          const savedCoverId = gallery.coverId || (typeof window !== 'undefined' ? localStorage.getItem(`gallery_cover_${gallery.id}`) : null)
+          const cover = (savedCoverId && gallery.pictures.find((p) => p.id === savedCoverId)) || gallery.pictures[0]
 
           return (
             <div
