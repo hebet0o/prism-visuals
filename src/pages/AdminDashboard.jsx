@@ -35,6 +35,7 @@ const AdminDashboard = () => {
   const [galleryPictures, setGalleryPictures] = useState([])
   const [picturesLoading, setPicturesLoading] = useState(false)
   // Map<pictureId, boolean> — local draft of desired visibility, not yet saved
+  const [pendingVisibility, setPendingVisibility] = useState({})
   const [committingPictures, setCommittingPictures] = useState(false)
   const [settingCoverId, setSettingCoverId] = useState(null)
 
