@@ -7,10 +7,10 @@ export const PLACEHOLDER_IMAGES = {
   ],
   featured: [
     '/statikus-kepek/featured/202.jpg',
+    '/statikus-kepek/featured/4L5A1864.jpg',
     '/statikus-kepek/featured/4L5A2051.jpg',
     '/statikus-kepek/featured/IMG_2224-2.jpg',
     '/statikus-kepek/featured/IMG_3661.jpg',
-    '/statikus-kepek/featured/IMG_3723.jpg',
     '/statikus-kepek/featured/IMG_5894.jpg',
   ],
 }
