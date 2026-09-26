@@ -62,7 +62,7 @@ const PricingContainer = () => {
             <PricingCard
               key={key}
               name={pkgData.name}
-              price={t('pricing.customPrice')}
+              price={pkgData.price}
               badge=""
               features={pkgData.features || []}
               buttonText={t('pricing.contactButton')}

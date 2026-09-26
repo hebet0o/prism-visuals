@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const ReviewCarousel = ({ reviews }) => {
   const [current, setCurrent] = useState(0)
@@ -7,22 +7,27 @@ const ReviewCarousel = ({ reviews }) => {
     return null
   }
 
-  const review = reviews[Math.min(current, reviews.length - 1)]
+  const activeIndex = Math.min(current, reviews.length - 1)
   const hasMultiple = reviews.length > 1
 
   const goToPrevious = () => {
-    setCurrent((prev) => (prev === 0 ? reviews.length - 1 : prev - 1))
+    setCurrent(activeIndex === 0 ? reviews.length - 1 : activeIndex - 1)
   }
 
   const goToNext = () => {
-    setCurrent((prev) => (prev === reviews.length - 1 ? 0 : prev + 1))
+    setCurrent(activeIndex === reviews.length - 1 ? 0 : activeIndex + 1)
   }
 
   return (
     <div className="max-w-3xl mx-auto">
       {/* Review Content */}
-      <div className="mb-10">
-        <blockquote className="font-display italic text-2xl md:text-3xl text-brand-warm/90 leading-relaxed mb-10 text-center">
+      {/* Stacked grid items reserve the tallest review's height at every screen width.
+          Inactive items retain layout space but are hidden visually and from assistive tech. */}
+      <div className="mb-10 grid" aria-live="polite">
+        {reviews.map((review, index) => (
+        <div key={review.id ?? index} aria-hidden={index !== activeIndex}
+          className={`col-start-1 row-start-1 min-w-0 flex flex-col break-words ${index !== activeIndex ? 'invisible pointer-events-none' : ''}`}>
+        <blockquote className="font-display italic text-2xl md:text-3xl text-brand-warm/90 leading-relaxed mb-10 text-center flex-1">
           &ldquo;{review.quote}&rdquo;
         </blockquote>
         <span className="divider-line" />
@@ -32,6 +37,8 @@ const ReviewCarousel = ({ reviews }) => {
         <p className="font-heading text-xs uppercase tracking-widest text-brand-muted mt-1 text-center">
           {review.event}
         </p>
+        </div>
+        ))}
       </div>
 
       {/* Navigation Controls - Only show if multiple reviews */}
@@ -54,7 +61,7 @@ const ReviewCarousel = ({ reviews }) => {
                 key={index}
                 onClick={() => setCurrent(index)}
                 className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                  index === current ? 'bg-brand-bronze' : 'bg-brand-warm/30'
+                  index === activeIndex ? 'bg-brand-bronze' : 'bg-brand-warm/30'
                 }`}
                 aria-label={`Go to review ${index + 1}`}
               />
@@ -76,7 +83,7 @@ const ReviewCarousel = ({ reviews }) => {
       {/* Review Count */}
       {hasMultiple && (
         <p className="text-center text-brand-muted text-xs mt-6">
-          {current + 1} / {reviews.length}
+          {activeIndex + 1} / {reviews.length}
         </p>
       )}
     </div>
