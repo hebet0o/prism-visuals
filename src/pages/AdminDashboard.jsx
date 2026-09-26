@@ -17,6 +17,7 @@ const AdminDashboard = () => {
   const {
     inquiries,
     isLoading: inquiriesLoading,
+    error: inquiriesError,
     updateInquiryStatus,
     deleteInquiry,
     newCount: newInquiriesCount
@@ -608,6 +609,15 @@ const AdminDashboard = () => {
               <div className="text-brand-muted flex items-center space-x-2 py-8">
                 <LoadingSpinner size="sm" />
                 <span>{t('admin.inquiries.loading') || 'Loading messages...'}</span>
+              </div>
+            ) : inquiriesError ? (
+              <div className="bg-red-950/30 border border-red-500/40 p-6 rounded-lg text-red-300">
+                <p className="font-heading text-lg mb-1">{t('admin.inquiries.loadError') || 'Hiba az üzenetek betöltésekor'}</p>
+                <p className="text-sm text-red-300/80">
+                  {i18n.language === 'hu'
+                    ? 'Ellenőrizd a PocketBase admin felületén az "inquiries" gyűjtemény API szabályait (List / View Rule: @request.auth.id != "").'
+                    : 'Check the API rules for the "inquiries" collection in PocketBase admin (List / View Rule: @request.auth.id != "").'}
+                </p>
               </div>
             ) : filteredInquiries.length === 0 ? (
               <div className="bg-brand-dark p-12 text-center rounded-lg border border-brand-charcoal text-brand-muted">

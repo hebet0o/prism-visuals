@@ -19,7 +19,12 @@ class SessionAuthStore extends BaseAuthStore {
     try { sessionStorage.removeItem('pocketbase_auth') } catch { /* Storage may be blocked. */ }
   }
 }
-const pb = new PocketBase(import.meta.env.VITE_POCKETBASE_URL || 'https://api.prismvisuals.hu', new SessionAuthStore())
+const defaultUrl = 'https://api.prismvisuals.hu'
+let configuredUrl = import.meta.env.VITE_POCKETBASE_URL || defaultUrl
+if (typeof window !== 'undefined' && window.location.protocol === 'https:' && configuredUrl.startsWith('http://')) {
+  configuredUrl = defaultUrl
+}
+const pb = new PocketBase(configuredUrl, new SessionAuthStore())
 
 // Enable auto-cancellation for realtime subscriptions
 pb.autoCancellation(false)

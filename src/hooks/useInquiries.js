@@ -15,9 +15,11 @@ export const addInquiry = async (data) => {
 export const useInquiries = () => {
   const [inquiries, setInquiries] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   const loadInquiries = useCallback(async () => {
     setIsLoading(true)
+    setError(null)
     try {
       const result = await pb.collection('inquiries').getList(1, 200, {
         sort: '-created'
@@ -25,6 +27,7 @@ export const useInquiries = () => {
       setInquiries(result.items)
     } catch (err) {
       console.warn('Failed to load inquiries from PocketBase:', err)
+      setError(err)
       setInquiries([])
     } finally {
       setIsLoading(false)
@@ -62,6 +65,7 @@ export const useInquiries = () => {
   return {
     inquiries,
     isLoading,
+    error,
     loadInquiries,
     updateInquiryStatus,
     deleteInquiry,

@@ -51,7 +51,9 @@ const PortfolioContainer = () => {
           loading={loading}
           columns={3}
           labels={{
-            loadingText: t('portfolio.loading') || 'Loading...',
+            loadingText: (!t('portfolio.loading') || t('portfolio.loading') === 'portfolio.loading')
+              ? (i18n.language === 'hu' ? 'Galériák betöltése...' : 'Loading galleries...')
+              : t('portfolio.loading'),
             emptyText: t('portfolio.noWorkYet'),
             photosText: t('weddingGalleries.photos'),
             viewGalleryText: t('weddingGalleries.viewGallery'),
