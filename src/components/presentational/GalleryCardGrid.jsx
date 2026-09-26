@@ -125,7 +125,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
                 <img
                   src={pb.files.getURL(cover, cover.image, { thumb: '600x800' })}
                   alt={gallery.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 group-focus-visible:scale-105"
                 />
               ) : (
                 <div className="w-full h-full bg-brand-dark flex items-center justify-center">
@@ -133,7 +133,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
                 </div>
               )}
 
-              <div className="absolute inset-0 bg-brand-black/80 opacity-100 transition-opacity duration-400 flex flex-col items-center justify-center px-6 text-center">
+              <div className="absolute inset-0 bg-brand-black/80 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-[400ms] flex flex-col items-center justify-center px-6 text-center">
                 <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-brand-warm italic mb-2">
                   {gallery.name}
                 </h2>
