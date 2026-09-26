@@ -23,7 +23,7 @@ export default function GalleryPasswordForm({ galleryId }) {
   return <details className="mt-4 border-t border-brand-charcoal pt-3 text-brand-warm">
     <summary className="cursor-pointer">{t('admin.galleries.setPassword')}</summary>
     <form onSubmit={submit} className="mt-3 space-y-3 max-w-lg">
-      <p className="text-sm text-brand-muted">{t('admin.galleries.passwordHelp')}</p>
+
       <label className="block">{t('admin.galleries.newPassword')}
         <input type="password" autoComplete="new-password" minLength={12} maxLength={72} required value={password} onChange={e => setPassword(e.target.value)} className="block w-full mt-1 p-2 bg-brand-black border border-brand-charcoal rounded" />
       </label>

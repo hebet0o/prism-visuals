@@ -459,9 +459,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-brand-black">
-      <p role="note" className="p-6 border-b border-brand-bronze text-brand-warm">
-        {t('legal.adminWarning')}
-      </p>
+
+
+
       {/* Header */}
       <div className="bg-brand-dark border-b border-brand-charcoal">
         <div className="max-w-7xl mx-auto px-6 py-4">

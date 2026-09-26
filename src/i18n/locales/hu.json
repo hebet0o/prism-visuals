@@ -339,6 +339,7 @@
     "logout": "Kijelentkezés",
     "tabs": {
       "dashboard": "Vezérlőpult",
+      "inquiries": "Üzenetek",
       "reviews": "Értékelések",
       "galleries": "Galériák"
     },
@@ -355,9 +356,28 @@
     },
     "dashboard": {
       "title": "Vezérlőpult Áttekintés",
+      "totalInquiries": "Beérkezett üzenetek",
       "totalReviews": "Összes Értékelés",
       "totalGalleries": "Összes Galéria",
       "welcome": "Üdvözöljük"
+    },
+    "inquiries": {
+      "title": "Beérkezett megkeresések",
+      "subtitle": "A weboldal kapcsolatfelvételi űrlapján keresztül érkezett ügyfélüzenetek.",
+      "loading": "Üzenetek betöltése...",
+      "empty": "Még nem érkezett megkeresés.",
+      "all": "Összes",
+      "filterNew": "Új",
+      "filterReplied": "Válaszolva",
+      "new": "Új",
+      "replied": "Válaszolva",
+      "reply": "Válasz e-mailben",
+      "markReplied": "Megjelölés válaszoltként",
+      "markNew": "Megjelölés újként",
+      "delete": "Törlés",
+      "deleteConfirm": "Biztosan törölni szeretnéd ezt az üzenetet?",
+      "phone": "Telefon",
+      "service": "Szolgáltatás"
     },
     "reviews": {
       "title": "Értékelés Kezelés",
@@ -504,41 +524,6 @@
   "maintenance": {
     "title": "Karbantartás alatt",
     "subtitle": "Jelenleg karbantartási munkákat végzünk. Köszönjük a türelmedet."
-  },
-  "admin": {
-    "title": "Admin Vezérlőpult",
-    "logout": "Kijelentkezés",
-    "tabs": {
-      "dashboard": "Áttekintés",
-      "inquiries": "Üzenetek",
-      "reviews": "Értékelések",
-      "galleries": "Galériák"
-    },
-    "dashboard": {
-      "title": "Áttekintés",
-      "totalInquiries": "Beérkezett üzenetek",
-      "totalReviews": "Összes értékelés",
-      "totalGalleries": "Összes galéria",
-      "welcome": "Bejelentkezve"
-    },
-    "inquiries": {
-      "title": "Beérkezett megkeresések",
-      "subtitle": "A weboldal kapcsolatfelvételi űrlapján keresztül érkezett ügyfélüzenetek.",
-      "loading": "Üzenetek betöltése...",
-      "empty": "Még nem érkezett megkeresés.",
-      "all": "Összes",
-      "filterNew": "Új",
-      "filterReplied": "Válaszolva",
-      "new": "Új",
-      "replied": "Válaszolva",
-      "reply": "Válasz e-mailben",
-      "markReplied": "Megjelölés válaszoltként",
-      "markNew": "Megjelölés újként",
-      "delete": "Törlés",
-      "deleteConfirm": "Biztosan törölni szeretnéd ezt az üzenetet?",
-      "phone": "Telefon",
-      "service": "Szolgáltatás"
-    }
   },
   "galleryTypes": {
     "wedding": "Esküvő",
