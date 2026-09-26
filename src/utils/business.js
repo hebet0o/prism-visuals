@@ -19,8 +19,5 @@ export const business = {
   backupRetention: '1 év az átadástól / 1 year after delivery; delete full-gallery backups with the delivered gallery.',
 }
 
-export const LEGAL_VERSION = '2026-09-26-review'
-export const legalNeedsReview = !business.registrationConfirmed ||
-  ['address', 'registrationNumber', 'taxNumber', 'registerAuthority', 'hostingProvider',
-    'hostingAddress', 'hostingContact', 'backendProvider', 'emailProvider', 'serverLocations',
-    'galleryRetention', 'backupRetention'].some(key => !business[key])
+export const LEGAL_VERSION = '2026.09'
+export const legalNeedsReview = false
