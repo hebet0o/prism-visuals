@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { SOCIAL_LINKS } from '../../utils/constants'
+import Logo from './Logo'
 
 const Footer = () => {
   const { t } = useTranslation()
@@ -13,7 +14,7 @@ const Footer = () => {
           {/* Brand */}
           <div>
             <Link to="/">
-              <span className="font-display text-2xl tracking-widest text-brand-warm">PRISM</span>
+              <Logo loading="lazy" />
             </Link>
             <p className="text-brand-muted text-xs font-body font-light mt-4 leading-relaxed">
               {t('footer.tagline')}<br />

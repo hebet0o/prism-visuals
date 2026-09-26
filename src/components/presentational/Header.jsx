@@ -2,6 +2,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import LanguageSwitch from './LanguageSwitch'
+import Logo from './Logo'
 
 const Header = () => {
   const { t } = useTranslation()
@@ -26,11 +27,11 @@ const Header = () => {
           scrolled ? 'bg-brand-black/95 backdrop-blur-sm' : 'bg-transparent'
         }`}
       >
-        <nav className="container mx-auto px-6 py-5">
-          <div className="flex items-center justify-center lg:justify-between lg:items-center gap-8 lg:gap-0">
+        <nav className="container mx-auto px-6 py-4">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
 
             {/* Left Navigation - Desktop */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-6 xl:gap-10 justify-self-start">
               <NavLink to="/about" className={navLinkClass}>
                 {t('nav.about')}
               </NavLink>
@@ -43,18 +44,12 @@ const Header = () => {
             </div>
 
             {/* Logo - Center */}
-            <Link to="/" className="flex-shrink-0" aria-label="Home">
-              <img
-                src="/logosvg.svg"
-                alt="PRISM logo"
-                className="h-12 w-auto"
-                loading="lazy"
-                decoding="async"
-              />
+            <Link to="/" className="col-start-2 row-start-1 justify-self-center" aria-label="Home">
+              <Logo />
             </Link>
 
             {/* Right Navigation - Desktop */}
-            <div className="hidden lg:flex items-center gap-10">
+            <div className="hidden lg:flex items-center gap-6 xl:gap-10 justify-self-end">
               <NavLink to="/pricing" className={navLinkClass}>
                 {t('nav.pricing')}
               </NavLink>
@@ -66,7 +61,7 @@ const Header = () => {
 
             {/* Mobile Hamburger */}
             <button
-              className="lg:hidden p-2 text-brand-warm ml-auto"
+              className="col-start-3 row-start-1 justify-self-end lg:hidden p-2 text-brand-warm"
               onClick={() => setIsMenuOpen(true)}
               aria-label="Open menu"
             >
@@ -84,7 +79,7 @@ const Header = () => {
         <div className="fixed inset-0 z-[100] bg-brand-black flex flex-col">
           <div className="flex justify-between items-center px-6 py-5">
             <Link to="/" onClick={() => setIsMenuOpen(false)}>
-              <span className="font-display text-xl tracking-widest text-brand-warm">PRISM</span>
+              <Logo />
             </Link>
             <button
               className="p-2 text-brand-warm"
