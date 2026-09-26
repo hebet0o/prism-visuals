@@ -3,9 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useState, useEffect } from 'react'
 import LanguageSwitch from './LanguageSwitch'
 import Logo from './Logo'
+import AccessibleDialog from '../AccessibleDialog'
 
 const Header = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
 
@@ -63,7 +64,9 @@ const Header = () => {
             <button
               className="col-start-3 row-start-1 justify-self-end lg:hidden p-2 text-brand-warm"
               onClick={() => setIsMenuOpen(true)}
-              aria-label="Open menu"
+              aria-label={i18n.language === 'hu' ? 'Menü megnyitása' : 'Open menu'}
+              aria-expanded={isMenuOpen}
+              aria-haspopup="dialog"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -76,7 +79,7 @@ const Header = () => {
 
       {/* Mobile Full-Screen Overlay */}
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[100] bg-brand-black flex flex-col">
+        <AccessibleDialog label={i18n.language === 'hu' ? 'Navigáció' : 'Navigation'} onClose={() => setIsMenuOpen(false)} className="fixed inset-0 z-[100] bg-brand-black flex flex-col">
           <div className="flex justify-between items-center px-6 py-5">
             <Link to="/" onClick={() => setIsMenuOpen(false)}>
               <Logo />
@@ -84,7 +87,7 @@ const Header = () => {
             <button
               className="p-2 text-brand-warm"
               onClick={() => setIsMenuOpen(false)}
-              aria-label="Close menu"
+              aria-label={i18n.language === 'hu' ? 'Menü bezárása' : 'Close menu'}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
@@ -93,7 +96,7 @@ const Header = () => {
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col justify-center items-center gap-10">
+          <div className="flex-1 overflow-y-auto flex flex-col justify-center items-center gap-6 py-6">
             {[
               { to: '/about', label: t('nav.about') },
               { to: '/wedding-galleries', label: t('nav.weddingGalleries') },
@@ -118,7 +121,7 @@ const Header = () => {
               <LanguageSwitch />
             </div>
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </>
   )

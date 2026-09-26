@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import useReducedMotion from '../../hooks/useReducedMotion'
 
 /**
  * Hero slider – persistent two-layer crossfade with Ken Burns zoom.
@@ -10,7 +11,11 @@ const TRANSITION_DURATION = 800  // ms – keep in sync with CSS transition
 const SLIDE_INTERVAL      = 6000 // ms – net display time per slide
 
 const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const reducedMotion = useReducedMotion()
+  const [paused, setPaused] = useState(false)
+  const pausedRef = useRef(false)
+  pausedRef.current = paused || reducedMotion
   const [activeSlot, setActiveSlot] = useState(0)
   const [slots, setSlots] = useState(() => [
     { src: images?.[0] ?? null, zoomKey: 0 },
@@ -46,6 +51,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
     if (images.length <= 1) return
 
     const advance = () => {
+      if (pausedRef.current) return
       if (transitioningRef.current) return
       transitioningRef.current = true
 
@@ -115,7 +121,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
   if (!images || images.length === 0) return null
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative min-h-screen w-full overflow-hidden">
 
       {/* Persistent two-slot background */}
       <div className="absolute inset-0">
@@ -129,6 +135,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
                 // Alternating between slow-zoom-0 / slow-zoom-1 restarts the
                 // CSS keyframe each time a new image lands on this slot.
                 animationName: `slow-zoom-${slot.zoomKey % 2}`,
+                animationPlayState: paused || reducedMotion ? 'paused' : 'running',
               }}
               className={[
                 'absolute inset-0 w-full h-full object-cover scale-105',
@@ -144,9 +151,9 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
       <div className="absolute inset-0 bg-gradient-to-b from-brand-black/30 via-brand-black/40 to-brand-black/70" />
 
       {/* Content */}
-      <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+      <div className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-36 pb-36">
         {/* Eyebrow label */}
-        <p className="section-label mb-8 opacity-80">{t('hero.location') || 'Budapest, Hungary'}</p>
+        <p className="section-label mb-8">{t('hero.location') || 'Budapest, Hungary'}</p>
 
         {/* Main headline — serif display */}
         <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-brand-warm font-normal leading-tight mb-6 max-w-5xl text-balance">
@@ -157,7 +164,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
         <span className="divider-line" />
 
         {/* Italic tagline */}
-        <p className="font-display italic text-lg md:text-xl lg:text-2xl text-brand-offwhite/80 mb-10 max-w-2xl leading-relaxed">
+        <p className="font-display italic text-lg md:text-xl lg:text-2xl text-brand-offwhite mb-10 max-w-2xl leading-relaxed">
           {tagline}
         </p>
 
@@ -168,10 +175,19 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+      <div aria-hidden="true" className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center gap-2">
         <span className="section-label text-[10px]">{t('hero.scroll') || 'scroll'}</span>
-        <span className="block w-px h-8 bg-brand-warm animate-pulse" />
+        <span className="block w-px h-8 bg-brand-warm" />
       </div>
+
+      {!reducedMotion && images.length > 1 && <button type="button" onClick={() => setPaused(p => !p)}
+        aria-label={i18n.language === 'hu' ? (paused ? 'Diavetítés folytatása' : 'Diavetítés szüneteltetése') : (paused ? 'Resume slideshow' : 'Pause slideshow')}
+        title={i18n.language === 'hu' ? (paused ? 'Folytatás' : 'Szünet') : (paused ? 'Play' : 'Pause')}
+        className="absolute bottom-6 right-6 w-11 h-11 flex items-center justify-center rounded-full bg-brand-black/70 text-brand-warm hover:bg-brand-black transition-colors">
+        <svg aria-hidden="true" className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          {paused ? <path d="M8 5v14l11-7z" /> : <path d="M7 5h3v14H7zm7 0h3v14h-3z" />}
+        </svg>
+      </button>}
 
     </section>
   )

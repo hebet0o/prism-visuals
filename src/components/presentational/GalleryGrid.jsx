@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next'
+import { imageAlt } from '../../utils/imageAlt'
+
 const GalleryGrid = ({ images, onImageClick, columns = 3 }) => {
+  const { i18n } = useTranslation()
   const gridColsClass = {
     2: 'grid-cols-1 md:grid-cols-2',
     3: 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
@@ -10,12 +14,16 @@ const GalleryGrid = ({ images, onImageClick, columns = 3 }) => {
       {images.map((image, index) => (
         <div
           key={index}
-          className="relative aspect-square overflow-hidden cursor-pointer group"
+          className={`relative aspect-square overflow-hidden group ${onImageClick ? 'cursor-pointer' : ''}`}
+          role={onImageClick ? 'button' : undefined}
+          tabIndex={onImageClick ? 0 : undefined}
+          onKeyDown={e => { if (onImageClick && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); onImageClick(index) } }}
+          aria-label={onImageClick ? imageAlt(image, i18n.language, index) : undefined}
           onClick={() => onImageClick && onImageClick(index)}
         >
           <img
-            src={image}
-            alt={`Gallery image ${index + 1}`}
+            src={typeof image === 'object' ? image.src : image}
+            alt={imageAlt(image, i18n.language, index)}
             className="w-full h-full object-cover transition-transform duration-[600ms] group-hover:scale-105"
             loading="lazy"
           />

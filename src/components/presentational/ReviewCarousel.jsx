@@ -7,7 +7,7 @@ const ReviewCarousel = ({ reviews }) => {
     return null
   }
 
-  const review = reviews[current]
+  const review = reviews[Math.min(current, reviews.length - 1)]
   const hasMultiple = reviews.length > 1
 
   const goToPrevious = () => {

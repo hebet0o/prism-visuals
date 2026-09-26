@@ -29,6 +29,7 @@ const PricingContainer = () => {
         {categories.map((cat) => (
           <button
             key={cat.id}
+            aria-pressed={activeCategory === cat.id}
             onClick={() => setActiveCategory(cat.id)}
             className={`px-5 py-2.5 text-xs font-heading font-semibold tracking-widest uppercase transition-all duration-300 ${
               activeCategory === cat.id
@@ -61,11 +62,11 @@ const PricingContainer = () => {
             <PricingCard
               key={key}
               name={pkgData.name}
-              price={pkgData.price}
-              badge={pkgData.badge}
+              price={t('pricing.customPrice')}
+              badge=""
               features={pkgData.features || []}
               buttonText={t('pricing.contactButton')}
-              featured={Boolean(pkgData.badge)}
+              featured={false}
             />
           )
         })}
@@ -74,7 +75,7 @@ const PricingContainer = () => {
       {/* Bottom Notes */}
       <div className="pt-8 border-t border-brand-charcoal/50 text-center space-y-2 text-xs text-brand-muted font-body font-light">
         <p>{t('pricing.note')}</p>
-        <p className="text-brand-bronze/80 font-medium">{t('pricing.offseason')}</p>
+        <p className="text-brand-bronze font-medium">{t('pricing.offseason')}</p>
       </div>
     </div>
   )

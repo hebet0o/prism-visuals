@@ -16,7 +16,7 @@ export default {
           black: '#100f0f',
           dark: '#1a1917',
           charcoal: '#2a2826',
-          bronze: '#9f8b6b',
+          bronze: '#c4aa85',
           'bronze-light': '#c4aa85',
           'bronze-dark': '#7a6a50',
           warm: '#f7f8f7',

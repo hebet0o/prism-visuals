@@ -3,8 +3,8 @@ import { useVisibleGalleries } from '../hooks/useVisibleGalleries'
 import GalleryCardGrid from '../components/presentational/GalleryCardGrid'
 
 const WeddingGalleriesPage = () => {
-  const { t } = useTranslation()
-  const { galleries, loading } = useVisibleGalleries()
+  const { t, i18n } = useTranslation()
+  const { galleries, loading, error } = useVisibleGalleries()
   const weddingGalleries = galleries.filter(g => g.type === 'wedding')
 
   return (
@@ -22,7 +22,8 @@ const WeddingGalleriesPage = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6">
-        <GalleryCardGrid
+        {error && <p role="status" className="text-center mb-8">{i18n.language === 'hu' ? 'A galériák jelenleg nem tölthetők be. Kérjük, próbáld újra később.' : 'Galleries could not be loaded. Please try again later.'}</p>}
+        {!error && <GalleryCardGrid
           galleries={weddingGalleries}
           loading={loading}
           columns={2}
@@ -32,7 +33,7 @@ const WeddingGalleriesPage = () => {
             photosText: t('weddingGalleries.photos'),
             viewGalleryText: t('weddingGalleries.viewGallery'),
           }}
-        />
+        />}
       </div>
     </div>
   )

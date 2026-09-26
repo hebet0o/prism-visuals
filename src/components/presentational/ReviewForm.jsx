@@ -1,136 +1,67 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { LEGAL_VERSION } from '../../utils/business'
 
-const ReviewForm = ({ onSubmit }) => {
-  const { t } = useTranslation()
-  const [formData, setFormData] = useState({
-    quote: '',
-    author: '',
-    event: '',
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  const handleSubmit = async (e) => {
+export default function ReviewForm({ onSubmit }) {
+  const { t, i18n } = useTranslation()
+  const hu = i18n.language === 'hu'
+  const busy = useRef(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [status, setStatus] = useState('')
+  const [length, setLength] = useState(0)
+  const permission = hu
+    ? 'Hozzájárulok az értékelésem, a választott nevem és a megadott esemény / helyszín közzétételéhez a Prism Visuals weboldalán. A hozzájárulásomat az info@prismvisuals.hu címen visszavonhatom.'
+    : 'I consent to publication of my review, chosen name and supplied event / location on the Prism Visuals website. I can withdraw permission at info@prismvisuals.hu.'
+  const handleSubmit = async e => {
     e.preventDefault()
-
-    // Validate form
-    if (!formData.quote.trim() || !formData.author.trim() || !formData.event.trim()) {
-      alert(t('reviews.form.allFieldsRequired') || 'All fields are required')
-      return
-    }
-
-    setIsSubmitting(true)
-
+    if (busy.current) return
+    const form = e.currentTarget
+    const data = new FormData(form)
+    const quote = String(data.get('quote') || '').trim()
+    const author = String(data.get('author') || '').trim()
+    if (!quote || !author || data.get('publication') !== 'yes') { setStatus('invalid'); return }
+    busy.current = true
+    setSubmitting(true)
+    setStatus('')
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 500))
-
-      // Submit the review
-      onSubmit(formData)
-
-      // Reset form and show success message
-      setFormData({ quote: '', author: '', event: '' })
-      setSubmitted(true)
-
-      // Hide success message after 3 seconds
-      setTimeout(() => setSubmitted(false), 3000)
-    } catch (error) {
-      console.error('Failed to submit review:', error)
-      alert(t('reviews.form.error') || 'Failed to submit review. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
+      await onSubmit({ quote, author, event: String(data.get('event') || '').trim(),
+        publicationConsent: { version: LEGAL_VERSION, text: permission, language: hu ? 'hu' : 'en', acceptedAt: new Date().toISOString() } })
+      form.reset()
+      setLength(0)
+      setStatus('success')
+    } catch { setStatus('error') }
+    finally { busy.current = false; setSubmitting(false) }
   }
-
-  return (
-    <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto">
-      <div className="space-y-6">
-        {/* Quote Field */}
-        <div>
-          <label htmlFor="quote" className="block text-xs uppercase tracking-display text-brand-bronze mb-3">
-            {t('reviews.form.review') || 'Your Review'}
-          </label>
-          <textarea
-            id="quote"
-            name="quote"
-            value={formData.quote}
-            onChange={handleChange}
-            placeholder={t('reviews.form.reviewPlaceholder') || 'Share your experience with us...'}
-            className="w-full px-4 py-3 bg-brand-charcoal border border-brand-warm/20 rounded text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze transition-colors duration-300"
-            rows="5"
-            required
-          />
-          <p className="text-xs text-brand-muted mt-2">
-            {formData.quote.length}/500 {t('reviews.form.characters') || 'characters'}
-          </p>
-        </div>
-
-        {/* Author and Event Row */}
-        <div className="grid grid-cols-2 gap-4">
-          {/* Author Field */}
-          <div>
-            <label htmlFor="author" className="block text-xs uppercase tracking-display text-brand-bronze mb-3">
-              {t('reviews.form.name') || 'Your Name'}
-            </label>
-            <input
-              type="text"
-              id="author"
-              name="author"
-              value={formData.author}
-              onChange={handleChange}
-              placeholder={t('reviews.form.namePlaceholder') || 'Name'}
-              className="w-full px-4 py-3 bg-brand-charcoal border border-brand-warm/20 rounded text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze transition-colors duration-300"
-              required
-            />
-          </div>
-
-          {/* Event Field */}
-          <div>
-            <label htmlFor="event" className="block text-xs uppercase tracking-display text-brand-bronze mb-3">
-              {t('reviews.form.event') || 'Event / Location'}
-            </label>
-            <input
-              type="text"
-              id="event"
-              name="event"
-              value={formData.event}
-              onChange={handleChange}
-              placeholder={t('reviews.form.eventPlaceholder') || 'e.g., Wedding, Budapest'}
-              className="w-full px-4 py-3 bg-brand-charcoal border border-brand-warm/20 rounded text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze transition-colors duration-300"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Submit Button */}
-        <div className="pt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full px-6 py-3 bg-brand-bronze text-brand-black font-heading font-semibold uppercase tracking-display rounded hover:bg-brand-bronze/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
-          >
-            {isSubmitting ? (t('reviews.form.submitting') || 'Submitting...') : t('reviews.form.submit') || 'Submit Review'}
-          </button>
-        </div>
-
-        {/* Success Message */}
-        {submitted && (
-          <div className="p-4 bg-green-900/30 border border-green-500/50 rounded text-green-400 text-sm text-center">
-            {t('reviews.form.success') || 'Thank you! Your review has been added.'}
-          </div>
-        )}
+  const labelClass = 'block text-xs font-heading uppercase tracking-display text-brand-bronze mb-3'
+  const fieldClass = 'w-full px-4 py-3 bg-brand-charcoal border border-brand-muted rounded text-brand-warm placeholder-brand-muted focus:border-brand-bronze transition-colors duration-300'
+  return <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto space-y-6" aria-describedby="review-notice" aria-busy={submitting}>
+    <fieldset disabled={submitting} className="space-y-6">
+      <legend className="sr-only">{t('reviews.formTitle')}</legend>
+      <div>
+        <label htmlFor="review-quote" className={labelClass}>{t('reviews.form.review')}</label>
+        <textarea id="review-quote" name="quote" rows={5} required maxLength={500} className={fieldClass}
+          placeholder={t('reviews.form.reviewPlaceholder')} onChange={e => setLength(e.target.value.length)} aria-describedby="review-count" />
+        <p id="review-count" className="text-xs text-brand-muted mt-2">{length}/500 {t('reviews.form.characters')}</p>
       </div>
-    </form>
-  )
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div><label htmlFor="review-author" className={labelClass}>{t('reviews.form.name')}</label>
+          <input id="review-author" name="author" required maxLength={60} placeholder={hu ? 'Név vagy becenév' : 'Name or nickname'} className={fieldClass} /></div>
+        <div><label htmlFor="review-event" className={labelClass}>{t('reviews.form.event')} <span className="normal-case tracking-normal">({hu ? 'opcionális' : 'optional'})</span></label>
+          <input id="review-event" name="event" maxLength={100} placeholder={t('reviews.form.eventPlaceholder')} className={fieldClass} /></div>
+      </div>
+      <div className="border-t border-brand-charcoal pt-6 space-y-4">
+        <p id="review-notice" className="text-xs leading-relaxed text-brand-muted">{hu ? 'Az értékelés csak jóváhagyás után jelenik meg. Ne adj meg más személyt azonosító adatot. ' : 'Your review appears only after approval. Please do not identify other people. '}<Link className="underline underline-offset-4 hover:text-brand-warm" to="/privacy-policy">{hu ? 'Adatkezelési tájékoztató' : 'Privacy policy'}</Link></p>
+        <label className="flex gap-3 items-start text-xs leading-relaxed text-brand-muted cursor-pointer">
+          <input type="checkbox" name="publication" value="yes" required className="mt-0.5 w-4 h-4 shrink-0 accent-brand-bronze" />
+          <span>{permission} {hu ? 'A szolgáltatás igénybevételének nem feltétele.' : 'This is not required to book a service.'}</span>
+        </label>
+      </div>
+      <button type="submit" className="w-full px-6 py-4 bg-brand-bronze text-brand-black font-heading font-semibold text-xs uppercase tracking-display rounded hover:bg-brand-warm disabled:opacity-60 disabled:cursor-wait transition-colors">
+        {submitting ? t('reviews.form.submitting') : t('reviews.form.submit')}
+      </button>
+    </fieldset>
+    {status === 'success' && <p role="status" className="border border-brand-bronze p-4 text-brand-warm text-sm text-center">{hu ? 'Köszönjük! Az értékelésed beérkezett, ellenőrzés után jelenik meg.' : 'Thank you! Your review was received and is awaiting approval.'}</p>}
+    {(status === 'error' || status === 'invalid') && <p role="alert" className="text-brand-warm text-sm">{status === 'invalid' ? (hu ? 'Kérjük, add meg a neved, az értékelésed és a közzétételi engedélyt.' : 'Please provide your name, review and publication permission.') : (hu ? 'Nem sikerült elküldeni. Az adataid megmaradtak; kérjük, próbáld újra később.' : 'Submission failed. Your entries have been kept; please try again later.')}</p>}
+  </form>
 }
-
-export default ReviewForm

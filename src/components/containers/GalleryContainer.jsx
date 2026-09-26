@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import AccessibleDialog from '../AccessibleDialog'
 import GalleryGrid from '../presentational/GalleryGrid'
 import ImageCarousel from '../presentational/ImageCarousel'
 
@@ -33,11 +34,10 @@ const GalleryContainer = ({ images }) => {
         ))}
 
         {selectedImage !== null && (
-          <div
+          <AccessibleDialog label="Photo gallery" onClose={closeModal}
             className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={closeModal}
           >
-            <button
+            <button aria-label="Close gallery"
               className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300"
               onClick={closeModal}
             >
@@ -46,7 +46,7 @@ const GalleryContainer = ({ images }) => {
             <div className="w-full max-w-6xl h-[80vh]" onClick={(e) => e.stopPropagation()}>
               <ImageCarousel images={images[selectedImage.groupIndex].images} autoplay={false} className="h-full" initialSlide={selectedImage.imageIndex} />
             </div>
-          </div>
+          </AccessibleDialog>
         )}
       </>
     )
@@ -57,20 +57,19 @@ const GalleryContainer = ({ images }) => {
         <GalleryGrid images={images} onImageClick={handleImageClick} />
 
         {selectedImage !== null && (
-          <div
+          <AccessibleDialog label="Photo gallery" onClose={closeModal}
             className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
-            onClick={closeModal}
           >
-            <button
+            <button aria-label="Close gallery"
               className="absolute top-4 right-4 text-white text-4xl hover:text-gray-300"
               onClick={closeModal}
             >
               &times;
             </button>
             <div className="w-full max-w-6xl h-[80vh]" onClick={(e) => e.stopPropagation()}>
-              <ImageCarousel images={images} autoplay={false} className="h-full" />
+              <ImageCarousel images={images} initialSlide={selectedImage} autoplay={false} className="h-full" />
             </div>
-          </div>
+          </AccessibleDialog>
         )}
       </>
     )

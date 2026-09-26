@@ -6,8 +6,8 @@ import GalleryCardGrid from '../presentational/GalleryCardGrid'
 const PORTFOLIO_TYPES = ['portrait', 'event', 'commercial', 'video']
 
 const PortfolioContainer = () => {
-  const { t } = useTranslation()
-  const { galleries, loading } = useVisibleGalleries()
+  const { t, i18n } = useTranslation()
+  const { galleries, loading, error } = useVisibleGalleries()
   const [selectedCategory, setSelectedCategory] = useState('all')
 
   const portfolioGalleries = galleries.filter(g => PORTFOLIO_TYPES.includes(g.type))
@@ -31,6 +31,7 @@ const PortfolioContainer = () => {
         {categories.map((category) => (
           <button
             key={category.id}
+            aria-pressed={selectedCategory === category.id}
             onClick={() => setSelectedCategory(category.id)}
             className={`text-xs font-heading font-semibold uppercase tracking-display transition-colors duration-300 pb-1 border-b ${
               selectedCategory === category.id
@@ -44,7 +45,8 @@ const PortfolioContainer = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-6">
-        <GalleryCardGrid
+        {error && <p role="status" className="text-center mb-8">{i18n.language === 'hu' ? 'A galériák jelenleg nem tölthetők be. Kérjük, próbáld újra később.' : 'Galleries could not be loaded. Please try again later.'}</p>}
+        {!error && <GalleryCardGrid
           galleries={visibleGalleries}
           loading={loading}
           columns={3}
@@ -54,7 +56,7 @@ const PortfolioContainer = () => {
             photosText: t('weddingGalleries.photos'),
             viewGalleryText: t('weddingGalleries.viewGallery'),
           }}
-        />
+        />}
       </div>
     </div>
   )

@@ -57,7 +57,7 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="bg-brand-dark p-8 rounded-lg">
           {error && (
             <div className="mb-6 p-4 bg-red-900/20 border border-red-500/50 rounded-md">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p role="alert" className="text-red-400 text-sm">{error}</p>
             </div>
           )}
 
@@ -68,6 +68,7 @@ const LoginPage = () => {
             <input
               type="email"
               id="email"
+              autoComplete="username"
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -84,6 +85,7 @@ const LoginPage = () => {
             <input
               type="password"
               id="password"
+              autoComplete="current-password"
               name="password"
               value={formData.password}
               onChange={handleChange}

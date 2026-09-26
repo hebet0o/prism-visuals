@@ -10,7 +10,9 @@ import PricingPage from './pages/PricingPage'
 import ContactPage from './pages/ContactPage'
 import LoginPage from './pages/LoginPage'
 import AdminDashboard from './pages/AdminDashboard'
-import GalleryPage from './pages/GalleryPage'
+import LegalPage from './pages/LegalPage'
+import ClientGalleryUnavailable from './pages/ClientGalleryUnavailable'
+import { legalRoutes } from './components/presentational/LegalLinks'
 
 function App() {
   return (
@@ -23,7 +25,8 @@ function App() {
       <Route path="/contact" element={<Layout><ContactPage /></Layout>} />
 
       {/* Gallery route without layout */}
-      <Route path="/gallery/:name" element={<GalleryPage />} />
+      <Route path="/gallery/:name" element={<Layout><ClientGalleryUnavailable /></Layout>} />
+      {legalRoutes.map(([kind, path]) => <Route key={kind} path={path} element={<Layout><LegalPage kind={kind} /></Layout>} />)}
 
       {/* Auth routes without layout */}
       <Route path="/login" element={<LoginPage />} />

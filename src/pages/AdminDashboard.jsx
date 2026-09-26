@@ -9,7 +9,7 @@ import LoadingSpinner from '../components/LoadingSpinner'
 const AdminDashboard = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { reviews, deleteReview, toggleReviewVisibility, isLoading: reviewsLoading } = useReviews()
+  const { reviews, deleteReview, toggleReviewVisibility, isLoading: reviewsLoading } = useReviews({ admin: true })
   const [activeTab, setActiveTab] = useState('dashboard')
   const [galleries, setGalleries] = useState([])
   const [galleriesLoading, setGalleriesLoading] = useState(true)
@@ -20,7 +20,7 @@ const AdminDashboard = () => {
     slug: '',
     password: '',
     type: 'portrait',
-    isVisible: true,
+    isVisible: false,
     images: []
   })
   const [galleryFormLoading, setGalleryFormLoading] = useState(false)
@@ -43,13 +43,13 @@ const AdminDashboard = () => {
     setSettingCoverId(pictureId)
     try {
       await pb.collection('galleries').update(galleryId, { coverId: pictureId })
-      localStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
+      sessionStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
       setGalleries((prev) =>
         prev.map((g) => (g.id === galleryId ? { ...g, coverId: pictureId } : g))
       )
     } catch (err) {
       console.error('Failed to update cover photo:', err)
-      localStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
+      sessionStorage.setItem(`gallery_cover_${galleryId}`, pictureId)
       setGalleries((prev) =>
         prev.map((g) => (g.id === galleryId ? { ...g, coverId: pictureId } : g))
       )
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
         await uploadGalleryImages(gallery.id, galleryForm.images)
       }
 
-      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
+      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
       setUploadProgress(null)
@@ -140,7 +140,7 @@ const AdminDashboard = () => {
           const formData = new FormData()
           formData.append('image', image)
           formData.append('gallery', galleryId)
-          formData.append('isVisible', 'true')
+          formData.append('isVisible', 'false')
           await pb.collection('pictures').create(formData)
           succeeded = true
           break
@@ -202,7 +202,7 @@ const AdminDashboard = () => {
 
   const cancelEditing = () => {
     setEditingGallery(null)
-    setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
+    setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
     setShowCreateGallery(false)
   }
 
@@ -236,7 +236,7 @@ const AdminDashboard = () => {
 
       // Reset form
       setEditingGallery(null)
-      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: true, images: [] })
+      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
 
@@ -395,6 +395,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-brand-black">
+      <p role="note" className="p-6 border-b border-brand-bronze text-brand-warm">
+        {t('legal.adminWarning')}
+      </p>
       {/* Header */}
       <div className="bg-brand-dark border-b border-brand-charcoal">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -810,7 +813,7 @@ const AdminDashboard = () => {
                                 const pendingVisible = pendingVisibility[picture.id] ?? savedVisible
                                 const isDirty = savedVisible !== pendingVisible
 
-                                const activeCoverId = gallery.coverId || (typeof window !== 'undefined' ? localStorage.getItem(`gallery_cover_${gallery.id}`) : null) || galleryPictures[0]?.id
+                                const activeCoverId = gallery.coverId || (typeof window !== 'undefined' ? sessionStorage.getItem(`gallery_cover_${gallery.id}`) : null) || galleryPictures[0]?.id
                                 const isCover = picture.id === activeCoverId
 
                                 return (

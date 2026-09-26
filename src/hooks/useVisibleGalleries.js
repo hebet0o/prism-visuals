@@ -4,12 +4,14 @@ import pb from '../utils/pocketbase'
 export function useVisibleGalleries() {
   const [galleries, setGalleries] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     const fetchGalleries = async () => {
       try {
         const records = await pb.collection('galleries').getFullList({
           filter: 'isVisible = true',
+          fields: 'id,name,slug,type,coverId,isVisible',
           sort: '-created'
         })
 
@@ -17,6 +19,7 @@ export function useVisibleGalleries() {
           records.map(async (gallery) => {
             const pictures = await pb.collection('pictures').getFullList({
               filter: `gallery = "${gallery.id}" && isVisible = true`,
+              fields: 'id,collectionId,collectionName,image,gallery,isVisible,altText,description',
               sort: 'created'
             })
             return { ...gallery, pictures }
@@ -25,7 +28,7 @@ export function useVisibleGalleries() {
 
         setGalleries(withPictures)
       } catch (err) {
-        console.error('Failed to load galleries:', err)
+        setError(true)
       } finally {
         setLoading(false)
       }
@@ -34,5 +37,5 @@ export function useVisibleGalleries() {
     fetchGalleries()
   }, [])
 
-  return { galleries, loading }
+  return { galleries, loading, error }
 }

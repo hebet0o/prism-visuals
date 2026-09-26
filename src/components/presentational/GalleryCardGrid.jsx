@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import pb from '../../utils/pocketbase'
 import LoadingSpinner from '../LoadingSpinner'
+import AccessibleDialog from '../AccessibleDialog'
+import { galleryPhotoAlt } from '../../utils/imageAlt'
 
 function buildColumns(items, colCount, heights) {
   const cols = Array.from({ length: colCount }, () => ({ items: [], height: 0 }))
@@ -34,7 +36,7 @@ function useColCount(containerRef) {
 }
 
 const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [openGalleryId, setOpenGalleryId] = useState(null)
   const [lightboxIndex, setLightboxIndex] = useState(null)
   const [layout, setLayout] = useState('masonry')
@@ -66,23 +68,10 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
 
   const openGallery = galleries.find((g) => g.id === openGalleryId)
 
-  // Disable background scrolling when open gallery overlay or lightbox is active
-  useEffect(() => {
-    if (openGalleryId || lightboxIndex !== null) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [openGalleryId, lightboxIndex])
-
   // Keyboard navigation for lightbox
   useEffect(() => {
     if (lightboxIndex === null || !openGallery) return
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setLightboxIndex(null)
       if (e.key === 'ArrowLeft') {
         setLightboxIndex((prev) => (prev > 0 ? prev - 1 : prev))
       }
@@ -121,12 +110,14 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
       {/* Clean full-bleed picture cards — hover dark overlay with gallery title */}
       <div className={gridClass}>
         {galleries.map((gallery) => {
-          const savedCoverId = gallery.coverId || (typeof window !== 'undefined' ? localStorage.getItem(`gallery_cover_${gallery.id}`) : null)
+          const savedCoverId = gallery.coverId
           const cover = (savedCoverId && gallery.pictures.find((p) => p.id === savedCoverId)) || gallery.pictures[0]
 
           return (
             <div
               key={gallery.id}
+              role="button" tabIndex={0} aria-label={gallery.name} aria-haspopup="dialog"
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleGallery(gallery.id) } }}
               onClick={() => toggleGallery(gallery.id)}
               className="group relative aspect-[4/5] overflow-hidden rounded-lg cursor-pointer"
             >
@@ -142,7 +133,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
                 </div>
               )}
 
-              <div className="absolute inset-0 bg-brand-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-400 flex flex-col items-center justify-center px-6 text-center">
+              <div className="absolute inset-0 bg-brand-black/80 opacity-100 transition-opacity duration-400 flex flex-col items-center justify-center px-6 text-center">
                 <h2 className="font-display text-2xl md:text-3xl lg:text-4xl text-brand-warm italic mb-2">
                   {gallery.name}
                 </h2>
@@ -160,10 +151,11 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
 
       {/* Opened Gallery Fullscreen View — exact same layout as private galleries */}
       {openGallery && (
-        <div className="fixed inset-0 bg-brand-black z-[60] flex flex-col overflow-hidden">
+        <AccessibleDialog label={openGallery.name} onClose={() => setOpenGalleryId(null)} className="fixed inset-0 bg-brand-black z-[60] flex flex-col overflow-hidden">
           {/* Header matching private gallery */}
           <div className="flex-shrink-0 bg-brand-dark border-b border-brand-charcoal/50 py-10 px-6 relative text-center">
             <button
+              aria-label={i18n.language === 'hu' ? 'Galéria bezárása' : 'Close gallery'}
               onClick={() => {
                 setOpenGalleryId(null)
                 setLightboxIndex(null)
@@ -191,7 +183,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setLayout('masonry')}
-                title={t('gallery.layoutMasonry') || 'Masonry'}
+                aria-pressed={layout === 'masonry'} aria-label={t('gallery.layoutMasonry')} title={t('gallery.layoutMasonry') || 'Masonry'}
                 className={`p-2 rounded-md transition-colors ${
                   layout === 'masonry'
                     ? 'text-brand-bronze bg-brand-dark'
@@ -209,7 +201,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               </button>
               <button
                 onClick={() => setLayout('grid')}
-                title={t('gallery.layoutGrid') || 'Grid'}
+                aria-pressed={layout === 'grid'} aria-label={t('gallery.layoutGrid')} title={t('gallery.layoutGrid') || 'Grid'}
                 className={`p-2 rounded-md transition-colors ${
                   layout === 'grid'
                     ? 'text-brand-bronze bg-brand-dark'
@@ -242,13 +234,15 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
                           <div
                             key={picture.id}
                             className="group relative overflow-hidden cursor-pointer rounded bg-brand-dark"
+                            role="button" tabIndex={0} aria-haspopup="dialog"
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightboxIndex(globalIndex) } }}
                             onClick={() => setLightboxIndex(globalIndex)}
                           >
                             <img
                               src={pb.files.getURL(picture, picture.image, {
                                 thumb: '0x800',
                               })}
-                              alt={`${openGallery.name} ${globalIndex + 1}`}
+                              alt={galleryPhotoAlt(picture, openGallery.name, globalIndex, i18n.language)}
                               className="w-full h-auto block transition-opacity duration-300 hover:opacity-90"
                               loading="lazy"
                               onLoad={(e) =>
@@ -271,13 +265,15 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
                   <div
                     key={picture.id}
                     className="group relative overflow-hidden cursor-pointer rounded bg-brand-dark"
+                    role="button" tabIndex={0} aria-haspopup="dialog"
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setLightboxIndex(index) } }}
                     onClick={() => setLightboxIndex(index)}
                   >
                     <img
                       src={pb.files.getURL(picture, picture.image, {
                         thumb: '0x800',
                       })}
-                      alt={`${openGallery.name} ${index + 1}`}
+                      alt={galleryPhotoAlt(picture, openGallery.name, index, i18n.language)}
                       className="w-full aspect-square object-cover block transition-opacity duration-300 hover:opacity-90"
                       loading="lazy"
                     />
@@ -286,16 +282,15 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               </div>
             )}
           </div>
-        </div>
+        </AccessibleDialog>
       )}
 
       {/* Lightbox Modal */}
       {lightboxIndex !== null && openGallery && openGallery.pictures[lightboxIndex] && (
-        <div
+        <AccessibleDialog label={openGallery.name} onClose={() => setLightboxIndex(null)}
           className="fixed inset-0 bg-black/95 z-[70] flex items-center justify-center"
-          onClick={() => setLightboxIndex(null)}
         >
-          <button
+          <button aria-label={i18n.language === 'hu' ? 'Bezárás' : 'Close'}
             onClick={() => setLightboxIndex(null)}
             className="absolute top-4 right-4 px-4 py-2 bg-brand-charcoal hover:bg-brand-charcoal/80 text-brand-warm rounded-md transition-colors text-sm font-medium z-10"
           >
@@ -303,7 +298,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
           </button>
 
           {lightboxIndex > 0 && (
-            <button
+            <button aria-label={i18n.language === 'hu' ? 'Előző kép' : 'Previous image'}
               onClick={(e) => {
                 e.stopPropagation()
                 setLightboxIndex(lightboxIndex - 1)
@@ -319,13 +314,13 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
               openGallery.pictures[lightboxIndex],
               openGallery.pictures[lightboxIndex].image
             )}
-            alt={`${openGallery.name} — ${lightboxIndex + 1}`}
+            alt={galleryPhotoAlt(openGallery.pictures[lightboxIndex], openGallery.name, lightboxIndex, i18n.language)}
             className="max-h-[85vh] max-w-[88vw] object-contain select-none shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
 
           {lightboxIndex < openGallery.pictures.length - 1 && (
-            <button
+            <button aria-label={i18n.language === 'hu' ? 'Következő kép' : 'Next image'}
               onClick={(e) => {
                 e.stopPropagation()
                 setLightboxIndex(lightboxIndex + 1)
@@ -339,7 +334,7 @@ const GalleryCardGrid = ({ galleries, loading, labels = {}, columns = 3 }) => {
           <div className="absolute bottom-4 text-brand-muted text-sm font-body tracking-wider">
             {lightboxIndex + 1} / {openGallery.pictures.length}
           </div>
-        </div>
+        </AccessibleDialog>
       )}
     </>
   )

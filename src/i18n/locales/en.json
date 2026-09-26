@@ -50,7 +50,7 @@
     "approach": "Our Approach",
     "approachText": "We work with a modern, creative style while ensuring that every image is natural and authentic. We believe that the best photos are when you are your best self.",
     "equipment": "Equipment",
-    "equipmentText": "We work with professional equipment to ensure the highest quality in every project.",
+    "equipmentText": "We use photography and video equipment suited to the project.",
     "gabor": {
       "role": "Founder & Photographer",
       "subtitle": "Photographer, software developer, wannabe graphic designer",
@@ -90,22 +90,22 @@
   "pricing": {
     "title": "Pricing",
     "description": "Transparent packages for every occasion",
-    "subtitle": "All packages include a private online gallery delivered within one month. Travel within Budapest is always included.",
+    "subtitle": "Scope and delivery dates are agreed in a written quote.",
     "tabPhoto": "Photography",
     "tabVideo": "Videography",
     "tabBundle": "Photo + Video",
     "tabMarketing": "Marketing",
-    "mostPopular": "Most Popular",
+    "mostPopular": "",
     "saves": "Saves {{amount}} Ft",
     "contactButton": "Request Quote",
     "from": "from",
     "ft": "Ft",
     "customPrice": "Custom Quote",
-    "note": "All prices are net prices. A preliminary consultation is always free of charge.",
-    "offseason": "Off-season discount (Nov – Feb): ask us about a reduced rate.",
+    "note": "Request a tailored quote. The total price including applicable taxes and costs is provided before agreement. This website does not take orders or payments.",
+    "offseason": "",
     "photo": {
       "heading": "Wedding Photography",
-      "subheading": "One professional photographer, full artistic direction, fully edited gallery delivered within one month.",
+      "subheading": "Photography with coverage and deliverables agreed for your event.",
       "alap": {
         "name": "Basic",
         "price": "165 000",
@@ -114,8 +114,8 @@
           "8–10 hours of availability",
           "Ceremony & reception coverage",
           "400+ professionally edited photos",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       },
       "deluxe": {
@@ -126,21 +126,21 @@
           "10–12 hours of availability",
           "Preparations, ceremony & reception",
           "500+ professionally edited photos",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       },
       "premium": {
         "name": "Premium",
         "price": "200 000",
-        "badge": "Most Popular",
+        "badge": "",
         "features": [
           "10–12 hours of availability",
           "Preparations, ceremony & reception",
           "Creative couple shoot (wedding day or separate)",
           "600+ professionally edited photos",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       }
     },
@@ -156,20 +156,20 @@
           "Ceremony & reception coverage",
           "Cinematic highlight aftermovie (3–5 min)",
           "Professional colour grade & music",
-          "Delivery within 1 month"
+          "Delivery date by agreement"
         ]
       },
       "deluxe": {
         "name": "Deluxe",
         "price": "150 000",
-        "badge": "Most Popular",
+        "badge": "",
         "features": [
           "10–12 hours of availability",
           "Preparations, ceremony & reception",
           "Highlight aftermovie (4–6 min)",
           "Full ceremony cut",
           "Drone aerial footage",
-          "Delivery within 1 month"
+          "Delivery date by agreement"
         ]
       },
       "premium": {
@@ -182,44 +182,44 @@
           "Full cinematic film (20–40 min)",
           "Highlight aftermovie (5–8 min)",
           "Drone aerial footage",
-          "Delivery within 1 month"
+          "Delivery date by agreement"
         ]
       }
     },
     "bundle": {
       "heading": "Photo + Video Bundle",
-      "subheading": "Book both services together and save. One team, one day, one unforgettable story — in photos and on film.",
+      "subheading": "Photography and videography in a tailored quote.",
       "alap": {
         "name": "Basic Bundle",
         "price": "245 000",
-        "badge": "Save 40 000 Ft",
+        "badge": "",
         "features": [
           "8–10 hours · 1 photographer + 1 videographer",
           "Ceremony & reception coverage",
           "400+ edited photos",
           "Cinematic highlight aftermovie (3–5 min)",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       },
       "deluxe": {
         "name": "Deluxe Bundle",
         "price": "285 000",
-        "badge": "Save 50 000 Ft",
+        "badge": "",
         "features": [
           "10–12 hours · 1 photographer + 1 videographer",
           "Preparations, ceremony & reception",
           "500+ edited photos",
           "Highlight aftermovie (4–6 min) + full ceremony cut",
           "Drone aerial footage",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       },
       "premium": {
         "name": "Premium Bundle",
         "price": "329 000",
-        "badge": "Save 56 000 Ft",
+        "badge": "",
         "features": [
           "10–12 hours · 1 photographer + 1 videographer",
           "Preparations, ceremony & reception",
@@ -227,8 +227,8 @@
           "600+ edited photos",
           "Full cinematic film (20–40 min) + highlight aftermovie",
           "Drone aerial footage",
-          "Private online gallery",
-          "Delivery within 1 month"
+          "Delivery method by agreement",
+          "Delivery date by agreement"
         ]
       }
     },
@@ -262,7 +262,7 @@
       "brand": {
         "name": "Brand Film",
         "price": "Custom Quote",
-        "badge": "Most Requested",
+        "badge": "",
         "features": [
           "Scripted or documentary-style brand story",
           "Multi-day shoot available",
@@ -497,5 +497,8 @@
     "event": "Event",
     "commercial": "Commercial",
     "video": "Video"
+  },
+  "legal": {
+    "adminWarning": "Privacy review: client galleries are temporarily disabled. Do not upload private images until server-side authorization and one-year deletion are verified. Check image permissions before public display. New galleries and pictures default to hidden; this is not access control."
   }
 }
