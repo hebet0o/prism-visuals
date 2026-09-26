@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { imageAlt } from '../../utils/imageAlt'
+import { responsiveImage } from '../../utils/responsiveImage'
 
 const GalleryGrid = ({ images, onImageClick, columns = 3 }) => {
   const { i18n } = useTranslation()
@@ -22,10 +23,12 @@ const GalleryGrid = ({ images, onImageClick, columns = 3 }) => {
           onClick={() => onImageClick && onImageClick(index)}
         >
           <img
-            src={typeof image === 'object' ? image.src : image}
+            {...responsiveImage(image)}
+            sizes={columns === 2 ? '(min-width: 768px) 50vw, 100vw' : columns === 4 ? '(min-width: 1024px) 25vw, 50vw' : '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'}
             alt={imageAlt(image, i18n.language, index)}
             className="w-full h-full object-cover transition-transform duration-[600ms] group-hover:scale-105"
             loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-brand-black/0 group-hover:bg-brand-black/30 transition-colors duration-[600ms]" />
         </div>

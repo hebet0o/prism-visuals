@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import useReducedMotion from '../../hooks/useReducedMotion'
+import { responsiveImage } from '../../utils/responsiveImage'
 
 /**
  * Hero slider – persistent two-layer crossfade with Ken Burns zoom.
@@ -96,7 +97,10 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
       preloadRef.current = img
       img.onload  = doSwap
       img.onerror = doSwap  // don't get stuck if an image 404s
-      img.src = nextSrc
+      const optimized = responsiveImage(nextSrc)
+      img.sizes = '100vw'
+      if (optimized.srcSet) img.srcset = optimized.srcSet
+      img.src = optimized.src
 
       // If already cached (complete before onload fires)
       if (img.complete) {
@@ -129,7 +133,10 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
           slot.src ? (
             <img
               key={`hero-slot-${i}`}
-              src={slot.src}
+              {...responsiveImage(slot.src)}
+              sizes="100vw"
+              fetchPriority={i === activeSlot ? 'high' : 'low'}
+              decoding="async"
               alt=""
               style={{
                 // Alternating between slow-zoom-0 / slow-zoom-1 restarts the

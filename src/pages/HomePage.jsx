@@ -8,6 +8,7 @@ import ReviewForm from '../components/presentational/ReviewForm'
 import LoadingSpinner from '../components/LoadingSpinner'
 import { PLACEHOLDER_IMAGES } from '../utils/constants'
 import { useReviews } from '../hooks/useReviews'
+import { responsiveImage } from '../utils/responsiveImage'
 
 const HomePage = () => {
   const { t } = useTranslation()
@@ -134,12 +135,9 @@ const HomePage = () => {
       {/* CTA — full-bleed dark banner */}
       <section
         className="relative py-36 px-6 overflow-hidden"
-        style={{
-          backgroundImage: `url(${PLACEHOLDER_IMAGES.hero[1]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
       >
+        <img {...responsiveImage(PLACEHOLDER_IMAGES.hero[1])} sizes="100vw" alt="" loading="lazy" decoding="async"
+          className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-brand-black/75" />
         <div className="relative max-w-2xl mx-auto text-center">
           <p className="section-label mb-8">{t('home.ctaTitle')}</p>

@@ -14,6 +14,7 @@ export default function AccessibleDialog({ children, onClose, label, className =
       document.body.style.overflow = 'hidden'
     }
     dialog.showModal()
+    dialog.querySelector('[data-dialog-initial-focus]')?.focus({ preventScroll: true })
     return () => {
       dialog.close()
       if (--openDialogs === 0) document.body.style.overflow = previousOverflow

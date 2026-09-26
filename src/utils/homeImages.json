@@ -1,0 +1,62 @@
+{
+  "/statikus-kepek/main-page/201.jpg": {
+    "src": "/optimized/home/hero-201-960.webp",
+    "srcSet": "/optimized/home/hero-201-640.webp 640w, /optimized/home/hero-201-960.webp 960w, /optimized/home/hero-201-1600.webp 1600w, /optimized/home/hero-201-2400.webp 2400w",
+    "width": 5472,
+    "height": 3648
+  },
+  "/statikus-kepek/main-page/4L5A7711.jpg": {
+    "src": "/optimized/home/hero-4L5A7711-960.webp",
+    "srcSet": "/optimized/home/hero-4L5A7711-640.webp 640w, /optimized/home/hero-4L5A7711-960.webp 960w, /optimized/home/hero-4L5A7711-1600.webp 1600w, /optimized/home/hero-4L5A7711-2400.webp 2400w",
+    "width": 5472,
+    "height": 3648
+  },
+  "/statikus-kepek/main-page/IMG_0798.jpg": {
+    "src": "/optimized/home/hero-IMG_0798-960.webp",
+    "srcSet": "/optimized/home/hero-IMG_0798-640.webp 640w, /optimized/home/hero-IMG_0798-960.webp 960w, /optimized/home/hero-IMG_0798-1600.webp 1600w, /optimized/home/hero-IMG_0798-2400.webp 2400w",
+    "width": 5616,
+    "height": 3744
+  },
+  "/statikus-kepek/main-page/IMG_2178.jpg": {
+    "src": "/optimized/home/hero-IMG_2178-960.webp",
+    "srcSet": "/optimized/home/hero-IMG_2178-640.webp 640w, /optimized/home/hero-IMG_2178-960.webp 960w, /optimized/home/hero-IMG_2178-1600.webp 1600w, /optimized/home/hero-IMG_2178-2400.webp 2400w",
+    "width": 5472,
+    "height": 3648
+  },
+  "/statikus-kepek/featured/202.jpg": {
+    "src": "/optimized/home/featured-202-800.webp",
+    "srcSet": "/optimized/home/featured-202-480.webp 480w, /optimized/home/featured-202-800.webp 800w, /optimized/home/featured-202-1200.webp 1200w",
+    "width": 5472,
+    "height": 3648
+  },
+  "/statikus-kepek/featured/4L5A1864.jpg": {
+    "src": "/optimized/home/featured-4L5A1864-800.webp",
+    "srcSet": "/optimized/home/featured-4L5A1864-480.webp 480w, /optimized/home/featured-4L5A1864-800.webp 800w, /optimized/home/featured-4L5A1864-1200.webp 1200w",
+    "width": 3503,
+    "height": 5254
+  },
+  "/statikus-kepek/featured/4L5A2051.jpg": {
+    "src": "/optimized/home/featured-4L5A2051-800.webp",
+    "srcSet": "/optimized/home/featured-4L5A2051-480.webp 480w, /optimized/home/featured-4L5A2051-800.webp 800w, /optimized/home/featured-4L5A2051-1200.webp 1200w",
+    "width": 3648,
+    "height": 5472
+  },
+  "/statikus-kepek/featured/IMG_2224-2.jpg": {
+    "src": "/optimized/home/featured-IMG_2224-2-800.webp",
+    "srcSet": "/optimized/home/featured-IMG_2224-2-480.webp 480w, /optimized/home/featured-IMG_2224-2-800.webp 800w, /optimized/home/featured-IMG_2224-2-1200.webp 1200w",
+    "width": 5472,
+    "height": 3648
+  },
+  "/statikus-kepek/featured/IMG_3661.jpg": {
+    "src": "/optimized/home/featured-IMG_3661-800.webp",
+    "srcSet": "/optimized/home/featured-IMG_3661-480.webp 480w, /optimized/home/featured-IMG_3661-800.webp 800w, /optimized/home/featured-IMG_3661-1200.webp 1200w",
+    "width": 3649,
+    "height": 5474
+  },
+  "/statikus-kepek/featured/IMG_5894.jpg": {
+    "src": "/optimized/home/featured-IMG_5894-800.webp",
+    "srcSet": "/optimized/home/featured-IMG_5894-480.webp 480w, /optimized/home/featured-IMG_5894-800.webp 800w, /optimized/home/featured-IMG_5894-1200.webp 1200w",
+    "width": 3429,
+    "height": 5143
+  }
+}

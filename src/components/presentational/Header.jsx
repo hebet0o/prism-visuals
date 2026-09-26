@@ -85,6 +85,7 @@ const Header = () => {
               <Logo />
             </Link>
             <button
+              data-dialog-initial-focus
               className="p-2 text-brand-warm"
               onClick={() => setIsMenuOpen(false)}
               aria-label={i18n.language === 'hu' ? 'Menü bezárása' : 'Close menu'}
