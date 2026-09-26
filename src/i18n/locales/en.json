@@ -108,7 +108,7 @@
       "subheading": "Photography with coverage and deliverables agreed for your event.",
       "alap": {
         "name": "Basic",
-        "price": "249 000",
+        "price": "165 000",
         "badge": "",
         "features": [
           "8–10 hours of availability",
@@ -120,7 +120,7 @@
       },
       "deluxe": {
         "name": "Deluxe",
-        "price": "299 000",
+        "price": "185 000",
         "badge": "",
         "features": [
           "10–12 hours of availability",
@@ -132,7 +132,7 @@
       },
       "premium": {
         "name": "Premium",
-        "price": "349 000",
+        "price": "200 000",
         "badge": "",
         "features": [
           "10–12 hours of availability",
@@ -149,7 +149,7 @@
       "subheading": "Cinematic storytelling by our videographer. Drone footage available. Every film is colour-graded and scored.",
       "alap": {
         "name": "Basic",
-        "price": "229 000",
+        "price": "120 000",
         "badge": "",
         "features": [
           "8–10 hours of availability",
@@ -161,7 +161,7 @@
       },
       "deluxe": {
         "name": "Deluxe",
-        "price": "299 000",
+        "price": "150 000",
         "badge": "",
         "features": [
           "10–12 hours of availability",
@@ -174,7 +174,7 @@
       },
       "premium": {
         "name": "Premium",
-        "price": "349 000",
+        "price": "185 000",
         "badge": "",
         "features": [
           "10–12 hours of availability",
@@ -191,7 +191,7 @@
       "subheading": "Photography and videography in a tailored quote.",
       "alap": {
         "name": "Basic Bundle",
-        "price": "449 000",
+        "price": "245 000",
         "badge": "",
         "features": [
           "8–10 hours · 1 photographer + 1 videographer",
@@ -204,7 +204,7 @@
       },
       "deluxe": {
         "name": "Deluxe Bundle",
-        "price": "549 000",
+        "price": "285 000",
         "badge": "",
         "features": [
           "10–12 hours · 1 photographer + 1 videographer",
@@ -218,7 +218,7 @@
       },
       "premium": {
         "name": "Premium Bundle",
-        "price": "629 000",
+        "price": "329 000",
         "badge": "",
         "features": [
           "10–12 hours · 1 photographer + 1 videographer",
@@ -237,7 +237,7 @@
       "subheading": "Brand films, social content, product videos, event aftermovies. Prices depend on scope — get in touch for a free brief.",
       "social": {
         "name": "Social Content",
-        "price": "149 000",
+        "price": "Custom Quote",
         "badge": "",
         "features": [
           "Short-form vertical content (Reels, TikTok, Shorts)",
@@ -249,7 +249,7 @@
       },
       "promo": {
         "name": "Promo / Event Film",
-        "price": "249 000",
+        "price": "Custom Quote",
         "badge": "",
         "features": [
           "Corporate events, galas, product launches",
@@ -261,7 +261,7 @@
       },
       "brand": {
         "name": "Brand Film",
-        "price": "449 000",
+        "price": "Custom Quote",
         "badge": "",
         "features": [
           "Scripted or documentary-style brand story",

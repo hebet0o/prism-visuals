@@ -108,7 +108,7 @@
       "subheading": "Fotós szolgáltatások az egyeztetett időtartamban és tartalommal.",
       "alap": {
         "name": "Alap",
-        "price": "249 000",
+        "price": "165 000",
         "badge": "",
         "features": [
           "8–10 óra rendelkezésre állás",
@@ -120,7 +120,7 @@
       },
       "deluxe": {
         "name": "Deluxe",
-        "price": "299 000",
+        "price": "185 000",
         "badge": "",
         "features": [
           "10–12 óra rendelkezésre állás",
@@ -132,7 +132,7 @@
       },
       "premium": {
         "name": "Prémium",
-        "price": "349 000",
+        "price": "200 000",
         "badge": "",
         "features": [
           "10–12 óra rendelkezésre állás",
@@ -149,7 +149,7 @@
       "subheading": "Mozis stílusú történetmesélés videósunktól. Drónfelvétel elérhető. Minden film színkalibrált és zenével aláfestett.",
       "alap": {
         "name": "Alap",
-        "price": "229 000",
+        "price": "120 000",
         "badge": "",
         "features": [
           "8–10 óra rendelkezésre állás",
@@ -161,7 +161,7 @@
       },
       "deluxe": {
         "name": "Deluxe",
-        "price": "299 000",
+        "price": "150 000",
         "badge": "",
         "features": [
           "10–12 óra rendelkezésre állás",
@@ -174,7 +174,7 @@
       },
       "premium": {
         "name": "Prémium",
-        "price": "349 000",
+        "price": "185 000",
         "badge": "",
         "features": [
           "10–12 óra rendelkezésre állás",
@@ -191,7 +191,7 @@
       "subheading": "Fotó és videó egyedi ajánlat alapján.",
       "alap": {
         "name": "Alap Csomag",
-        "price": "449 000",
+        "price": "245 000",
         "badge": "",
         "features": [
           "8–10 óra · 1 fotós + 1 videós",
@@ -204,7 +204,7 @@
       },
       "deluxe": {
         "name": "Deluxe Csomag",
-        "price": "549 000",
+        "price": "285 000",
         "badge": "",
         "features": [
           "10–12 óra · 1 fotós + 1 videós",
@@ -218,7 +218,7 @@
       },
       "premium": {
         "name": "Prémium Csomag",
-        "price": "629 000",
+        "price": "329 000",
         "badge": "",
         "features": [
           "10–12 óra · 1 fotós + 1 videós",
@@ -237,7 +237,7 @@
       "subheading": "Brand filmek, közösségi tartalom, termékvideók, rendezvény aftermovie-k. Az árak a projekt terjedelmétől függnek — írj nekünk egy ingyenes konzultációért.",
       "social": {
         "name": "Közösségi Tartalom",
-        "price": "149 000",
+        "price": "Egyedi árajánlat",
         "badge": "",
         "features": [
           "Rövid formátumú vertikális tartalom (Reels, TikTok, Shorts)",
@@ -249,7 +249,7 @@
       },
       "promo": {
         "name": "Promó / Rendezvény Film",
-        "price": "249 000",
+        "price": "Egyedi árajánlat",
         "badge": "",
         "features": [
           "Céges rendezvények, gálák, termékbemutatók",
@@ -261,7 +261,7 @@
       },
       "brand": {
         "name": "Brand Film",
-        "price": "449 000",
+        "price": "Egyedi árajánlat",
         "badge": "",
         "features": [
           "Szkriptelt vagy dokumentarista stílusú brand történet",
