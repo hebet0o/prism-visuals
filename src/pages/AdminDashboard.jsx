@@ -3,16 +3,27 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import pb from '../utils/pocketbase'
 import { useReviews } from '../hooks/useReviews'
+import { useInquiries } from '../hooks/useInquiries'
 import { useAdminFileToken } from '../hooks/useAdminFileToken'
 import { slugify } from '../utils/helpers'
 import GalleryPasswordForm from '../components/GalleryPasswordForm'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 const AdminDashboard = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { token: fileToken, error: fileTokenError } = useAdminFileToken()
   const { reviews, deleteReview, toggleReviewVisibility, isLoading: reviewsLoading } = useReviews({ admin: true })
+  const {
+    inquiries,
+    isLoading: inquiriesLoading,
+    updateInquiryStatus,
+    deleteInquiry,
+    newCount: newInquiriesCount
+  } = useInquiries()
+  const [inquiryFilter, setInquiryFilter] = useState('all')
+  const [deletingInquiryId, setDeletingInquiryId] = useState(null)
+  const [updatingInquiryId, setUpdatingInquiryId] = useState(null)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [galleries, setGalleries] = useState([])
   const [galleriesLoading, setGalleriesLoading] = useState(true)
@@ -381,8 +392,67 @@ const AdminDashboard = () => {
     setPendingVisibility(reset)
   }
 
+  const handleReplyInquiry = async (inquiry) => {
+    const isHu = i18n.language === 'hu'
+    const subject = encodeURIComponent(
+      isHu
+        ? `Re: Prism Visuals megkeresés - ${inquiry.service || 'Érdeklődés'}`
+        : `Re: Prism Visuals enquiry - ${inquiry.service || 'Photography'}`
+    )
+    const quote = inquiry.message
+      ? `\n\n---\n${isHu ? 'Eredeti megkeresésed' : 'Your original enquiry'}:\n${inquiry.message}`
+      : ''
+    const greeting = isHu
+      ? `Kedves ${inquiry.name}!\n\nKöszönjük a megkeresést!`
+      : `Dear ${inquiry.name},\n\nThank you for reaching out to Prism Visuals!`
+    const body = encodeURIComponent(`${greeting}${quote}`)
+
+    window.open(`mailto:${inquiry.email}?subject=${subject}&body=${body}`, '_blank')
+
+    if (!inquiry.status || inquiry.status === 'new') {
+      try {
+        await updateInquiryStatus(inquiry.id, 'replied')
+      } catch (err) {
+        console.warn('Could not auto-update status to replied:', err)
+      }
+    }
+  }
+
+  const handleToggleInquiryStatus = async (inquiry) => {
+    setUpdatingInquiryId(inquiry.id)
+    try {
+      const nextStatus = (!inquiry.status || inquiry.status === 'new') ? 'replied' : 'new'
+      await updateInquiryStatus(inquiry.id, nextStatus)
+    } catch (err) {
+      console.error('Failed to toggle inquiry status:', err)
+    } finally {
+      setUpdatingInquiryId(null)
+    }
+  }
+
+  const handleDeleteInquiry = async (id) => {
+    if (!window.confirm(t('admin.inquiries.deleteConfirm') || 'Are you sure you want to delete this message?')) {
+      return
+    }
+    setDeletingInquiryId(id)
+    try {
+      await deleteInquiry(id)
+    } catch (err) {
+      console.error('Failed to delete inquiry:', err)
+    } finally {
+      setDeletingInquiryId(null)
+    }
+  }
+
+  const filteredInquiries = inquiries.filter((inquiry) => {
+    if (inquiryFilter === 'new') return !inquiry.status || inquiry.status === 'new'
+    if (inquiryFilter === 'replied') return inquiry.status === 'replied'
+    return true
+  })
+
   const tabs = [
     { id: 'dashboard', label: t('admin.tabs.dashboard') || 'Dashboard' },
+    { id: 'inquiries', label: t('admin.tabs.inquiries') || 'Messages', count: newInquiriesCount },
     { id: 'reviews', label: t('admin.tabs.reviews') || 'Reviews' },
     { id: 'galleries', label: t('admin.tabs.galleries') || 'Galleries' },
   ]
@@ -417,13 +487,18 @@ const AdminDashboard = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center space-x-2 ${
                   activeTab === tab.id
                     ? 'border-brand-bronze text-brand-bronze'
                     : 'border-transparent text-brand-muted hover:text-brand-warm hover:border-brand-warm/50'
                 }`}
               >
-                {tab.label}
+                <span>{tab.label}</span>
+                {tab.count > 0 && (
+                  <span className="px-1.5 py-0.5 text-xs bg-brand-bronze text-brand-black rounded-full font-bold">
+                    {tab.count}
+                  </span>
+                )}
               </button>
             ))}
           </nav>
@@ -437,7 +512,23 @@ const AdminDashboard = () => {
             <h2 className="font-display text-2xl text-brand-warm mb-6">
               {t('admin.dashboard.title') || 'Dashboard Overview'}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div
+                onClick={() => setActiveTab('inquiries')}
+                className="bg-brand-dark p-6 rounded-lg cursor-pointer hover:border-brand-bronze/50 border border-transparent transition-colors"
+              >
+                <h3 className="font-heading text-lg text-brand-warm mb-2 flex items-center justify-between">
+                  <span>{t('admin.dashboard.totalInquiries') || 'Messages'}</span>
+                  {newInquiriesCount > 0 && (
+                    <span className="text-xs bg-brand-bronze/20 text-brand-bronze px-2 py-0.5 rounded font-mono font-medium">
+                      {newInquiriesCount} {t('admin.inquiries.new') || 'new'}
+                    </span>
+                  )}
+                </h3>
+                <p className="text-3xl font-display text-brand-bronze">
+                  {inquiries.length}
+                </p>
+              </div>
               <div className="bg-brand-dark p-6 rounded-lg">
                 <h3 className="font-heading text-lg text-brand-warm mb-2">
                   {t('admin.dashboard.totalReviews') || 'Total Reviews'}
@@ -463,6 +554,176 @@ const AdminDashboard = () => {
                 </p>
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'inquiries' && (
+          <div>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div>
+                <h2 className="font-display text-2xl text-brand-warm">
+                  {t('admin.inquiries.title') || 'Client Messages & Enquiries'}
+                </h2>
+                <p className="text-brand-muted text-sm mt-1">
+                  {t('admin.inquiries.subtitle') || 'Messages sent by clients through the website contact form.'}
+                </p>
+              </div>
+
+              {/* Filter Tabs */}
+              <div className="flex items-center space-x-2 bg-brand-dark p-1 rounded-md border border-brand-charcoal text-xs">
+                <button
+                  onClick={() => setInquiryFilter('all')}
+                  className={`px-3 py-1.5 rounded transition-colors ${
+                    inquiryFilter === 'all'
+                      ? 'bg-brand-charcoal text-brand-warm font-medium'
+                      : 'text-brand-muted hover:text-brand-warm'
+                  }`}
+                >
+                  {t('admin.inquiries.all') || 'All'} ({inquiries.length})
+                </button>
+                <button
+                  onClick={() => setInquiryFilter('new')}
+                  className={`px-3 py-1.5 rounded transition-colors ${
+                    inquiryFilter === 'new'
+                      ? 'bg-brand-bronze text-brand-black font-semibold'
+                      : 'text-brand-muted hover:text-brand-warm'
+                  }`}
+                >
+                  {t('admin.inquiries.filterNew') || 'New'} ({newInquiriesCount})
+                </button>
+                <button
+                  onClick={() => setInquiryFilter('replied')}
+                  className={`px-3 py-1.5 rounded transition-colors ${
+                    inquiryFilter === 'replied'
+                      ? 'bg-brand-charcoal text-brand-warm font-medium'
+                      : 'text-brand-muted hover:text-brand-warm'
+                  }`}
+                >
+                  {t('admin.inquiries.filterReplied') || 'Replied'} ({inquiries.filter(i => i.status === 'replied').length})
+                </button>
+              </div>
+            </div>
+
+            {inquiriesLoading ? (
+              <div className="text-brand-muted flex items-center space-x-2 py-8">
+                <LoadingSpinner size="sm" />
+                <span>{t('admin.inquiries.loading') || 'Loading messages...'}</span>
+              </div>
+            ) : filteredInquiries.length === 0 ? (
+              <div className="bg-brand-dark p-12 text-center rounded-lg border border-brand-charcoal text-brand-muted">
+                <p className="font-heading text-lg mb-2">{t('admin.inquiries.empty') || 'No messages received yet.'}</p>
+                <p className="text-sm">Client submissions from the website contact form will appear here automatically.</p>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {filteredInquiries.map((inquiry) => {
+                  const isNew = !inquiry.status || inquiry.status === 'new'
+                  const dateStr = inquiry.created ? new Date(inquiry.created).toLocaleString() : ''
+
+                  return (
+                    <div
+                      key={inquiry.id}
+                      className={`bg-brand-dark p-6 rounded-lg border transition-colors ${
+                        isNew ? 'border-brand-bronze/60 bg-brand-dark/95' : 'border-brand-charcoal'
+                      }`}
+                    >
+                      {/* Header */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4 pb-3 border-b border-brand-charcoal">
+                        <div className="flex items-center space-x-3">
+                          <h3 className="font-heading text-lg text-brand-warm font-semibold">
+                            {inquiry.name}
+                          </h3>
+                          <span
+                            className={`text-xs px-2.5 py-0.5 rounded font-mono font-medium ${
+                              isNew
+                                ? 'bg-brand-bronze/20 text-brand-bronze border border-brand-bronze/40'
+                                : 'bg-green-950/40 text-green-400 border border-green-500/30'
+                            }`}
+                          >
+                            {isNew ? (t('admin.inquiries.new') || 'New') : (t('admin.inquiries.replied') || 'Replied')}
+                          </span>
+                        </div>
+                        <div className="text-xs text-brand-muted font-mono">{dateStr}</div>
+                      </div>
+
+                      {/* Meta information row */}
+                      <div className="flex flex-wrap gap-6 text-sm mb-4">
+                        <div>
+                          <span className="text-brand-muted text-xs block mb-0.5">Email</span>
+                          <a
+                            href={`mailto:${inquiry.email}`}
+                            className="text-brand-warm underline hover:text-brand-bronze transition-colors"
+                          >
+                            {inquiry.email}
+                          </a>
+                        </div>
+                        {inquiry.phone && (
+                          <div>
+                            <span className="text-brand-muted text-xs block mb-0.5">{t('admin.inquiries.phone') || 'Phone'}</span>
+                            <a
+                              href={`tel:${inquiry.phone.replace(/\s+/g, '')}`}
+                              className="text-brand-warm underline hover:text-brand-bronze transition-colors"
+                            >
+                              {inquiry.phone}
+                            </a>
+                          </div>
+                        )}
+                        {inquiry.service && (
+                          <div>
+                            <span className="text-brand-muted text-xs block mb-0.5">{t('admin.inquiries.service') || 'Service'}</span>
+                            <span className="text-brand-warm font-light">{inquiry.service}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Message body */}
+                      <div className="bg-brand-black/60 p-4 rounded border border-brand-charcoal mb-5">
+                        <p className="text-brand-warm font-body text-sm whitespace-pre-wrap leading-relaxed">
+                          {inquiry.message}
+                        </p>
+                      </div>
+
+                      {/* Action buttons */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <button
+                            onClick={() => handleReplyInquiry(inquiry)}
+                            className="px-4 py-2 bg-brand-bronze hover:bg-brand-bronze/90 text-brand-black font-semibold rounded text-sm transition-colors flex items-center space-x-1.5"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+                            </svg>
+                            <span>{t('admin.inquiries.reply') || 'Reply via Email'}</span>
+                          </button>
+
+                          <button
+                            onClick={() => handleToggleInquiryStatus(inquiry)}
+                            disabled={updatingInquiryId === inquiry.id}
+                            className="px-3 py-2 bg-brand-charcoal hover:bg-brand-charcoal/80 text-brand-warm rounded text-sm transition-colors flex items-center space-x-1.5 disabled:opacity-50"
+                          >
+                            {updatingInquiryId === inquiry.id && <LoadingSpinner size="xs" />}
+                            <span>
+                              {isNew
+                                ? (t('admin.inquiries.markReplied') || 'Mark as Replied')
+                                : (t('admin.inquiries.markNew') || 'Mark as New')}
+                            </span>
+                          </button>
+                        </div>
+
+                        <button
+                          onClick={() => handleDeleteInquiry(inquiry.id)}
+                          disabled={deletingInquiryId === inquiry.id}
+                          className="px-3 py-2 bg-red-900/20 text-red-400 border border-red-500/40 rounded text-sm hover:bg-red-900/40 transition-colors flex items-center space-x-1.5 disabled:opacity-50"
+                        >
+                          {deletingInquiryId === inquiry.id && <LoadingSpinner size="xs" />}
+                          <span>{t('admin.inquiries.delete') || 'Delete'}</span>
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
           </div>
         )}
 

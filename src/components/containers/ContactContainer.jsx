@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContactForm from '../presentational/ContactForm'
 import { business } from '../../utils/business'
+import { addInquiry } from '../../hooks/useInquiries'
 
 export default function ContactContainer() {
   const { t, i18n } = useTranslation()
@@ -61,8 +62,6 @@ export default function ContactContainer() {
     setStatus('submitting')
     setErrorMessage('')
 
-    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
-
     // If botcheck is filled by a spam bot, drop silently and pretend success
     if (formData.botcheck) {
       setStatus('success')
@@ -70,54 +69,70 @@ export default function ContactContainer() {
       return
     }
 
-    if (!accessKey) {
-      setStatus('error')
-      setErrorMessage(
-        hu
-          ? 'Az űrlap beküldése nincs konfigurálva (hiányzik a VITE_WEB3FORMS_ACCESS_KEY kulcs). Kérjük írj közvetlenül az info@prismvisuals.hu címre!'
-          : 'Form submission is not configured (missing VITE_WEB3FORMS_ACCESS_KEY). Please email info@prismvisuals.hu directly!'
-      )
-      return
+    const serviceLabel = formData.service
+      ? t(`services.${formData.service}.title`, formData.service)
+      : (hu ? 'Nincs megadva' : 'Not specified')
+
+    let pbSaved = false
+    let web3Saved = false
+    let web3Error = ''
+
+    // 1. Save to PocketBase database so it appears in the Admin Dashboard
+    try {
+      await addInquiry({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        service: serviceLabel,
+        message: formData.message
+      })
+      pbSaved = true
+    } catch (pbErr) {
+      console.warn('PocketBase inquiry save not available:', pbErr)
     }
 
-    try {
-      const serviceLabel = formData.service
-        ? t(`services.${formData.service}.title`, formData.service)
-        : (hu ? 'Nincs megadva' : 'Not specified')
-
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          access_key: accessKey,
-          name: formData.name.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim() || undefined,
-          service: serviceLabel,
-          message: formData.message.trim(),
-          subject: `Prism Visuals megkeresés: ${formData.name.trim()}`,
-          from_name: 'Prism Visuals Weboldal'
+    // 2. Dispatch via Web3Forms for immediate email delivery
+    const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY
+    if (accessKey) {
+      try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            access_key: accessKey,
+            name: formData.name.trim(),
+            email: formData.email.trim(),
+            phone: formData.phone.trim() || undefined,
+            service: serviceLabel,
+            message: formData.message.trim(),
+            subject: `Prism Visuals megkeresés: ${formData.name.trim()}`,
+            from_name: 'Prism Visuals Weboldal'
+          })
         })
-      })
-
-      const data = await response.json()
-
-      if (response.ok && data.success) {
-        setStatus('success')
-        setFormData(initialForm)
-      } else {
-        setStatus('error')
-        setErrorMessage(data.message || '')
+        const data = await response.json()
+        if (response.ok && data.success) {
+          web3Saved = true
+        } else {
+          web3Error = data.message || ''
+        }
+      } catch (err) {
+        console.warn('Web3Forms dispatch error:', err)
       }
-    } catch {
+    }
+
+    // If either destination succeeded, the user's message is safely stored/sent!
+    if (pbSaved || web3Saved) {
+      setStatus('success')
+      setFormData(initialForm)
+    } else {
       setStatus('error')
       setErrorMessage(
-        hu
-          ? 'Hálózati hiba történt. Kérjük ellenőrizd a kapcsolatodat, vagy írj az info@prismvisuals.hu címre.'
-          : 'A network error occurred. Please check your connection or email info@prismvisuals.hu directly.'
+        web3Error || (hu
+          ? 'Hiba történt a küldés során. Kérjük próbáld újra, vagy írj közvetlenül az info@prismvisuals.hu címre.'
+          : 'Failed to send message. Please try again or email info@prismvisuals.hu directly.')
       )
     }
   }

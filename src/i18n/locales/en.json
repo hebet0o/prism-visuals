@@ -505,6 +505,41 @@
       "passwordFailed": "Could not save. Check administrator sign-in and the server gallery extension installation."
     }
   },
+  "admin": {
+    "title": "Admin Dashboard",
+    "logout": "Logout",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "inquiries": "Messages",
+      "reviews": "Reviews",
+      "galleries": "Galleries"
+    },
+    "dashboard": {
+      "title": "Dashboard Overview",
+      "totalInquiries": "Total Messages",
+      "totalReviews": "Total Reviews",
+      "totalGalleries": "Total Galleries",
+      "welcome": "Welcome"
+    },
+    "inquiries": {
+      "title": "Client Messages & Enquiries",
+      "subtitle": "Messages sent by clients through the website contact form.",
+      "loading": "Loading messages...",
+      "empty": "No messages received yet.",
+      "all": "All",
+      "filterNew": "New",
+      "filterReplied": "Replied",
+      "new": "New",
+      "replied": "Replied",
+      "reply": "Reply via Email",
+      "markReplied": "Mark as Replied",
+      "markNew": "Mark as New",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete this message?",
+      "phone": "Phone",
+      "service": "Service"
+    }
+  },
   "galleryTypes": {
     "wedding": "Wedding",
     "portrait": "Portrait",
