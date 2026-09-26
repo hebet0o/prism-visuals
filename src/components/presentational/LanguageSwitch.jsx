@@ -1,11 +1,13 @@
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 const LanguageSwitch = () => {
   const { i18n } = useTranslation()
+  const location = useLocation()
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'hu' ? 'en' : 'hu'
-    i18n.changeLanguage(newLang)
+    window.location.assign(`/${newLang}${location.pathname === '/' ? '' : location.pathname}${location.search}${location.hash}`)
   }
 
   return (

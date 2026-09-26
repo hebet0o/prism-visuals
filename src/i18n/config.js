@@ -3,8 +3,7 @@ import { initReactI18next } from 'react-i18next'
 import hu from './locales/hu.json'
 import en from './locales/en.json'
 
-let savedLanguage = 'hu'
-try { savedLanguage = sessionStorage.getItem('language') || 'hu' } catch { /* Storage can be blocked. */ }
+const savedLanguage = typeof window !== 'undefined' && window.location.pathname.split('/')[1] === 'en' ? 'en' : 'hu'
 
 i18n
   .use(initReactI18next)
@@ -21,9 +20,9 @@ i18n
   })
 
 i18n.on('languageChanged', (lng) => {
-  document.documentElement.lang = lng === 'hu' ? 'hu' : 'en'
+  if (typeof document !== 'undefined') document.documentElement.lang = lng === 'hu' ? 'hu' : 'en'
   try { sessionStorage.setItem('language', lng) } catch { /* Keep language in memory. */ }
 })
-document.documentElement.lang = savedLanguage === 'hu' ? 'hu' : 'en'
+if (typeof document !== 'undefined') document.documentElement.lang = savedLanguage === 'hu' ? 'hu' : 'en'
 
 export default i18n

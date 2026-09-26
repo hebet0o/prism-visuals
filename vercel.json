@@ -1,5 +1,155 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/hu",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/hu/about",
+      "permanent": true
+    },
+    {
+      "source": "/wedding-galleries",
+      "destination": "/hu/wedding-galleries",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio",
+      "destination": "/hu/portfolio",
+      "permanent": true
+    },
+    {
+      "source": "/pricing",
+      "destination": "/hu/pricing",
+      "permanent": true
+    },
+    {
+      "source": "/contact",
+      "destination": "/hu/contact",
+      "permanent": true
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/hu/privacy-policy",
+      "permanent": true
+    },
+    {
+      "source": "/terms",
+      "destination": "/hu/terms",
+      "permanent": true
+    },
+    {
+      "source": "/cookie-policy",
+      "destination": "/hu/cookie-policy",
+      "permanent": true
+    },
+    {
+      "source": "/business-details",
+      "destination": "/hu/business-details",
+      "permanent": true
+    },
+    {
+      "source": "/accessibility",
+      "destination": "/hu/accessibility",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
-  ]
+    {
+      "source": "/hu",
+      "destination": "/hu/index.html"
+    },
+    {
+      "source": "/hu/about",
+      "destination": "/hu/about/index.html"
+    },
+    {
+      "source": "/hu/wedding-galleries",
+      "destination": "/hu/wedding-galleries/index.html"
+    },
+    {
+      "source": "/hu/portfolio",
+      "destination": "/hu/portfolio/index.html"
+    },
+    {
+      "source": "/hu/pricing",
+      "destination": "/hu/pricing/index.html"
+    },
+    {
+      "source": "/hu/contact",
+      "destination": "/hu/contact/index.html"
+    },
+    {
+      "source": "/hu/privacy-policy",
+      "destination": "/hu/privacy-policy/index.html"
+    },
+    {
+      "source": "/hu/terms",
+      "destination": "/hu/terms/index.html"
+    },
+    {
+      "source": "/hu/cookie-policy",
+      "destination": "/hu/cookie-policy/index.html"
+    },
+    {
+      "source": "/hu/business-details",
+      "destination": "/hu/business-details/index.html"
+    },
+    {
+      "source": "/hu/accessibility",
+      "destination": "/hu/accessibility/index.html"
+    },
+    {
+      "source": "/en",
+      "destination": "/en/index.html"
+    },
+    {
+      "source": "/en/about",
+      "destination": "/en/about/index.html"
+    },
+    {
+      "source": "/en/wedding-galleries",
+      "destination": "/en/wedding-galleries/index.html"
+    },
+    {
+      "source": "/en/portfolio",
+      "destination": "/en/portfolio/index.html"
+    },
+    {
+      "source": "/en/pricing",
+      "destination": "/en/pricing/index.html"
+    },
+    {
+      "source": "/en/contact",
+      "destination": "/en/contact/index.html"
+    },
+    {
+      "source": "/en/privacy-policy",
+      "destination": "/en/privacy-policy/index.html"
+    },
+    {
+      "source": "/en/terms",
+      "destination": "/en/terms/index.html"
+    },
+    {
+      "source": "/en/cookie-policy",
+      "destination": "/en/cookie-policy/index.html"
+    },
+    {
+      "source": "/en/business-details",
+      "destination": "/en/business-details/index.html"
+    },
+    {
+      "source": "/en/accessibility",
+      "destination": "/en/accessibility/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "buildCommand": "npm run build",
+  "trailingSlash": false
 }

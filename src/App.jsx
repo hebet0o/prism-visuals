@@ -1,3 +1,4 @@
+import Seo from './components/Seo'
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -16,6 +17,8 @@ import { legalRoutes } from './components/presentational/LegalLinks'
 
 function App() {
   return (
+    <>
+    <Seo />
     <Routes>
       <Route path="/" element={<Layout><HomePage /></Layout>} />
       <Route path="/about" element={<Layout><AboutPage /></Layout>} />
@@ -36,6 +39,7 @@ function App() {
         </ProtectedRoute>
       } />
     </Routes>
+    </>
   )
 }
 

@@ -135,7 +135,7 @@ const Hero = ({ images, title, tagline, ctaText, ctaLink }) => {
               key={`hero-slot-${i}`}
               {...responsiveImage(slot.src)}
               sizes="100vw"
-              fetchPriority={i === activeSlot ? 'high' : 'low'}
+              fetchpriority={i === activeSlot ? 'high' : 'low'}
               decoding="async"
               alt=""
               style={{
