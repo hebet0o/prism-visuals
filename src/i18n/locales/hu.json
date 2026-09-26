@@ -392,6 +392,7 @@
       "deleteError": "A galéria törlése sikertelen",
       "loading": "Galériák betöltése...",
       "loadingPhotos": "Képek betöltése...",
+      "protectedImageError": "A védett képek betöltése nem sikerült. Próbálj újra bejelentkezni; a rendszer automatikusan újrapróbálkozik.",
       "noPhotos": "Még nincsenek képek ebben a galériában",
       "managePhotos": "Képek Kezelése",
       "hidePhotos": "Képek Elrejtése",
@@ -425,7 +426,15 @@
       "setCover": "Beállítás borítóképnek",
       "coverPhoto": "Borítókép",
       "isCover": "Borító",
-      "coverUpdated": "Borítókép frissítve!"
+      "coverUpdated": "Borítókép frissítve!",
+      "setPassword": "Galériajelszó beállítása / módosítása",
+      "newPassword": "Új jelszó",
+      "confirmPassword": "Új jelszó még egyszer",
+      "savePassword": "Jelszó mentése",
+      "passwordHelp": "Legalább 12 karakter. A mentés kijelentkezteti a galéria korábbi látogatóit. A régi jelszó nem kérhető le. A nyilvánosra állított képek továbbra is nyilvánosak.",
+      "passwordInvalid": "A két jelszó egyezzen meg, legyen legalább 12 karakter és legfeljebb 72 UTF-8 bájt.",
+      "passwordSaved": "Jelszó elmentve. A korábbi galériabelépések érvénytelenek; az ügyfél az új jelszóval léphet be.",
+      "passwordFailed": "Nem sikerült menteni. Ellenőrizd az adminbelépést és a galériakiegészítés szerveroldali telepítését."
     }
   },
   "gallery": {
@@ -449,7 +458,7 @@
     "guestLoading": "Mentés...",
     "guestNameRequired": "Kérjük add meg a neved",
     "guestPinRequired": "A PIN 4 számjegyű kell legyen",
-    "guestPinTaken": "Ez a név + PIN kombináció már foglalt ebben a galériában. Válassz másik PIN-t.",
+    "guestPinTaken": "Ez a név már foglalt ebben a galériában. Válassz másik nevet.",
     "guestNoMatch": "Nem találtunk profilt ezzel a névvel és PIN-nel.",
     "guestSwitchToNew": "Regisztrálok új profilként",
     "guestGenericError": "Hiba történt. Próbáld újra.",
@@ -459,7 +468,7 @@
     "accessing": "Hozzáférés...",
     "notFound": "A galéria nem található",
     "wrongPassword": "Hibás jelszó",
-    "authError": "A hitelesítés sikertelen",
+    "authError": "A belépés nem sikerült. Ellenőrizd a galérialinket, a jelszót és az internetkapcsolatot.",
     "loadError": "A galéria betöltése sikertelen",
     "downloadAll": "Összes Letöltése",
     "download": "Letöltés",
@@ -485,7 +494,12 @@
     "noLikedYet": "Még nincsenek kedvelt képek",
     "noLikedHint": "Koppints a szívre bármelyik képen",
     "clickPhotoHint": "Kattints bármelyik képre a teljes nézethez",
-    "close": "Bezárás"
+    "close": "Bezárás",
+    "sessionError": "A hozzáférést nem sikerült frissíteni. Ellenőrizd a kapcsolatot; lejárt belépésnél lépj be újra.",
+    "tooManyAttempts": "Túl sok próbálkozás. Próbáld újra 15 perc múlva.",
+    "likesSaveError": "A kedvenc mentése nem sikerült. Próbáld újra; ha szükséges, jelentkezz be újra a profilodba.",
+    "logoutError": "A kijelentkezést a szerver nem igazolta vissza. Ellenőrizd a kapcsolatot és próbáld újra.",
+    "downloadError": "A letöltés nem sikerült. Ellenőrizd a kapcsolatot és a galériabelépést, majd próbáld újra."
   },
   "maintenance": {
     "title": "Karbantartás alatt",
@@ -499,6 +513,6 @@
     "video": "Videó"
   },
   "legal": {
-    "adminWarning": "Adatvédelmi felülvizsgálat: az ügyfélgaléria ideiglenesen leállítva. Privát képet ne tölts fel, amíg a szerveroldali hozzáférés-védelem és az egyéves törlés nincs ellenőrizve. A nyilvános megjelenítés előtt ellenőrizd minden érintett képmásengedélyét. Az új galériák és képek alapból rejtettek; ez önmagában nem hozzáférés-védelem."
+    "adminWarning": "Privát galéria megosztása előtt állíts be galériajelszót, és ellenőrizd a belépést. A „Látható” galériák látható képei jelszó nélkül nyilvánosak. Közzététel előtt ellenőrizd a képmásengedélyeket. Az egyéves törlés és a mentések törlése az üzemeltető feladata."
   }
 }

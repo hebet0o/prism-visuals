@@ -1,21 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import JSZip from 'jszip'
-import pb from '../utils/pocketbase'
+import { createGalleryClient } from '../utils/galleryClient'
 import LoadingSpinner from '../components/LoadingSpinner'
-import {
-  getStoredGuestToken,
-  getStoredGuestName,
-  storeGuestToken,
-  storeGuestName,
-  clearGuest,
-  generateGuestToken,
-  loadGuestUserByToken,
-  loginGuest,
-  registerGuest,
-  updateGuestUserLikes,
-} from '../utils/guestAuth'
 
 const HeartIcon = ({ filled }) => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" fill={filled ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth={1.8}>
@@ -33,7 +21,7 @@ function buildColumns(items, colCount, heights) {
   return cols.map(c => c.items)
 }
 
-function useColCount(containerRef) {
+function useColCount(containerRef, enabled, layout) {
   const [colCount, setColCount] = useState(3)
   useEffect(() => {
     const el = containerRef.current
@@ -49,13 +37,18 @@ function useColCount(containerRef) {
     const ro = new ResizeObserver(compute)
     ro.observe(el)
     return () => ro.disconnect()
-  }, [containerRef])
+  }, [containerRef, enabled, layout])
   return colCount
 }
 
 const GalleryPage = () => {
   const { t } = useTranslation()
   const { name } = useParams()
+  const client = useMemo(() => createGalleryClient(name), [name])
+  const pb = client.pb
+  const [fileToken, setFileToken] = useState('')
+  const likesBusy = useRef(false)
+  const alive = useRef(true)
 
   const [password, setPassword] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -85,7 +78,7 @@ const GalleryPage = () => {
   const [pendingLeave, setPendingLeave] = useState(null)
 
   const masonryRef = useRef(null)
-  const colCount = useColCount(masonryRef)
+  const colCount = useColCount(masonryRef, isAuthenticated && !loading, layout)
   const [imgHeights, setImgHeights] = useState(() => new Map())
   const registerHeight = useCallback((id, h) => {
     setImgHeights(prev => {
@@ -100,33 +93,39 @@ const GalleryPage = () => {
   const hasUnsavedLikes = !hasRegisteredGuest && likedIds.size > 0
 
   useEffect(() => {
-    const init = async () => {
-      const token = getStoredGuestToken()
-      const storedName = getStoredGuestName() || ''
-      if (token) {
-        const loaded = await loadGuestUserByToken(token)
-        if (loaded) {
-          setGuest(loaded)
-          setLikedIds(new Set(loaded.likedPhotos))
-        } else if (storedName) {
-          setGuestNameInput(storedName)
-          setGuestMode('returning')
-        }
-      } else if (storedName) {
-        setGuestNameInput(storedName)
-        setGuestMode('returning')
-      }
+    alive.current = true
+    if (pb.authStore.isValid) loadGallery().catch(() => { if (alive.current) { resetSession(); setError(t('gallery.sessionError')) } })
+    else { client.clear(); setLoading(false) }
+    return () => { alive.current = false }
+  }, [client])
 
-      const isAuth = localStorage.getItem(`gallery_auth_${name}`) === 'true'
-      if (isAuth) {
-        setIsAuthenticated(true)
-        await loadGallery()
-      } else {
-        setLoading(false)
+  const resetSession = () => {
+    client.clear(); setIsAuthenticated(false); setPictures([]); setGallery(null)
+    setFileToken(''); setGuest(null); setLikedIds(new Set()); setLightboxIndex(null)
+    setLoading(false); setShowGuestModal(false)
+  }
+
+  useEffect(() => {
+    if (!isAuthenticated) return
+    let cancelled = false
+    const refresh = async () => {
+      try {
+        await client.session()
+        const token = await pb.files.getToken()
+        if (!cancelled) setFileToken(token)
+      } catch (err) {
+        if (!cancelled) {
+          if (err.status === 401 || err.status === 403 || err.status === 404) resetSession()
+          else setFileToken('')
+          setError(t('gallery.sessionError'))
+        }
       }
     }
-    init()
-  }, [name])
+    const timer = setInterval(refresh, 60000)
+    const wake = () => { if (document.visibilityState === 'visible') refresh() }
+    document.addEventListener('visibilitychange', wake)
+    return () => { cancelled = true; clearInterval(timer); document.removeEventListener('visibilitychange', wake) }
+  }, [isAuthenticated, client, t])
 
   useEffect(() => {
     if (!hasUnsavedLikes) return
@@ -139,141 +138,47 @@ const GalleryPage = () => {
   }, [hasUnsavedLikes])
 
   const loadGallery = async () => {
+    setLoading(true)
     try {
-      setLoading(true)
-      setError('')
-
-      const galleryRecord = await pb.collection('galleries').getFirstListItem(`slug = "${name}"`)
-      if (!galleryRecord) {
-        setError(t('gallery.notFound') || 'Gallery not found')
-        return
-      }
-
-      setGallery(galleryRecord)
-
-      const PAGE_SIZE = 50
-      const first = await pb.collection('pictures').getList(1, PAGE_SIZE, {
-        filter: `gallery = "${galleryRecord.id}"`,
-        sort: 'created'
+      const data = await client.session()
+      const token = await pb.files.getToken()
+      const records = await pb.collection('pictures').getFullList({
+        filter: pb.filter('gallery = {:id}', { id: data.gallery.id }), sort: 'created'
       })
-      setPictures(first.items)
-      setLoading(false)
-
-      if (first.totalPages > 1) {
-        const remaining = await Promise.all(
-          Array.from({ length: first.totalPages - 1 }, (_, i) =>
-            pb.collection('pictures').getList(i + 2, PAGE_SIZE, {
-              filter: `gallery = "${galleryRecord.id}"`,
-              sort: 'created'
-            })
-          )
-        )
-        setPictures([...first.items, ...remaining.flatMap(p => p.items)])
-      }
-    } catch (err) {
-      console.error('Failed to load gallery:', err)
-      setError(t('gallery.loadError') || 'Failed to load gallery')
-    } finally {
-      setLoading(false)
-    }
+      const restoredGuest = await client.restoreGuest()
+      if (!alive.current) return
+      setGallery(data.gallery); setPictures(records); setFileToken(token)
+      setGuest(restoredGuest); setLikedIds(new Set(restoredGuest?.likedPhotos || []))
+      setIsAuthenticated(true); setError('')
+    } finally { if (alive.current) setLoading(false) }
   }
 
   const handlePasswordSubmit = async (e) => {
-    e.preventDefault()
-    setAuthLoading(true)
-    setError('')
-
+    e.preventDefault(); setAuthLoading(true); setError('')
     try {
-      const galleryRecord = await pb.collection('galleries').getFirstListItem(`slug = "${name}"`)
-      if (!galleryRecord) {
-        setError(t('gallery.notFound') || 'Gallery not found')
-        return
-      }
-
-      if (password === galleryRecord.passwordHash) {
-        setIsAuthenticated(true)
-        setGallery(galleryRecord)
-        localStorage.setItem(`gallery_auth_${name}`, 'true')
-        await loadGallery()
-        if (!guest && !hasSeenGuestPrompt) {
-          setShowGuestModal(true)
-        }
-      } else {
-        setError(t('gallery.wrongPassword') || 'Wrong password')
-      }
+      await client.login(password)
+      setPassword('')
+      await loadGallery()
+      if (!hasSeenGuestPrompt) setShowGuestModal(true)
     } catch (err) {
-      console.error('Authentication failed:', err)
-      setError(t('gallery.authError') || 'Authentication failed')
-    } finally {
-      setAuthLoading(false)
-    }
+      resetSession()
+      setError(t(err.status === 429 ? 'gallery.tooManyAttempts' : 'gallery.authError'))
+    } finally { setAuthLoading(false) }
   }
 
   const handleGuestSubmit = async (e) => {
-    e.preventDefault()
-    setGuestError('')
-
-    const trimmedName = guestNameInput.trim()
-    const trimmedPin = guestPinInput.trim()
-
-    if (!trimmedName) {
-      setGuestError(t('gallery.guestNameRequired'))
-      return
-    }
-    if (!/^[0-9]{4}$/.test(trimmedPin)) {
-      setGuestError(t('gallery.guestPinRequired'))
-      return
-    }
-    if (!gallery?.id) {
-      setGuestError(t('gallery.guestGenericError'))
-      return
-    }
-
+    e.preventDefault(); setGuestError('')
+    const name = guestNameInput.trim(), pin = guestPinInput.trim()
+    if (!name || !/^\d{4}$/.test(pin)) { setGuestError(t('gallery.guestPinRequired')); return }
     setGuestSaving(true)
-
-    if (guestMode === 'returning') {
-      const found = await loginGuest(gallery.id, trimmedName, trimmedPin)
-      if (found) {
-        storeGuestToken(found.token)
-        storeGuestName(found.name)
-        const mergedLikes = Array.from(new Set([...found.likedPhotos, ...likedIds]))
-        setGuest(found)
-        setLikedIds(new Set(mergedLikes))
-        if (mergedLikes.length > found.likedPhotos.length) {
-          const updated = await updateGuestUserLikes(found.id, mergedLikes)
-          if (updated) setGuest(prev => ({ ...prev, likedPhotos: updated }))
-        }
-        setShowGuestModal(false)
-        setHasSeenGuestPrompt(true)
-      } else {
-        setGuestError(t('gallery.guestNoMatch'))
-      }
-      setGuestSaving(false)
-      return
-    }
-
-    const token = generateGuestToken()
-    const result = await registerGuest(gallery.id, trimmedName, trimmedPin, token)
-
-    if (result.ok) {
-      storeGuestToken(token)
-      storeGuestName(result.guest.name)
-      const mergedLikes = Array.from(new Set([...result.guest.likedPhotos, ...likedIds]))
-      setGuest(result.guest)
-      setLikedIds(new Set(mergedLikes))
-      if (mergedLikes.length > result.guest.likedPhotos.length) {
-        const updated = await updateGuestUserLikes(result.guest.id, mergedLikes)
-        if (updated) setGuest(prev => ({ ...prev, likedPhotos: updated }))
-      }
-      setShowGuestModal(false)
-      setHasSeenGuestPrompt(true)
-    } else if (result.reason === 'duplicate') {
-      setGuestError(t('gallery.guestPinTaken'))
-    } else {
-      setGuestError(t('gallery.guestGenericError'))
-    }
-
-    setGuestSaving(false)
+    try {
+      const found = await client.guest(guestMode === 'returning' ? 'login' : 'register', name, pin)
+      const merged = [...new Set([...found.likedPhotos, ...likedIds])].filter(id => pictures.some(p => p.id === id))
+      const saved = await client.likes(merged)
+      setGuest({ ...found, likedPhotos: saved }); setLikedIds(new Set(saved))
+      setGuestPinInput(''); setShowGuestModal(false); setHasSeenGuestPrompt(true)
+    } catch (err) { setGuestError(t(err.status === 429 ? 'gallery.tooManyAttempts' : 'gallery.guestGenericError')) }
+    finally { setGuestSaving(false) }
   }
 
   const handleGuestSkip = () => {
@@ -288,36 +193,30 @@ const GalleryPage = () => {
   }
 
   const toggleLike = useCallback(async (id) => {
+    if (likesBusy.current) return
     const next = new Set(likedIds)
-    if (next.has(id)) next.delete(id)
-    else next.add(id)
+    if (next.has(id)) next.delete(id); else next.add(id)
     setLikedIds(next)
-
     if (guest?.id) {
-      const updated = await updateGuestUserLikes(guest.id, Array.from(next))
-      if (updated) {
+      likesBusy.current = true
+      try {
+        const updated = await client.likes([...next])
         setGuest(prev => ({ ...prev, likedPhotos: updated }))
-      }
+      } catch { setLikedIds(likedIds); setError(t('gallery.likesSaveError')) }
+      finally { likesBusy.current = false }
     }
-  }, [likedIds, guest])
+  }, [likedIds, guest, client, t])
 
   const handleLogout = () => {
-    const doLogout = () => {
-      localStorage.removeItem(`gallery_auth_${name}`)
-      clearGuest()
-      setIsAuthenticated(false)
-      setPassword('')
-      setGuest(null)
-      setLikedIds(new Set())
-      setShowLikedOnly(false)
-      setHasSeenGuestPrompt(false)
+    const doLogout = async () => {
+      try { await client.logout() }
+      catch (err) {
+        if (err.status !== 401) { setError(t('gallery.logoutError')); return }
+      }
+      resetSession(); setPassword(''); setShowLikedOnly(false); setHasSeenGuestPrompt(false)
     }
-    if (hasUnsavedLikes) {
-      setPendingLeave(() => doLogout)
-      setShowLeaveModal(true)
-    } else {
-      doLogout()
-    }
+    if (hasUnsavedLikes) { setPendingLeave(() => doLogout); setShowLeaveModal(true) }
+    else doLogout()
   }
 
   const confirmLeave = () => {
@@ -327,58 +226,32 @@ const GalleryPage = () => {
     setPendingLeave(null)
   }
 
-  const handleDownloadAll = async () => {
-    setDownloadingAll(true)
-    const zip = new JSZip()
-    await Promise.all(pictures.map(async (picture, index) => {
-      const url = pb.files.getURL(picture, picture.image)
-      const response = await fetch(url)
-      const blob = await response.blob()
-      const ext = picture.image.split('.').pop()
-      zip.file(`${index + 1}.${ext}`, blob)
-    }))
-    const content = await zip.generateAsync({ type: 'blob' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(content)
-    a.download = `${gallery?.name || 'gallery'}.zip`
-    a.click()
-    URL.revokeObjectURL(a.href)
-    setDownloadingAll(false)
+  const saveBlob = (blob, name) => {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name
+    a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000)
   }
-
-  const handleDownloadLiked = async () => {
-    const liked = pictures.filter(p => likedIds.has(p.id))
-    if (!liked.length) return
-    setDownloadingLiked(true)
-    const zip = new JSZip()
-    await Promise.all(liked.map(async (picture, index) => {
-      const url = pb.files.getURL(picture, picture.image)
-      const response = await fetch(url)
-      const blob = await response.blob()
-      const ext = picture.image.split('.').pop()
-      zip.file(`${index + 1}.${ext}`, blob)
-    }))
-    const content = await zip.generateAsync({ type: 'blob' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(content)
-    a.download = `${gallery?.name || 'gallery'}-liked.zip`
-    a.click()
-    URL.revokeObjectURL(a.href)
-    setDownloadingLiked(false)
+  const downloadZip = async (items, suffix, setBusy) => {
+    if (!items.length) return
+    setBusy(true); setError('')
+    try {
+      const zip = new JSZip()
+      for (let i = 0; i < items.length; i += 4) {
+        await Promise.all(items.slice(i, i + 4).map(async (p, offset) => {
+          const blob = await client.fileBlob(p)
+          zip.file((i + offset + 1) + '.' + p.image.split('.').pop(), blob)
+        }))
+      }
+      saveBlob(await zip.generateAsync({ type: 'blob' }), (gallery?.name || 'gallery') + suffix + '.zip')
+    } catch { setError(t('gallery.downloadError')) }
+    finally { setBusy(false) }
   }
-
+  const handleDownloadAll = () => downloadZip(pictures, '', setDownloadingAll)
+  const handleDownloadLiked = () => downloadZip(pictures.filter(p => likedIds.has(p.id)), '-liked', setDownloadingLiked)
   const handleDownloadSingle = async (picture) => {
-    setDownloadingSingle(true)
-    const url = pb.files.getURL(picture, picture.image)
-    const response = await fetch(url)
-    const blob = await response.blob()
-    const ext = picture.image.split('.').pop()
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = picture.image || `image.${ext}`
-    a.click()
-    URL.revokeObjectURL(a.href)
-    setDownloadingSingle(false)
+    setDownloadingSingle(true); setError('')
+    try { saveBlob(await client.fileBlob(picture), picture.image) }
+    catch { setError(t('gallery.downloadError')) }
+    finally { setDownloadingSingle(false) }
   }
 
   if (loading) {
@@ -445,6 +318,7 @@ const GalleryPage = () => {
 
   return (
     <div className="min-h-screen bg-brand-black">
+      {error && <p role="alert" className="p-4 text-red-400 text-center">{error}</p>}
       {/* Hero Header */}
       <div className="relative bg-brand-dark border-b border-brand-charcoal/50 py-16 px-6 text-center">
         <p className="section-label mb-4">{t('gallery.privateGallery') || 'Private Gallery'}</p>
@@ -565,7 +439,8 @@ const GalleryPage = () => {
                       <div key={picture.id} className="group relative overflow-hidden cursor-pointer"
                         onClick={() => setLightboxIndex(globalIndex)}>
                         <img
-                          src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
+                          referrerPolicy="no-referrer"
+                          src={fileToken ? pb.files.getURL(picture, picture.image, { thumb: '0x800', token: fileToken }) : undefined}
                           alt={`Gallery image ${globalIndex + 1}`}
                           className="w-full h-auto block transition-opacity duration-300 hover:opacity-90"
                           loading="lazy"
@@ -599,7 +474,8 @@ const GalleryPage = () => {
                     onClick={() => setLightboxIndex(index)}
                   >
                     <img
-                      src={pb.files.getURL(picture, picture.image, { thumb: '0x800' })}
+                      referrerPolicy="no-referrer"
+                          src={fileToken ? pb.files.getURL(picture, picture.image, { thumb: '0x800', token: fileToken }) : undefined}
                       alt={`Gallery image ${index + 1}`}
                       className="w-full aspect-square object-cover block transition-opacity duration-300 hover:opacity-90"
                       loading="lazy"
@@ -663,7 +539,8 @@ const GalleryPage = () => {
               )}
 
               <img
-                src={pb.files.getURL(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image)}
+                referrerPolicy="no-referrer"
+                          src={fileToken ? pb.files.getURL(visiblePictures[lightboxIndex], visiblePictures[lightboxIndex].image, { token: fileToken }) : undefined}
                 alt={`Gallery image ${lightboxIndex + 1}`}
                 className="max-h-[85vh] max-w-[85vw] object-contain"
                 onClick={(e) => e.stopPropagation()}
@@ -855,4 +732,7 @@ const GalleryPage = () => {
   )
 }
 
-export default GalleryPage
+export default function GalleryRoute() {
+  const { name } = useParams()
+  return <GalleryPage key={name} />
+}

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import pb from '../utils/pocketbase'
+import { isAdminRecord } from '../utils/adminAccess'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -31,6 +32,12 @@ const LoginPage = () => {
 
     try {
       await pb.collection('users').authWithPassword(formData.email, formData.password)
+
+      if (!isAdminRecord(pb.authStore.record)) {
+        pb.authStore.clear()
+        setError(t('admin.login.error'))
+        return
+      }
 
       // Redirect to the page they were trying to access or admin dashboard
       navigate(from, { replace: true })

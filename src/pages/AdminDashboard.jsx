@@ -3,12 +3,15 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import pb from '../utils/pocketbase'
 import { useReviews } from '../hooks/useReviews'
+import { useAdminFileToken } from '../hooks/useAdminFileToken'
 import { slugify } from '../utils/helpers'
+import GalleryPasswordForm from '../components/GalleryPasswordForm'
 import LoadingSpinner from '../components/LoadingSpinner'
 
 const AdminDashboard = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { token: fileToken, error: fileTokenError } = useAdminFileToken()
   const { reviews, deleteReview, toggleReviewVisibility, isLoading: reviewsLoading } = useReviews({ admin: true })
   const [activeTab, setActiveTab] = useState('dashboard')
   const [galleries, setGalleries] = useState([])
@@ -18,7 +21,6 @@ const AdminDashboard = () => {
   const [galleryForm, setGalleryForm] = useState({
     name: '',
     slug: '',
-    password: '',
     type: 'portrait',
     isVisible: false,
     images: []
@@ -93,7 +95,6 @@ const AdminDashboard = () => {
       const galleryData = {
         name: galleryForm.name,
         slug: galleryForm.slug,
-        passwordHash: galleryForm.password,
         type: galleryForm.type,
         isVisible: galleryForm.isVisible,
         createdBy: pb.authStore.model?.id
@@ -105,7 +106,7 @@ const AdminDashboard = () => {
         await uploadGalleryImages(gallery.id, galleryForm.images)
       }
 
-      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
+      setGalleryForm({ name: '', slug: '', type: 'portrait', isVisible: false, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
       setUploadProgress(null)
@@ -192,7 +193,6 @@ const AdminDashboard = () => {
     setGalleryForm({
       name: gallery.name,
       slug: gallery.slug,
-      password: gallery.passwordHash,
       type: gallery.type || 'portrait',
       isVisible: gallery.isVisible !== false,
       images: [] // Don't pre-populate images for editing
@@ -202,7 +202,7 @@ const AdminDashboard = () => {
 
   const cancelEditing = () => {
     setEditingGallery(null)
-    setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
+    setGalleryForm({ name: '', slug: '', type: 'portrait', isVisible: false, images: [] })
     setShowCreateGallery(false)
   }
 
@@ -215,14 +215,8 @@ const AdminDashboard = () => {
       const updateData = {
         name: galleryForm.name,
         slug: galleryForm.slug,
-        passwordHash: galleryForm.password,
         type: galleryForm.type,
         isVisible: galleryForm.isVisible
-      }
-
-      // Only update password if it was changed
-      if (!galleryForm.password) {
-        delete updateData.passwordHash
       }
 
       await pb.collection('galleries').update(editingGallery.id, updateData)
@@ -236,7 +230,7 @@ const AdminDashboard = () => {
 
       // Reset form
       setEditingGallery(null)
-      setGalleryForm({ name: '', slug: '', password: '', type: 'portrait', isVisible: false, images: [] })
+      setGalleryForm({ name: '', slug: '', type: 'portrait', isVisible: false, images: [] })
       setFileInputKey(k => k + 1)
       setShowCreateGallery(false)
 
@@ -611,20 +605,6 @@ const AdminDashboard = () => {
 
                   <div>
                     <label className="block text-brand-warm font-medium mb-2">
-                      {t('admin.galleries.createForm.password') || 'Password'}
-                    </label>
-                    <input
-                      type="password"
-                      value={galleryForm.password}
-                      onChange={(e) => setGalleryForm(prev => ({ ...prev, password: e.target.value }))}
-                      required
-                      className="w-full px-4 py-3 bg-brand-black border border-brand-charcoal rounded-md text-brand-warm placeholder-brand-muted focus:outline-none focus:border-brand-bronze"
-                      placeholder={t('admin.galleries.createForm.passwordPlaceholder') || 'Enter access password'}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-brand-warm font-medium mb-2">
                       {t('admin.galleries.createForm.images') || 'Images'}
                     </label>
                     <input
@@ -725,7 +705,7 @@ const AdminDashboard = () => {
                           Created: {new Date(gallery.created).toLocaleDateString()}
                         </p>
                         <p className="text-brand-muted text-sm">
-                          URL: /gallery/{gallery.slug}
+                          URL: /gallery/{gallery.id}
                         </p>
                       </div>
                       <div className="flex space-x-2">
@@ -766,9 +746,13 @@ const AdminDashboard = () => {
                       </div>
                     </div>
 
+                    <GalleryPasswordForm galleryId={gallery.id} />
+
                     {managingPicturesGalleryId === gallery.id && (
                       <div className="mt-4 pt-4 border-t border-brand-charcoal">
-                        {picturesLoading ? (
+                        {fileTokenError ? (
+                          <p role="alert" className="text-red-400 py-4">{t('admin.galleries.protectedImageError')}</p>
+                        ) : picturesLoading || !fileToken ? (
                           <div className="flex items-center py-4">
                             <LoadingSpinner size="sm" className="mr-2" />
                             <span className="text-brand-muted text-sm">{t('admin.galleries.loadingPhotos') || 'Loading photos...'}</span>
@@ -822,7 +806,8 @@ const AdminDashboard = () => {
                                     className="relative group select-none rounded overflow-hidden"
                                   >
                                     <img
-                                      src={pb.files.getURL(picture, picture.image, { thumb: '200x200' })}
+                                      src={pb.files.getURL(picture, picture.image, { thumb: '200x200', token: fileToken })}
+                                      referrerPolicy="no-referrer"
                                       alt=""
                                       onClick={() => handleTogglePictureVisibility(picture.id)}
                                       className={`w-full aspect-square object-cover cursor-pointer transition-opacity ${

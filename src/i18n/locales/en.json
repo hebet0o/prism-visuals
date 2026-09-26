@@ -355,7 +355,7 @@
     "guestLoading": "Saving...",
     "guestNameRequired": "Please enter your name",
     "guestPinRequired": "PIN must be 4 digits",
-    "guestPinTaken": "This name + PIN is already used in this gallery. Pick a different PIN.",
+    "guestPinTaken": "This name is already used in this gallery. Choose another name.",
     "guestNoMatch": "No profile found with that name and PIN.",
     "guestSwitchToNew": "Sign up as new",
     "guestGenericError": "Something went wrong. Please try again.",
@@ -365,7 +365,7 @@
     "accessing": "Accessing...",
     "notFound": "Gallery not found",
     "wrongPassword": "Wrong password",
-    "authError": "Authentication failed",
+    "authError": "Sign-in failed. Check the gallery link, password and internet connection.",
     "loadError": "Failed to load gallery",
     "downloadAll": "Download All",
     "download": "Download",
@@ -391,7 +391,12 @@
     "noLikedYet": "No liked photos yet",
     "noLikedHint": "Tap the heart on any photo to save it here",
     "clickPhotoHint": "Click any photo for lightbox view",
-    "close": "Close"
+    "close": "Close",
+    "sessionError": "Could not refresh access. Check your connection; sign in again if the session expired.",
+    "tooManyAttempts": "Too many attempts. Try again in 15 minutes.",
+    "likesSaveError": "Could not save your selection. Try again; sign back into your profile if needed.",
+    "logoutError": "The server did not confirm sign-out. Check your connection and try again.",
+    "downloadError": "Download failed. Check your connection and gallery sign-in, then try again."
   },
   "maintenance": {
     "title": "Under Maintenance",
@@ -455,6 +460,7 @@
       "deleteError": "Failed to delete gallery",
       "loading": "Loading galleries...",
       "loadingPhotos": "Loading photos...",
+      "protectedImageError": "Protected images could not be loaded. Try signing in again; the system will retry automatically.",
       "noPhotos": "No photos in this gallery",
       "managePhotos": "Manage Photos",
       "hidePhotos": "Hide Photos",
@@ -488,7 +494,15 @@
       "setCover": "Set as Cover",
       "coverPhoto": "Cover Photo",
       "isCover": "Cover",
-      "coverUpdated": "Cover photo updated!"
+      "coverUpdated": "Cover photo updated!",
+      "setPassword": "Set / change gallery password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "savePassword": "Save password",
+      "passwordHelp": "At least 12 characters. Saving signs out previous gallery visitors. The old password cannot be retrieved. Pictures marked public remain public.",
+      "passwordInvalid": "Passwords must match, with at least 12 characters and at most 72 UTF-8 bytes.",
+      "passwordSaved": "Password saved. Previous gallery sessions are revoked; clients can sign in with the new password.",
+      "passwordFailed": "Could not save. Check administrator sign-in and the server gallery extension installation."
     }
   },
   "galleryTypes": {
@@ -499,6 +513,6 @@
     "video": "Video"
   },
   "legal": {
-    "adminWarning": "Privacy review: client galleries are temporarily disabled. Do not upload private images until server-side authorization and one-year deletion are verified. Check image permissions before public display. New galleries and pictures default to hidden; this is not access control."
+    "adminWarning": "Set a gallery password and verify sign-in before sharing a private gallery. Visible pictures in visible galleries are public without a password. Check image permissions before publication. The operator manages one-year deletion and backup deletion."
   }
 }
